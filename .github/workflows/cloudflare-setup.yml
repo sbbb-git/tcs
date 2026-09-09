@@ -18,6 +18,10 @@ on:
         description: "Désactiver l'obfuscation d'e-mail sur la zone"
         type: boolean
         default: false
+      setup_www:
+        description: "Rediriger www vers l'apex en 301"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -206,5 +210,91 @@ jobs:
               print("  -> le token ne porte pas la permission Zone Settings:Edit.")
               print("\nÀ faire à la main : Cloudflare > le domaine > Scrape Shield")
               print("  > Email Address Obfuscation > désactiver")
+              sys.exit(1)
+          PY
+
+      # www n'existe pas : la règle de redirection est donc posée AVANT
+      # l'enregistrement DNS. Dans l'ordre inverse, un échec de la règle
+      # laisserait www servir le même site que l'apex — deux hostnames pour un
+      # même contenu, exactement ce qu'on cherche à éviter.
+      - name: Rediriger www vers l'apex
+        if: ${{ inputs.setup_www }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DOMAIN: ${{ env.DOMAIN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+
+          domain = os.environ["DOMAIN"]
+          token = os.environ["CF_API_TOKEN"]
+          api = "https://api.cloudflare.com/client/v4"
+          headers = ["-H", f"Authorization: Bearer {token}", "-H", "Content-Type: application/json"]
+
+          def call(method, path, body=None):
+              cmd = ["curl", "-sS", "-X", method, *headers]
+              if body is not None:
+                  cmd += ["-d", json.dumps(body)]
+              cmd.append(f"{api}{path}")
+              out = subprocess.run(cmd, capture_output=True, text=True).stdout
+              try:
+                  return json.loads(out)
+              except json.JSONDecodeError:
+                  return {"success": False, "errors": [{"code": 0, "message": out[:200]}]}
+
+          def explain(res):
+              for e in res.get("errors", []):
+                  print(f"  [{e.get('code')}] {e.get('message')}")
+
+          zone = call("GET", f"/zones?name={domain}")
+          if not zone.get("success") or not zone.get("result"):
+              print(f"Zone {domain} illisible.")
+              explain(zone)
+              sys.exit(1)
+          zone_id = zone["result"][0]["id"]
+
+          # 1) La règle de redirection.
+          phase = "/rulesets/phases/http_request_dynamic_redirect/entrypoint"
+          rule = {
+              "rules": [{
+                  "action": "redirect",
+                  "description": f"www.{domain} vers l'apex",
+                  "expression": f'(http.host eq "www.{domain}")',
+                  "action_parameters": {
+                      "from_value": {
+                          "status_code": 301,
+                          "target_url": {
+                              "expression": f'concat("https://{domain}", http.request.uri.path)'
+                          },
+                          "preserve_query_string": True,
+                      }
+                  },
+              }]
+          }
+          res = call("PUT", f"/zones/{zone_id}{phase}", rule)
+          if not res.get("success"):
+              print("Création de la règle de redirection refusée :")
+              explain(res)
+              print("  -> permission Dynamic Redirect:Edit absente du token.")
+              print("\nÀ faire à la main : Cloudflare > le domaine > Rules > Redirect Rules")
+              print(f"  Si http.host = www.{domain}  ->  301 vers https://{domain} (préserver le chemin)")
+              sys.exit(1)
+          print("Règle de redirection 301 posée.")
+
+          # 2) L'enregistrement DNS, seulement une fois la règle en place.
+          dns = call("POST", f"/zones/{zone_id}/dns_records", {
+              "type": "CNAME",
+              "name": f"www.{domain}",
+              "content": domain,
+              "proxied": True,
+              "comment": "Redirigé en 301 vers l'apex",
+          })
+          if dns.get("success"):
+              print(f"Enregistrement www créé : CNAME -> {domain} (proxy activé)")
+          elif any(e.get("code") == 81053 for e in dns.get("errors", [])):
+              print("L'enregistrement www existe déjà.")
+          else:
+              print("Création de l'enregistrement www refusée :")
+              explain(dns)
               sys.exit(1)
           PY
