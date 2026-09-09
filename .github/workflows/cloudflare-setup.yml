@@ -14,6 +14,10 @@ on:
         description: "Créer l'enregistrement DNS de l'apex vers le projet"
         type: boolean
         default: false
+      fix_zone_settings:
+        description: "Désactiver l'obfuscation d'e-mail sur la zone"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -157,4 +161,50 @@ jobs:
                   print("  -> le token ne porte probablement pas la permission DNS:Edit.")
                   dashboard_fallback()
                   sys.exit(1)
+          PY
+
+      # L'obfuscation d'e-mail de Cloudflare réécrit les liens mailto: en une
+      # URL /cdn-cgi/l/email-protection qui renvoie 404 aux robots — sur chaque
+      # page portant une adresse. Elle est active par défaut.
+      - name: Désactiver l'obfuscation d'e-mail
+        if: ${{ inputs.fix_zone_settings }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DOMAIN: ${{ env.DOMAIN }}
+        run: |
+          curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=$DOMAIN" \
+            -o zone.json || true
+
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+
+          domain = os.environ["DOMAIN"]
+          token = os.environ["CF_API_TOKEN"]
+
+          zone = json.load(open("zone.json"))
+          if not zone.get("success") or not zone.get("result"):
+              print(f"Zone {domain} illisible — le token ne porte pas Zone:Read.")
+              sys.exit(1)
+          zone_id = zone["result"][0]["id"]
+
+          out = subprocess.run([
+              "curl", "-sS", "-X", "PATCH",
+              "-H", f"Authorization: Bearer {token}",
+              "-H", "Content-Type: application/json",
+              "-d", json.dumps({"value": "off"}),
+              f"https://api.cloudflare.com/client/v4/zones/{zone_id}/settings/email_obfuscation",
+          ], capture_output=True, text=True).stdout
+
+          res = json.loads(out)
+          if res.get("success"):
+              print(f"Obfuscation d'e-mail : {res['result']['value']}")
+          else:
+              print("Modification refusée :")
+              for err in res.get("errors", []):
+                  print(f"  [{err.get('code')}] {err.get('message')}")
+              print("  -> le token ne porte pas la permission Zone Settings:Edit.")
+              print("\nÀ faire à la main : Cloudflare > le domaine > Scrape Shield")
+              print("  > Email Address Obfuscation > désactiver")
+              sys.exit(1)
           PY

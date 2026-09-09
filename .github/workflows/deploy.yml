@@ -88,3 +88,9 @@ jobs:
             --project-name=${{ env.PROJECT_NAME }}
             --branch=main
             --commit-dirty=true
+
+      # Le contrôle précédent porte sur le HTML construit ici ; celui-ci porte
+      # sur le site réellement servi, où l'hébergeur peut avoir modifié la
+      # réponse (bloc ajouté au robots.txt, réécriture des liens mailto:).
+      - name: Vérifier le site en ligne
+        run: npm run smoke -- https://talentcaresante.fr
