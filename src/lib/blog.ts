@@ -15,6 +15,8 @@ export type PostFrontmatter = {
   date: string;
   category: string;
   keywords?: string[];
+  /** Summary bullets shown above the article body. */
+  keyPoints?: string[];
   /** Overrides the computed reading time when set. */
   readingTime?: string;
   /** Set to true to keep a post out of the build entirely. */

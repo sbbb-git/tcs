@@ -6,10 +6,16 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import { Callout } from "@/components/mdx/Callout";
-import { KeyPoints } from "@/components/mdx/KeyPoints";
 import { site } from "@/lib/site";
 
 /**
+ * Components available inside MDX.
+ *
+ * next-mdx-remote v6 no longer evaluates `{...}` expressions in MDX — that is
+ * the fix for its arbitrary-code-execution advisory — so a component used here
+ * may only receive plain string attributes. Anything structured (the key-points
+ * list, for instance) lives in the frontmatter and is rendered by the page.
+ *
  * Typography for article bodies. The scale mirrors the original site: bold
  * near-black headings, generous paragraph spacing, primary-coloured links.
  */
@@ -100,7 +106,6 @@ const components = {
     />
   ),
   Callout,
-  KeyPoints,
   Contact: () => (
     <Link
       href="/#contact"

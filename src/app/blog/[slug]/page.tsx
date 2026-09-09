@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import MdxContent from "@/components/MdxContent";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
+import { KeyPoints } from "@/components/mdx/KeyPoints";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getPost, getPosts, getRelatedPosts, slugify } from "@/lib/blog";
@@ -110,6 +111,10 @@ export default async function BlogPostPage({ params }: Params) {
 
               <hr className="mt-8 border-border" />
             </header>
+
+            {post.keyPoints && post.keyPoints.length > 0 && (
+              <KeyPoints items={post.keyPoints} />
+            )}
 
             <TableOfContents headings={post.headings} />
 

@@ -240,6 +240,30 @@ if (todoCount > 0) {
   );
 }
 
+/* --- MDX expression attributes --- */
+
+/*
+ * next-mdx-remote v6 does not evaluate `{...}` in MDX. An expression attribute
+ * is dropped silently, so the component renders with the prop undefined — the
+ * kind of failure that only shows up as a blank block on a published page.
+ * Structured data belongs in the frontmatter instead.
+ */
+const CONTENT_DIR_MDX = path.join(process.cwd(), "content", "blog");
+if (fs.existsSync(CONTENT_DIR_MDX)) {
+  for (const file of fs.readdirSync(CONTENT_DIR_MDX).filter((f) => f.endsWith(".mdx"))) {
+    const body = fs
+      .readFileSync(path.join(CONTENT_DIR_MDX, file), "utf8")
+      .replace(/^---[\s\S]*?\n---\n/, "");
+    if (/<[A-Z][A-Za-z0-9]*[^>]*\s[a-zA-Z-]+=\{/.test(body)) {
+      fail(
+        `content/blog/${file}`,
+        "attribut MDX en expression {…} : non évalué par next-mdx-remote v6. " +
+          "Passez la donnée par le frontmatter.",
+      );
+    }
+  }
+}
+
 /* --- publishing rhythm --- */
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
