@@ -14,12 +14,23 @@ const base = (process.argv[2] || "https://talentcaresante.fr").replace(/\/$/, ""
 const errors = [];
 const notes = [];
 
-/** Un déploiement fraîchement publié met quelques secondes à se propager. */
+/**
+ * Un déploiement fraîchement publié met quelques secondes à se propager, et le
+ * CDN peut encore servir la version précédente. Le paramètre de contournement
+ * force une réponse fraîche : sans lui, le contrôle valide parfois le contenu
+ * d'avant le déploiement. La requête passe par la même chaîne de traitement,
+ * les transformations de l'hébergeur restent donc visibles.
+ */
 async function fetchWithRetry(url, { attempts = 6, delayMs = 5000 } = {}) {
   let last;
+  const bust = `_cb=${Date.now().toString(36)}`;
+  const fresh = url.includes("?") ? `${url}&${bust}` : `${url}?${bust}`;
   for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetch(url, { redirect: "follow" });
+      const res = await fetch(fresh, {
+        redirect: "follow",
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+      });
       if (res.status < 500) return res;
       last = new Error(`HTTP ${res.status}`);
     } catch (err) {

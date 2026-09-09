@@ -3,6 +3,8 @@
 Site vitrine et blog de TalentCare Santé, cabinet de recrutement spécialisé
 santé. Next.js exporté en statique, hébergé sur Cloudflare Pages.
 
+**En ligne : https://talentcaresante.fr**
+
 ## Pourquoi cette base
 
 La version précédente était une application React monopage : le serveur
@@ -31,6 +33,7 @@ npm run dev          # http://localhost:3000
 | `npm run typecheck` | Vérification TypeScript seule |
 | `npm run seo:check` | Contrôles SEO sur `out/` (voir plus bas) |
 | `npm run seo:check:strict` | Idem, la dette qualité devient bloquante |
+| `npm run smoke -- <url>` | Contrôles sur le site en ligne (défaut : la production) |
 | `npm run verify` | `typecheck` + `build` + `seo:check` |
 | `npm run og` | Régénère `public/og/*.png` (nécessite `npm i -D playwright`) |
 
@@ -174,6 +177,22 @@ La reconstruction quotidienne est ce qui fait sortir les articles datés dans le
 futur. Sans elle, un article programmé resterait invisible jusqu'au prochain
 push.
 
+### Ce que le déploiement vérifie en ligne
+
+Après publication, `scripts/smoke-check.mjs` interroge le site réellement servi :
+codes de réponse, 404 effectif, URL canonique, cohérence du sitemap, groupes
+contradictoires dans le robots.txt, et réécriture des liens `mailto:` par
+l'hébergeur. Le contrôle contourne le cache du CDN, sinon il validerait parfois
+la version précédente.
+
+C'est nécessaire parce que le fichier servi n'est pas celui du dépôt : Cloudflare
+préfixe le `robots.txt` d'un bloc « Managed content » qui bloque les robots
+d'entraînement (GPTBot, ClaudeBot, Google-Extended, CCBot…). Ce bloc est
+volontaire et se règle dans Cloudflare (AI Crawl Control), pas ici. En
+conséquence, `src/app/robots.ts` ne déclare que des robots de recherche et de
+citation, qu'aucune règle managée ne bloque : redéclarer un agent déjà bloqué
+créerait deux groupes contradictoires.
+
 ### À vérifier dans le tableau de bord Cloudflare
 
 1. **Un seul hostname.** Choisissez `talentcaresante.fr` **ou**
@@ -181,22 +200,18 @@ push.
    sur la zone. Deux hostnames servant le même site divisent les signaux et
    dupliquent chaque page dans les rapports. `src/lib/site.ts` déclare
    actuellement l'apex.
-2. **Email Address Obfuscation : désactivé** (Scrape Shield). Activée, l'option
-   réécrit les liens `mailto:` vers une URL technique qui renvoie 404 aux
-   robots — sur chaque page du site.
-3. **Le `robots.txt` réellement servi.** Ouvrez `https://talentcaresante.fr/robots.txt`
-   et vérifiez qu'il correspond bien à `src/app/robots.ts`. Certains réglages
-   Cloudflare ajoutent leur propre bloc, ce qui créerait deux groupes
-   contradictoires pour un même agent.
-4. **Automatic HTTPS Rewrites** et redirection HTTP → HTTPS activées.
+2. **Email Address Obfuscation** (Scrape Shield) — déjà désactivé. Activée,
+   l'option réécrit les liens `mailto:` vers une URL technique qui renvoie 404
+   aux robots, sur chaque page du site. Le contrôle en ligne la détecte si elle
+   revient.
+3. **Automatic HTTPS Rewrites** et redirection HTTP → HTTPS activées.
 
 ## Avant la première mise en ligne
 
 - [ ] Renseigner `src/lib/legal.ts` : raison sociale, forme juridique, adresse,
       SIREN, SIRET, directeur de la publication. Obligation légale (LCEN).
       Aucune de ces valeurs ne doit être approximée.
-- [ ] Choisir apex ou `www` et poser la redirection 301.
-- [ ] Désactiver l'obfuscation d'e-mail Cloudflare.
+- [ ] Poser la redirection 301 de `www` vers l'apex.
 - [ ] Créer la propriété Google Search Console et soumettre
       `https://talentcaresante.fr/sitemap.xml`.
 - [ ] Créer le compte Bing Webmaster Tools et y soumettre le même sitemap.
