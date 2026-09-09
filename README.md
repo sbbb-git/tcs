@@ -206,20 +206,38 @@ créerait deux groupes contradictoires.
    revient.
 3. **Automatic HTTPS Rewrites** et redirection HTTP → HTTPS activées.
 
-## Avant la première mise en ligne
+## État de la mise en ligne
+
+Fait :
+
+- [x] Projet Cloudflare Pages `talentcaresante` créé et déployé depuis la CI.
+- [x] Domaine `talentcaresante.fr` rattaché au projet, enregistrement DNS posé.
+- [x] Obfuscation d'e-mail Cloudflare désactivée — les liens `mailto:` sont de
+      nouveau lisibles par les robots.
+- [x] `robots.txt` aligné sur la politique managée de Cloudflare, sans groupe
+      contradictoire.
+- [x] Purge du CDN et vérification du site servi à chaque déploiement.
+
+Reste à faire :
 
 - [ ] Renseigner `src/lib/legal.ts` : raison sociale, forme juridique, adresse,
       SIREN, SIRET, directeur de la publication. Obligation légale (LCEN).
       Aucune de ces valeurs ne doit être approximée.
-- [ ] Poser la redirection 301 de `www` vers l'apex.
+- [ ] Rediriger `www` vers l'apex. Le workflow `cloudflare-setup` sait le faire
+      (entrée `setup_www`) mais le token doit porter la permission
+      *Zone → Dynamic Redirect → Edit* ; sinon, la règle se pose à la main dans
+      Rules > Redirect Rules. Sans urgence : `www` ne résout pas aujourd'hui,
+      il n'y a donc pas de contenu servi en double.
 - [ ] Créer la propriété Google Search Console et soumettre
       `https://talentcaresante.fr/sitemap.xml`.
 - [ ] Créer le compte Bing Webmaster Tools et y soumettre le même sitemap.
 - [ ] Générer la clé IndexNow **depuis Bing Webmaster Tools**. Une clé inventée
       renvoie un 403 permanent, qui signifie « clé invalide » et non « trop de
       requêtes ».
-- [ ] Renseigner les deux secrets et la variable GitHub du workflow de déploiement.
 - [ ] Vérifier l'aperçu de partage sur LinkedIn et Facebook.
+
+La variable GitHub `CLOUDFLARE_PROJECT_NAME` n'est plus lue : le nom du projet
+est fixé dans le workflow. Elle peut être supprimée.
 
 ## Ce qui plafonne les résultats
 
