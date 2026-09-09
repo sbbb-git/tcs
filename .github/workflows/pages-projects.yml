@@ -1,0 +1,59 @@
+name: Lister les projets Pages
+
+# Utilitaire ponctuel : affiche les projets Cloudflare Pages du compte et les
+# domaines rattachés, pour retrouver le nom exact attendu par le déploiement.
+# La session Claude n'a pas accès à l'API Cloudflare ; la CI, elle, a le token.
+# À supprimer une fois le nom connu.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  list:
+    name: Lister
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Interroger l'API Cloudflare
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # Ni le token ni l'identifiant de compte ne sont affichés.
+          curl -sS --fail-with-body \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects" \
+            -o response.json || true
+
+          python3 - <<'PY'
+          import json
+
+          try:
+              data = json.load(open("response.json"))
+          except Exception as exc:
+              print("Réponse illisible :", exc)
+              raise SystemExit(1)
+
+          if not data.get("success"):
+              print("L'API a refusé la requête :")
+              for err in data.get("errors", []):
+                  print(f"  [{err.get('code')}] {err.get('message')}")
+              raise SystemExit(1)
+
+          projects = data.get("result", [])
+          if not projects:
+              print("Aucun projet Pages sur ce compte.")
+              raise SystemExit(1)
+
+          print(f"{len(projects)} projet(s) Pages :\n")
+          for p in projects:
+              print(f"  nom            : {p['name']}")
+              print(f"  sous-domaine   : {p.get('subdomain')}")
+              print(f"  domaines       : {', '.join(p.get('domains') or []) or '(aucun)'}")
+              src = p.get("source")
+              print(f"  source         : {src.get('type') if src else 'direct upload'}")
+              print(f"  branche prod   : {p.get('production_branch')}")
+              print()
+          PY
