@@ -36,6 +36,35 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Lister les déploiements récents
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        run: |
+          curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/deployments?per_page=10" \
+            -o deployments.json || true
+
+          python3 - <<'PY'
+          import json
+
+          data = json.load(open("deployments.json"))
+          if not data.get("success"):
+              print("Historique illisible :")
+              for e in data.get("errors", []):
+                  print(f"  [{e.get('code')}] {e.get('message')}")
+              raise SystemExit(0)
+
+          for d in data.get("result", [])[:10]:
+              stage = (d.get("latest_stage") or {})
+              trigger = (d.get("deployment_trigger") or {}).get("type", "?")
+              print(f"  {d.get('created_on','')[:19]}  {d.get('environment','?'):<10}"
+                    f"  {stage.get('name','?'):<8} {stage.get('status','?'):<9} {trigger}")
+              if stage.get("status") == "failure":
+                  print(f"     -> URL : {d.get('url')}")
+          PY
+
       - name: Lister les projets Pages
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
