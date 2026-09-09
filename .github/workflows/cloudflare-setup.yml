@@ -10,6 +10,10 @@ on:
         description: "Rattacher le domaine au projet Pages"
         type: boolean
         default: false
+      create_dns:
+        description: "Créer l'enregistrement DNS de l'apex vers le projet"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -83,4 +87,74 @@ jobs:
               print("\nÀ faire à la main dans le tableau de bord :")
               print(f"  Workers & Pages > {os.environ['PROJECT_NAME']} > Custom domains > Set up a custom domain")
               raise SystemExit(1)
+          PY
+
+      # Rattacher le domaine ne crée pas l'enregistrement DNS : l'assistant du
+      # tableau de bord fait les deux, l'API seulement le premier. Sans
+      # enregistrement, le domaine reste en « initializing » indéfiniment.
+      - name: Créer l'enregistrement DNS
+        if: ${{ inputs.create_dns }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DOMAIN: ${{ env.DOMAIN }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        run: |
+          curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=$DOMAIN" \
+            -o zone.json || true
+
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+
+          domain = os.environ["DOMAIN"]
+          project = os.environ["PROJECT_NAME"]
+          token = os.environ["CF_API_TOKEN"]
+
+          def dashboard_fallback():
+              print("\nÀ faire à la main dans le tableau de bord Cloudflare :")
+              print(f"  Workers & Pages > {project} > Custom domains")
+              print(f"  ou : DNS > Records > Add record")
+              print(f"       Type CNAME | Name @ | Target {project}.pages.dev | Proxy activé")
+
+          zone = json.load(open("zone.json"))
+          if not zone.get("success") or not zone.get("result"):
+              print(f"Impossible de lire la zone {domain} :")
+              for err in zone.get("errors", []):
+                  print(f"  [{err.get('code')}] {err.get('message')}")
+              print("  -> le token ne porte pas la permission Zone:Read.")
+              dashboard_fallback()
+              sys.exit(1)
+
+          zone_id = zone["result"][0]["id"]
+          payload = json.dumps({
+              "type": "CNAME",
+              "name": domain,
+              "content": f"{project}.pages.dev",
+              "proxied": True,
+              "comment": "Cloudflare Pages — site TalentCare Santé",
+          })
+
+          out = subprocess.run([
+              "curl", "-sS", "-X", "POST",
+              "-H", f"Authorization: Bearer {token}",
+              "-H", "Content-Type: application/json",
+              "-d", payload,
+              f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records",
+          ], capture_output=True, text=True).stdout
+
+          res = json.loads(out)
+          if res.get("success"):
+              r = res["result"]
+              print(f"Enregistrement créé : {r['type']} {r['name']} -> {r['content']} (proxy: {r['proxied']})")
+          else:
+              already = any(e.get("code") == 81053 for e in res.get("errors", []))
+              if already:
+                  print("L'enregistrement existe déjà.")
+              else:
+                  print("Création refusée :")
+                  for err in res.get("errors", []):
+                      print(f"  [{err.get('code')}] {err.get('message')}")
+                  print("  -> le token ne porte probablement pas la permission DNS:Edit.")
+                  dashboard_fallback()
+                  sys.exit(1)
           PY
