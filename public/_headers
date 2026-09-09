@@ -16,11 +16,11 @@
   Cache-Control: public, max-age=604800
 
 /sitemap.xml
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=300, must-revalidate
 
 /feed.xml
   Content-Type: application/rss+xml; charset=utf-8
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=300, must-revalidate
 
 /robots.txt
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=300, must-revalidate

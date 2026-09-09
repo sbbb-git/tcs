@@ -89,6 +89,41 @@ jobs:
             --branch=main
             --commit-dirty=true
 
+      # Sans purge, le CDN continue de servir l'ancienne version des fichiers
+      # à durée de vie longue (robots.txt, sitemap.xml) après un déploiement.
+      # Échec toléré : le token peut ne pas porter la permission de purge.
+      - name: Purger le cache du CDN
+        continue-on-error: true
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DOMAIN: talentcaresante.fr
+        run: |
+          zone_id=$(curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=$DOMAIN" \
+            | python3 -c "import json,sys; r=json.load(sys.stdin).get('result') or [{}]; print(r[0].get('id',''))")
+
+          if [ -z "$zone_id" ]; then
+            echo "Zone illisible — purge ignorée (permission Zone:Read absente)."
+            exit 0
+          fi
+
+          curl -sS -X POST \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"purge_everything":true}' \
+            "https://api.cloudflare.com/client/v4/zones/$zone_id/purge_cache" \
+            | python3 -c "
+          import json,sys
+          d = json.load(sys.stdin)
+          if d.get('success'):
+              print('Cache purgé.')
+          else:
+              print('Purge refusée :')
+              for e in d.get('errors', []):
+                  print(f\"  [{e.get('code')}] {e.get('message')}\")
+              print('  -> permission Cache Purge absente du token.')
+          "
+
       # Le contrôle précédent porte sur le HTML construit ici ; celui-ci porte
       # sur le site réellement servi, où l'hébergeur peut avoir modifié la
       # réponse (bloc ajouté au robots.txt, réécriture des liens mailto:).
