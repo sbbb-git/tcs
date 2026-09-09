@@ -7,7 +7,17 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chromium } from "playwright";
+let chromium;
+try {
+  ({ chromium } = await import("playwright"));
+} catch {
+  console.error(
+    "Playwright n'est pas installé. Il ne l'est volontairement pas par défaut :\n" +
+      "les PNG de public/og/ sont versionnés et ne se régénèrent qu'à un changement\n" +
+      "de marque. Pour les refaire :\n\n  npm i -D playwright && npx playwright install chromium\n  npm run og\n",
+  );
+  process.exit(1);
+}
 
 const OUT = path.join(process.cwd(), "public", "og");
 fs.mkdirSync(OUT, { recursive: true });

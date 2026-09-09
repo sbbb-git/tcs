@@ -32,7 +32,7 @@ npm run dev          # http://localhost:3000
 | `npm run seo:check` | Contrôles SEO sur `out/` (voir plus bas) |
 | `npm run seo:check:strict` | Idem, la dette qualité devient bloquante |
 | `npm run verify` | `typecheck` + `build` + `seo:check` |
-| `npm run og` | Régénère `public/og/*.png` (après un changement de marque) |
+| `npm run og` | Régénère `public/og/*.png` (nécessite `npm i -D playwright`) |
 
 ## Écrire un article
 
@@ -103,9 +103,9 @@ Un article daté dans le futur **n'apparaît pas** dans le build : ni sur le blo
 ni dans le sitemap, ni dans le flux RSS. Il se publie tout seul le jour venu, à
 condition qu'un build soit déclenché ce jour-là.
 
-Pour cela, programmez une reconstruction quotidienne côté Cloudflare Pages
-(Deploy Hook appelé par une tâche planifiée). Vous pouvez ainsi rédiger
-plusieurs articles d'avance et les laisser sortir à leur rythme.
+La reconstruction quotidienne est assurée par le workflow GitHub Actions
+(`.github/workflows/deploy.yml`). Vous pouvez donc rédiger plusieurs articles
+d'avance et les laisser sortir à leur rythme.
 
 Une page par semaine est un bon rythme. Le contrôle SEO refuse plus de deux
 articles programmés à la même date future : sur un domaine récent, une
@@ -138,20 +138,43 @@ non sur les sources. Il sort en code non nul pour interrompre un déploiement.
 Passez à `npm run seo:check:strict` dans la commande de build une fois la dette
 résorbée. L'activer trop tôt ne ferait que bloquer la production.
 
-## Déploiement — Cloudflare Pages
+## Déploiement — GitHub Actions vers Cloudflare Pages
 
-### Réglages du projet
+Le projet Cloudflare Pages est de type **Direct Upload** : il n'a pas de
+configuration de build côté Cloudflare. C'est GitHub Actions qui construit et
+publie (`.github/workflows/deploy.yml`).
 
-| Réglage | Valeur |
+Le workflow se déclenche à chaque push sur `main`, tous les jours à 5h17 UTC, et
+à la demande. Le build part du dépôt cloné par la CI, jamais d'un dossier
+local : une page ne peut donc pas exister en production sans être versionnée.
+
+Si les contrôles SEO échouent, rien n'est publié.
+
+### Ce qu'il faut renseigner une fois
+
+Dans le dépôt GitHub → **Settings → Secrets and variables → Actions** :
+
+Onglet **Secrets** :
+
+| Nom | Valeur |
 |---|---|
-| Framework preset | None |
-| Build command | `npm run build && npm run seo:check` |
-| Build output directory | `out` |
-| Variable d'environnement | `NODE_VERSION` = `22` |
+| `CLOUDFLARE_API_TOKEN` | Token d'API avec la permission *Cloudflare Pages : Edit* |
+| `CLOUDFLARE_ACCOUNT_ID` | Identifiant de compte Cloudflare |
 
-Le build part du dépôt cloné par Cloudflare. Ne déployez jamais depuis un
-dossier local : des pages finiraient en production sans être versionnées, et le
-passage suivant les effacerait.
+Onglet **Variables** :
+
+| Nom | Valeur |
+|---|---|
+| `CLOUDFLARE_PROJECT_NAME` | Nom exact du projet Pages |
+
+Tant que l'un des trois manque, le workflow s'arrête à la première étape avec la
+liste de ce qui manque, sans rien déployer.
+
+### Publication différée
+
+La reconstruction quotidienne est ce qui fait sortir les articles datés dans le
+futur. Sans elle, un article programmé resterait invisible jusqu'au prochain
+push.
 
 ### À vérifier dans le tableau de bord Cloudflare
 
@@ -182,7 +205,7 @@ passage suivant les effacerait.
 - [ ] Générer la clé IndexNow **depuis Bing Webmaster Tools**. Une clé inventée
       renvoie un 403 permanent, qui signifie « clé invalide » et non « trop de
       requêtes ».
-- [ ] Programmer un build quotidien (Deploy Hook) pour la publication différée.
+- [ ] Renseigner les deux secrets et la variable GitHub du workflow de déploiement.
 - [ ] Vérifier l'aperçu de partage sur LinkedIn et Facebook.
 
 ## Ce qui plafonne les résultats
