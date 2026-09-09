@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="TalentCare Santé">
+  <rect width="32" height="32" rx="8" fill="#0284c5"/>
+  <path d="M25.3 18.7c1.99-1.95 4-4.28 4-7.33A7.33 7.33 0 0 0 22 4c-2.35 0-4 .67-6 2.67C14 4.67 12.35 4 10 4a7.33 7.33 0 0 0-7.33 7.37c0 3.06 2 4.4 4 7.33L16 28Z"
+        transform="scale(0.72) translate(6.2 5.5)"
+        fill="none" stroke="#f0f9ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
