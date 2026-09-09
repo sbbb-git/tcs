@@ -161,14 +161,12 @@ Onglet **Secrets** :
 | `CLOUDFLARE_API_TOKEN` | Token d'API avec la permission *Cloudflare Pages : Edit* |
 | `CLOUDFLARE_ACCOUNT_ID` | Identifiant de compte Cloudflare |
 
-Onglet **Variables** :
+Le nom du projet Pages est fixé dans le workflow (`PROJECT_NAME`,
+`talentcaresante`). Il est créé automatiquement au premier déploiement s'il
+n'existe pas encore.
 
-| Nom | Valeur |
-|---|---|
-| `CLOUDFLARE_PROJECT_NAME` | Nom exact du projet Pages |
-
-Tant que l'un des trois manque, le workflow s'arrête à la première étape avec la
-liste de ce qui manque, sans rien déployer.
+Tant que l'un des deux secrets manque, le workflow s'arrête à la première étape
+en le nommant, sans rien déployer.
 
 ### Publication différée
 

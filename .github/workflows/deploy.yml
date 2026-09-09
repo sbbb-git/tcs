@@ -21,6 +21,10 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  # Nom du projet Cloudflare Pages. Créé au premier déploiement s'il n'existe pas.
+  PROJECT_NAME: talentcaresante
+
 jobs:
   deploy:
     name: Construire et publier
@@ -33,14 +37,12 @@ jobs:
 
       - name: Vérifier la configuration
         env:
-          PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
           ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           missing=""
-          [ -n "$PROJECT_NAME" ] || missing="$missing\n  - variable CLOUDFLARE_PROJECT_NAME (Settings > Secrets and variables > Actions > Variables)"
-          [ -n "$ACCOUNT_ID" ]   || missing="$missing\n  - secret CLOUDFLARE_ACCOUNT_ID"
-          [ -n "$API_TOKEN" ]    || missing="$missing\n  - secret CLOUDFLARE_API_TOKEN"
+          [ -n "$ACCOUNT_ID" ] || missing="$missing\n  - secret CLOUDFLARE_ACCOUNT_ID"
+          [ -n "$API_TOKEN" ]  || missing="$missing\n  - secret CLOUDFLARE_API_TOKEN"
           if [ -n "$missing" ]; then
             printf 'Configuration incomplète :%b\n' "$missing"
             exit 1
@@ -63,6 +65,19 @@ jobs:
       - name: Contrôles SEO
         run: npm run seo:check
 
+      # `pages deploy` échoue si le projet n'existe pas ; on le crée au premier
+      # passage. La commande est jouée après le build pour ne rien créer si la
+      # construction échoue, et son échec est ignoré lorsque le projet est déjà là.
+      - name: Créer le projet Pages si nécessaire
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages project create ${{ env.PROJECT_NAME }}
+            --production-branch=main
+
       - name: Publier sur Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
@@ -70,5 +85,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: >-
             pages deploy out
-            --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }}
+            --project-name=${{ env.PROJECT_NAME }}
             --branch=main
+            --commit-dirty=true
