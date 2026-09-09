@@ -1,0 +1,86 @@
+name: Configuration Cloudflare
+
+# Utilitaire d'administration, déclenché à la main. Il inspecte le compte
+# Cloudflare et rattache le domaine au projet Pages. La session Claude n'a pas
+# accès à l'API Cloudflare ; la CI dispose du token.
+on:
+  workflow_dispatch:
+    inputs:
+      attach_domain:
+        description: "Rattacher le domaine au projet Pages"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_NAME: talentcaresante
+  DOMAIN: talentcaresante.fr
+
+jobs:
+  setup:
+    name: Inspecter et configurer
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Lister les projets Pages
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # Ni le token ni l'identifiant de compte ne sont affichés.
+          curl -sS -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects" \
+            -o projects.json || true
+
+          python3 - <<'PY'
+          import json
+          data = json.load(open("projects.json"))
+          if not data.get("success"):
+              print("L'API a refusé la requête :")
+              for err in data.get("errors", []):
+                  print(f"  [{err.get('code')}] {err.get('message')}")
+              raise SystemExit(1)
+          for p in data.get("result", []):
+              print(f"  {p['name']:<20} {p.get('subdomain')}")
+              print(f"  {'':<20} domaines : {', '.join(p.get('domains') or []) or '(aucun)'}")
+          PY
+
+      - name: Rattacher le domaine
+        if: ${{ inputs.attach_domain }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DOMAIN: ${{ env.DOMAIN }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"name\":\"$DOMAIN\"}" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains" \
+            -o attach.json || true
+
+          python3 - <<'PY'
+          import json, os
+          domain = os.environ["DOMAIN"]
+          data = json.load(open("attach.json"))
+          if data.get("success"):
+              res = data.get("result") or {}
+              print(f"Domaine {domain} rattaché.")
+              print(f"  statut       : {res.get('status')}")
+              print(f"  vérification : {(res.get('validation_data') or {}).get('status')}")
+              print("\nSi le statut reste en attente, l'enregistrement DNS manque :")
+              print(f"  CNAME  {domain}  ->  {os.environ['PROJECT_NAME']}.pages.dev  (proxy activé)")
+          else:
+              print(f"Le rattachement de {domain} a échoué :")
+              for err in data.get("errors", []):
+                  code, msg = err.get("code"), err.get("message")
+                  print(f"  [{code}] {msg}")
+                  if code == 9109 or "authentication" in str(msg).lower():
+                      print("  -> le token n'a probablement que la permission Pages:Edit.")
+              print("\nÀ faire à la main dans le tableau de bord :")
+              print(f"  Workers & Pages > {os.environ['PROJECT_NAME']} > Custom domains > Set up a custom domain")
+              raise SystemExit(1)
+          PY
