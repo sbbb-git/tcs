@@ -41,6 +41,12 @@ export default function MedecinsSection() {
       eyebrow="Vous êtes praticien"
       title="Comment on travaille avec vous"
       intro="Changer de poste engage plusieurs années. Autant partir de ce que vous voulez faire, avant de regarder qui recrute."
+      image={{
+        src: "/images/consultation-patient.webp",
+        alt: "Médecin en consultation avec un patient, dans un cabinet",
+        width: 1400,
+        height: 560,
+      }}
       features={features}
       cta={{ href: "/offres-emploi/", label: "Voir les postes" }}
     />

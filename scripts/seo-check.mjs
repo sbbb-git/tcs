@@ -231,6 +231,7 @@ for (const file of files) {
     if (!description) fail(route, "meta description absente.");
     if (!ogImage) fail(route, "og:image absente.");
     else checkOgImage(route, html, ogImage);
+    checkPhotos(route, html);
     if (!canonical) fail(route, "URL canonique absente.");
 
     if (title) {
@@ -484,5 +485,41 @@ function checkOgImage(route, html, ogImage) {
       route,
       `og:image annoncée ${declared.width} x ${declared.height} mais le fichier fait ${size.width} x ${size.height}.`,
     );
+  }
+}
+/*
+ * Une même photographie posée deux fois sur la même page.
+ *
+ * Le défaut a l'air anodin et ne l'est pas : sur un site voisin, le même
+ * visage servait à la fois de membre de l'équipe et de client en témoignage,
+ * des deux côtés de la table. Personne ne l'a vu, et c'est resté en ligne des
+ * mois, parce qu'un doublon ne casse rien et ne se remarque qu'en regardant.
+ *
+ * La règle porte sur la page et non sur le site : une même photo peut
+ * légitimement illustrer une liste et la fiche qu'elle annonce.
+ *
+ * Le contrôle vérifie aussi que chaque photo porte un `alt`. Un alt vide est
+ * accepté, c'est une instruction volontaire pour les lecteurs d'écran ; un
+ * attribut absent est un oubli.
+ */
+function checkPhotos(route, html) {
+  const balises = html.match(/<img\b[^>]*>/gi) ?? [];
+  const vues = new Map();
+
+  for (const balise of balises) {
+    const src = /\ssrc=["']([^"']+)["']/i.exec(balise)?.[1];
+    if (!src || src.startsWith("data:")) continue;
+
+    if (!/\salt=["']/i.test(balise)) {
+      fail(route, `image sans attribut alt : ${src}`);
+    }
+
+    vues.set(src, (vues.get(src) ?? 0) + 1);
+  }
+
+  for (const [src, nombre] of vues) {
+    if (nombre > 1) {
+      fail(route, `même image posée ${nombre} fois sur la page : ${src}`);
+    }
   }
 }
