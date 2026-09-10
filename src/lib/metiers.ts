@@ -1,34 +1,28 @@
 import type { IconName } from "@/components/Icon";
 
 /**
- * Taxonomie des métiers du jobboard.
+ * Spécialités couvertes par le jobboard.
  *
- * Volontairement courte. Une page métier n'existe que si l'on a de quoi y
- * écrire quelque chose de substantiel : trente pages quasi identiques
- * déclinant une même trame sont des pages satellites, que Google traite comme
- * telles. Mieux vaut huit pages qui répondent réellement à la question.
+ * Le périmètre est volontairement étroit : médecins et sages-femmes, sur Paris.
+ * Une taxonomie large produirait des pages sans offres derrière, et des pages
+ * quasi identiques déclinant une même trame, que Google traite comme des pages
+ * satellites.
  *
- * Pour ajouter un métier : écrire son contenu éditorial ici, puis créer les
- * offres correspondantes dans content/offres.
+ * Pour ajouter une spécialité : écrire son contenu ici, puis créer les offres
+ * correspondantes dans content/offres.
  */
 export type Metier = {
   slug: string;
-  /** Libellé affiché, au singulier. */
   name: string;
-  /** Libellé pluriel, pour les titres de page. */
   plural: string;
   icon: IconName;
-  /** Balise title de la page métier, 60 caractères maximum. */
+  /** Balise title, 60 caractères maximum. */
   title: string;
   /** Meta description, 110 à 160 caractères. */
   description: string;
-  /** Chapeau affiché sous le H1. */
   intro: string;
-  /** Corps éditorial de la page. C'est lui qui la rend indexable. */
   sections: { heading: string; paragraphs: string[] }[];
-  /** Questions réellement posées, reprises en FAQPage. */
   faq: { question: string; answer: string }[];
-  /** Article de blog approfondissant le sujet. */
   relatedPost?: string;
 };
 
@@ -38,238 +32,280 @@ export const metiers: Metier[] = [
     name: "Médecin généraliste",
     plural: "Médecins généralistes",
     icon: "stethoscope",
-    title: "Emploi médecin généraliste | TalentCare Santé",
+    title: "Emploi médecin généraliste à Paris | TalentCare",
     description:
-      "Postes de médecin généraliste en centre de santé, maison de santé, clinique ou établissement public. Salariat ou libéral, partout en France.",
+      "Postes de médecin généraliste à Paris : centre de santé, cabinet de groupe, salariat ou libéral. Patientèle constituée, pas de gestion administrative.",
     intro:
-      "Le médecin généraliste est le profil le plus recherché du secteur, et celui pour lequel les modes d'exercice se sont le plus diversifiés. Salariat en centre de santé, installation en maison de santé, exercice mixte : les options sont plus nombreuses qu'il y a dix ans.",
+      "À Paris, le médecin généraliste choisit surtout entre deux modèles : le salariat en centre de santé, sans gestion de cabinet, et l'installation en cabinet de groupe. Les deux recrutent.",
     sections: [
       {
-        heading: "Les modes d'exercice possibles",
+        heading: "Salariat ou installation",
         paragraphs: [
-          "Le salariat en centre de santé a changé la donne pour beaucoup de praticiens. Il supprime la gestion de cabinet, l'investissement initial et l'incertitude du revenu des premières années. En contrepartie, l'organisation est collective et l'autonomie moindre qu'en libéral.",
-          "L'installation en maison de santé pluriprofessionnelle conserve l'indépendance du libéral tout en supprimant l'isolement. Chacun garde sa patientèle et ses honoraires ; les locaux, une partie des moyens et les protocoles de coordination sont mis en commun.",
-          "L'exercice mixte, combinant une part salariée et une part libérale, ou une part présentielle et une part en téléconsultation, correspond à une demande croissante. Un établissement qui refuse cette souplesse écarte mécaniquement une partie des candidats.",
+          "Le salariat en centre de santé supprime la gestion de cabinet, l'investissement de départ et les charges professionnelles. Le revenu est prévisible dès le premier mois. L'organisation est collective, donc moins souple qu'en libéral.",
+          "L'installation en cabinet de groupe garde l'indépendance du libéral. À Paris, le frein n'est pas la patientèle, elle existe, mais le loyer et le coût d'installation.",
+          "L'exercice mixte, une part salariée et une part libérale, reste possible et fréquent.",
         ],
       },
       {
-        heading: "Ce qui pèse dans une décision d'installation",
+        heading: "Ce qui se vérifie avant d'accepter",
         paragraphs: [
-          "La rémunération compte, mais elle arrive rarement en tête des motifs cités. La prévisibilité du planning, la présence d'un relais en cas d'absence, la taille de l'équipe et l'accès aux avis spécialisés pèsent davantage.",
-          "Le cadre de vie est déterminant hors des grandes métropoles : accessibilité, logement, emploi du conjoint, scolarisation des enfants. Les territoires qui traitent ces sujets avec un interlocuteur unique recrutent mieux que ceux qui se contentent d'annoncer une aide financière.",
-          "Le classement du territoire en zone sous-dotée ouvre par ailleurs droit à des dispositifs d'accompagnement à l'installation, dont le détail se vérifie auprès de l'Agence régionale de santé et de l'Assurance Maladie.",
+          "Le nombre de praticiens de la structure et leur ancienneté. Une équipe qui tourne beaucoup signale un problème d'organisation.",
+          "La durée de consultation retenue et le nombre de patients attendus par demi-journée. C'est ce qui détermine le rythme réel du poste.",
+          "Le secrétariat, la coordination et les outils. À charge égale, ils font la différence entre une journée tenable et une journée subie.",
         ],
       },
     ],
     faq: [
       {
-        question: "Peut-on exercer en salariat comme médecin généraliste ?",
+        question: "Peut-on exercer en salariat comme généraliste à Paris ?",
         answer:
-          "Oui, notamment en centre de santé, en établissement de santé ou en service de santé au travail. Le praticien est alors salarié de la structure, sans gestion de cabinet ni charges professionnelles, avec la couverture sociale du salariat.",
+          "Oui. Les centres de santé parisiens salarient leurs médecins : pas de gestion de cabinet, pas de charges professionnelles, couverture sociale du salariat et revenu connu à l'avance.",
       },
       {
-        question: "Faut-il s'installer en zone sous-dotée pour trouver un poste ?",
+        question: "Faut-il racheter une patientèle à Paris ?",
         answer:
-          "Non. La demande existe sur tout le territoire, y compris en zone dense. Les zones sous-dotées offrent en revanche des dispositifs d'aide à l'installation et une patientèle immédiatement constituée, ce qui raccourcit la montée en charge.",
+          "Pas en centre de santé, où la patientèle est celle de la structure. En installation libérale, la reprise d'un cabinet existant reste une option, mais elle n'est pas la seule : la demande parisienne permet aussi de constituer une patientèle.",
       },
     ],
     relatedPost: "exercice-coordonne-msp-centre-de-sante-cpts",
   },
   {
-    slug: "medecin-coordonnateur",
-    name: "Médecin coordonnateur",
-    plural: "Médecins coordonnateurs",
-    icon: "fileCheck",
-    title: "Emploi médecin coordonnateur EHPAD | TalentCare",
+    slug: "radiologue",
+    name: "Radiologue",
+    plural: "Radiologues",
+    icon: "scan",
+    title: "Emploi radiologue à Paris | TalentCare Santé",
     description:
-      "Postes de médecin coordonnateur en EHPAD : missions réglementées, temps partiel ou mutualisé entre structures, qualifications admises.",
+      "Postes de radiologue à Paris en centre d'imagerie et en établissement. Plateau technique, part de téléradiologie et organisation des vacations.",
     intro:
-      "Le poste de médecin coordonnateur figure parmi les plus durablement vacants du secteur médico-social. La fonction est pourtant accessible à des profils variés, à condition d'en comprendre le périmètre réel.",
+      "L'imagerie parisienne est dense mais les postes restent difficiles à pourvoir. Ce qui distingue deux offres tient au plateau, à la part de téléradiologie et au rythme des vacations.",
     sections: [
       {
-        heading: "Une fonction de coordination, pas de suivi médical",
+        heading: "Le plateau détermine le poste",
         paragraphs: [
-          "C'est la confusion la plus répandue, et celle qui écarte le plus de candidats. Le médecin coordonnateur n'assure pas le suivi médical courant des résidents, qui reste celui de leur médecin traitant. Il élabore le projet de soins, donne un avis sur les admissions, anime la commission de coordination gériatrique et fait le lien avec les praticiens du territoire.",
-          "Ses missions et les qualifications requises sont fixées par le code de l'action sociale et des familles. Elles ne se négocient pas d'un établissement à l'autre.",
+          "Équipements disponibles, âge du parc, délais de rendez-vous, part de scanner et d'IRM par rapport à la radiologie conventionnelle et à l'échographie. Un radiologue évalue d'abord cela.",
+          "Les autorisations d'équipement lourd relèvent de l'Agence régionale de santé. Un centre qui attend une autorisation et un centre qui l'a obtenue ne proposent pas la même activité.",
         ],
       },
       {
-        heading: "Un temps de travail souvent partiel",
+        heading: "Téléradiologie et organisation",
         paragraphs: [
-          "Le temps de présence exigé est proportionnel à la capacité d'accueil de l'établissement, ce qui fait que la plupart des postes ne sont pas des temps pleins. C'est la principale difficulté de recrutement, et la principale marge de manœuvre.",
-          "Beaucoup de praticiens construisent un temps plein en cumulant plusieurs structures d'un même territoire, ou en conservant une activité clinique par ailleurs. Un établissement qui propose explicitement cette organisation élargit nettement son vivier.",
-        ],
-      },
-      {
-        heading: "Plusieurs voies d'accès à la fonction",
-        paragraphs: [
-          "La réglementation admet le diplôme d'études spécialisées de gériatrie, la capacité de gérontologie, un diplôme universitaire de médecin coordonnateur, ou une formation continue attestée. Le vivier ne se limite donc pas aux gériatres.",
-          "Un médecin généraliste expérimenté peut accéder à la fonction moyennant une formation, que certains établissements financent dans le cadre du recrutement. C'est un argument rarement mis en avant et souvent décisif.",
+          "La part d'interprétation à distance varie fortement d'une structure à l'autre. Elle peut être un atout, elle peut aussi vider le poste de sa dimension clinique. La proportion doit être annoncée.",
+          "Le rythme des vacations, la participation à la permanence des soins et l'existence d'une équipe de manipulateurs stable complètent la description.",
         ],
       },
     ],
     faq: [
       {
-        question: "Un généraliste peut-il devenir médecin coordonnateur ?",
+        question: "Quelle est la part de téléradiologie dans un poste ?",
         answer:
-          "Oui. Outre le diplôme d'études spécialisées de gériatrie et la capacité de gérontologie, la réglementation admet le diplôme universitaire de médecin coordonnateur d'EHPAD et une formation continue attestée. Certains établissements financent ce parcours.",
+          "Elle dépend entièrement de la structure, de quasi nulle à majoritaire. C'est une question à poser avant tout entretien : elle change la nature du travail et le rapport au patient.",
       },
       {
-        question: "Peut-on coordonner plusieurs EHPAD ?",
+        question: "Faut-il un DES pour exercer en imagerie ?",
         answer:
-          "Oui, et c'est fréquent. Le temps de coordination exigé étant proportionnel à la capacité de l'établissement, un praticien construit souvent son activité en cumulant plusieurs structures.",
+          "L'exercice de la radiologie et de l'imagerie médicale suppose le diplôme d'études spécialisées correspondant. Certaines activités d'échographie sont accessibles à d'autres praticiens titulaires d'une formation dédiée.",
       },
     ],
-    relatedPost: "recruter-medecin-coordonnateur-ehpad",
   },
   {
-    slug: "infirmier",
-    name: "Infirmier",
-    plural: "Infirmiers",
-    icon: "heart",
-    title: "Emploi infirmier IDE | TalentCare Santé",
+    slug: "orl",
+    name: "ORL",
+    plural: "ORL",
+    icon: "ear",
+    title: "Emploi ORL à Paris | TalentCare Santé",
     description:
-      "Postes d'infirmier diplômé d'État en hôpital, clinique, EHPAD et centre de santé. Fonction publique, salariat privé ou exercice libéral.",
+      "Postes d'oto-rhino-laryngologiste à Paris, en cabinet de groupe comme en établissement. Part de consultation, d'exploration et de chirurgie.",
     intro:
-      "Le métier d'infirmier recouvre des réalités très différentes selon le service, la structure et le statut. Ce qui distingue deux postes tient rarement à la rémunération, largement contrainte, et presque toujours à l'organisation du travail.",
+      "L'ORL couvre un éventail large, de la consultation simple à la chirurgie cervico-faciale. Le contenu d'un poste dépend de ce que la structure permet réellement.",
     sections: [
       {
-        heading: "Les cadres d'exercice",
+        heading: "Trois activités très différentes",
         paragraphs: [
-          "En fonction publique hospitalière, l'infirmier relève d'une grille indiciaire nationale, sur un poste titulaire ou contractuel. Dans le secteur privé, la convention collective applicable à la structure fixe le cadre de la rémunération.",
-          "L'exercice libéral suppose une durée d'expérience préalable en structure de soins avant conventionnement, ce qui fait des premières années de salariat un passage obligé pour les jeunes diplômés.",
+          "La consultation, avec sa part d'audiologie et de vertiges. L'exploration fonctionnelle, qui suppose un équipement dédié. La chirurgie, qui suppose un accès au bloc.",
+          "Un poste décrit comme « ORL » sans plus de précision peut recouvrir l'une ou l'ensemble de ces activités. C'est la première chose à clarifier.",
         ],
       },
       {
-        heading: "Ce qu'un candidat regarde vraiment",
+        heading: "Ce que la structure doit préciser",
         paragraphs: [
-          "L'effectif réel du service, et non l'effectif théorique. La stabilité du planning et le nombre de rappels sur repos. La qualité de la collaboration avec l'équipe médicale. La relation avec l'encadrement de proximité.",
-          "Les perspectives comptent aussi : accès aux spécialisations, à la formation continue, à la pratique avancée. Un poste présenté comme un point d'arrivée attire moins qu'un poste présenté comme une étape.",
+          "L'équipement disponible en consultation : audiométrie, vidéonystagmographie, fibroscopie, matériel d'exploration.",
+          "L'accès au bloc s'il y a une activité chirurgicale : nombre de vacations, spécialités partagées, personnel de bloc.",
+          "L'articulation avec les audioprothésistes et les orthophonistes du secteur.",
         ],
       },
     ],
     faq: [
       {
-        question: "Faut-il être inscrit à l'Ordre pour exercer ?",
+        question: "Faut-il un plateau d'exploration pour exercer l'ORL en ville ?",
         answer:
-          "Oui, l'inscription au tableau de l'Ordre national des infirmiers est obligatoire pour exercer, quel que soit le mode d'exercice. Elle emporte l'attribution d'un identifiant au répertoire partagé des professionnels de santé.",
+          "Une part de l'activité s'exerce sans équipement lourd, mais l'audiométrie et la fibroscopie changent ce qu'il est possible de faire en consultation. Un cabinet qui en dispose et un cabinet qui adresse systématiquement ne proposent pas le même exercice.",
       },
       {
-        question: "Un infirmier diplômé à l'étranger peut-il exercer en France ?",
+        question: "Un poste d'ORL inclut-il forcément de la chirurgie ?",
         answer:
-          "Cela dépend du lieu d'obtention du diplôme. Un diplôme délivré dans l'Union européenne relève de la reconnaissance des qualifications professionnelles ; un diplôme obtenu hors de cette zone suppose une procédure d'autorisation d'exercice distincte.",
+          "Non. Beaucoup de postes parisiens sont exclusivement en consultation et exploration. À l'inverse, un praticien qui souhaite maintenir une activité chirurgicale doit vérifier l'accès effectif au bloc et le nombre de vacations.",
       },
     ],
-    relatedPost: "recruter-infirmier-etablissement-sante",
   },
   {
-    slug: "infirmier-anesthesiste",
-    name: "Infirmier anesthésiste",
-    plural: "Infirmiers anesthésistes",
-    icon: "shield",
-    title: "Emploi infirmier anesthésiste IADE | TalentCare",
+    slug: "medecin-esthetique",
+    name: "Médecin esthétique",
+    plural: "Médecins esthétiques",
+    icon: "sparkles",
+    title: "Emploi médecin esthétique à Paris | TalentCare",
     description:
-      "Postes d'infirmier anesthésiste diplômé d'État en bloc opératoire, réanimation et SMUR. Un marché en tension structurelle sur tout le territoire.",
+      "Postes de médecin esthétique à Paris en centre et en cabinet. Formation requise, cadre déontologique de la publicité et organisation de l'activité.",
     intro:
-      "L'infirmier anesthésiste exerce au bloc, en réanimation ou en structure mobile d'urgence après une formation complémentaire de deux ans. Le vivier est restreint et la tension structurelle : un poste vacant se pourvoit rarement rapidement.",
+      "La médecine esthétique n'est pas une spécialité au sens du diplôme d'études spécialisées. Elle s'exerce sur la base d'une formation complémentaire, dans un cadre déontologique strict.",
     sections: [
       {
-        heading: "Un marché distinct de celui des infirmiers en soins généraux",
+        heading: "Un exercice encadré",
         paragraphs: [
-          "La spécialisation crée un marché à part, avec ses propres candidats et ses propres attentes. Diffuser une annonce générique d'infirmier pour un poste d'anesthésiste ne produit rien : les professionnels concernés ne s'y reconnaissent pas.",
-          "Sur ces postes, l'approche directe remplace la publication d'offres. Les praticiens visés sont en poste et ne consultent pas les annonces.",
+          "Il n'existe pas de DES de médecine esthétique. L'activité est exercée par des praticiens de différentes origines, sur la base de diplômes universitaires ou interuniversitaires dédiés.",
+          "Les règles déontologiques de la profession médicale s'appliquent intégralement, en particulier sur la communication et l'information du patient. Elles sont consultables auprès du Conseil national de l'Ordre des médecins.",
         ],
       },
       {
-        heading: "Ce qui fait la différence entre deux blocs",
+        heading: "Ce qui distingue deux postes",
         paragraphs: [
-          "Le nombre de salles, la nature des interventions, l'organisation des gardes et astreintes, l'effectif qui les couvre. Un poste avec une permanence des soins lourde et une équipe incomplète reste vacant quel que soit le niveau de rémunération.",
-          "L'accès à la formation continue et la possibilité d'intervenir sur plusieurs secteurs, bloc et réanimation par exemple, comptent également dans la décision.",
+          "Les actes réellement pratiqués et le matériel disponible : injections, lasers, appareils dédiés. Un centre équipé et un cabinet sans plateau ne proposent pas la même activité.",
+          "Le mode de rémunération, qui varie sensiblement selon les structures, et la part de consultation initiale par rapport aux actes.",
+          "La provenance de la patientèle et la façon dont la structure la constitue.",
         ],
       },
     ],
     faq: [
       {
-        question: "Quelle formation pour devenir infirmier anesthésiste ?",
+        question: "Quelle formation pour exercer la médecine esthétique ?",
         answer:
-          "Le diplôme d'État d'infirmier anesthésiste s'obtient après une formation complémentaire de deux ans, accessible aux infirmiers justifiant d'une expérience professionnelle préalable. Il confère des compétences propres au bloc opératoire et à la réanimation.",
+          "Il n'existe pas de diplôme d'études spécialisées correspondant. L'exercice repose sur des diplômes universitaires ou interuniversitaires, et sur la formation continue. Les conditions se vérifient auprès du conseil départemental de l'Ordre.",
+      },
+      {
+        question: "La publicité est-elle autorisée en médecine esthétique ?",
+        answer:
+          "La communication des médecins est encadrée par le code de déontologie. Les possibilités ont évolué ces dernières années, mais restent bornées. C'est un point à vérifier auprès de l'Ordre plutôt qu'à supposer.",
       },
     ],
-    relatedPost: "recruter-infirmier-etablissement-sante",
   },
   {
-    slug: "aide-soignant",
-    name: "Aide-soignant",
-    plural: "Aides-soignants",
-    icon: "users",
-    title: "Emploi aide-soignant | TalentCare Santé",
+    slug: "sage-femme",
+    name: "Sage-femme",
+    plural: "Sages-femmes",
+    icon: "baby",
+    title: "Emploi sage-femme à Paris | TalentCare Santé",
     description:
-      "Postes d'aide-soignant diplômé d'État en hôpital, EHPAD et service de soins à domicile. Diplôme requis, passerelles et conditions d'exercice.",
+      "Postes de sage-femme à Paris en maternité, cabinet et centre de santé. Profession médicale, suivi gynécologique de prévention et contraception.",
     intro:
-      "Le métier d'aide-soignant concentre les tensions du secteur. C'est aussi celui où l'écart entre les établissements qui recrutent et ceux qui ne recrutent pas s'explique le plus directement par les conditions de travail.",
+      "La sage-femme est une profession médicale, avec un champ de compétences plus large que ce que l'on suppose souvent : suivi de grossesse, accouchement, suites de couches, mais aussi suivi gynécologique de prévention et contraception.",
     sections: [
       {
-        heading: "Le diplôme et le périmètre d'exercice",
+        heading: "Des cadres d'exercice distincts",
         paragraphs: [
-          "L'exercice suppose le diplôme d'État d'aide-soignant, accessible par la formation initiale, l'apprentissage ou la validation des acquis de l'expérience. Cette dernière voie reste largement sous-utilisée alors qu'elle permet de qualifier des agents déjà en poste.",
-          "L'aide-soignant exerce en collaboration avec l'infirmier et sous sa responsabilité, dans un périmètre défini. Faire glisser vers un agent non diplômé des tâches relevant de cette qualification expose l'établissement et met l'agent en difficulté.",
+          "En maternité, l'activité s'organise autour de la salle de naissance, des consultations et des suites de couches. Le niveau de la maternité et son volume d'accouchements déterminent le rythme.",
+          "En libéral ou en centre de santé, l'activité penche vers le suivi de grossesse, la préparation à la naissance, la rééducation périnéale et le suivi gynécologique de prévention.",
         ],
       },
       {
-        heading: "Recruter et garder",
+        heading: "Ce qui se vérifie",
         paragraphs: [
-          "Le taux de départ se joue sur l'effectif réel, la stabilité du planning, la qualité du binôme avec l'infirmier et la relation avec le cadre de santé. Ces quatre points reviennent dans presque tous les motifs de départ exprimés.",
-          "Les perspectives pèsent aussi : accompagner un projet de passerelle vers la formation infirmière fidélise fortement, y compris lorsque l'agent quitte ensuite son poste pour revenir comme infirmier.",
+          "L'inscription au tableau de l'Ordre des sages-femmes est obligatoire pour exercer.",
+          "En structure, l'effectif réel en salle de naissance et le ratio par rapport au nombre d'accouchements. C'est le premier facteur de tension du métier.",
         ],
       },
     ],
     faq: [
       {
-        question: "Peut-on exercer sans le diplôme d'État d'aide-soignant ?",
+        question: "Une sage-femme peut-elle assurer un suivi gynécologique ?",
         answer:
-          "Non. Le diplôme est requis pour exercer comme aide-soignant. Un agent sans ce diplôme peut occuper d'autres fonctions, mais il ne relève ni du même périmètre d'intervention ni de la même qualification.",
+          "Oui. Le champ de compétences des sages-femmes comprend le suivi gynécologique de prévention et la prescription de contraception pour les femmes en bonne santé. Le détail figure au code de la santé publique.",
       },
       {
-        question: "Un aide-soignant peut-il devenir infirmier ?",
+        question: "Faut-il être inscrite à l'Ordre pour exercer ?",
         answer:
-          "Oui, des passerelles existent vers la formation en soins infirmiers, avec des modalités d'accès aménagées pour les professionnels en exercice.",
+          "Oui, l'inscription au tableau de l'Ordre des sages-femmes conditionne l'exercice, quel que soit le mode d'activité.",
       },
     ],
-    relatedPost: "recruter-aide-soignant-fideliser",
   },
   {
-    slug: "pharmacien",
-    name: "Pharmacien",
-    plural: "Pharmaciens",
-    icon: "briefcase",
-    title: "Emploi pharmacien officine et hôpital | TalentCare",
+    slug: "sage-femme-echographiste",
+    name: "Sage-femme échographiste",
+    plural: "Sages-femmes échographistes",
+    icon: "activity",
+    title: "Emploi sage-femme échographiste à Paris | TalentCare",
     description:
-      "Postes de pharmacien en officine, en pharmacie à usage intérieur et en établissement de santé. Inscription ordinale par section et statuts applicables.",
+      "Postes de sage-femme échographiste à Paris. Diplôme d'échographie requis, échographies de dépistage, organisation des vacations et matériel.",
     intro:
-      "Le recrutement pharmaceutique recouvre des métiers si différents que parler d'un marché unique n'a pas de sens. Officine, pharmacie à usage intérieur, biologie médicale et industrie relèvent de logiques distinctes.",
+      "L'échographie obstétricale exercée par une sage-femme suppose une formation dédiée en plus du diplôme d'État. Les structures parisiennes recrutent sur ce profil, en maternité comme en centre.",
     sections: [
       {
-        heading: "L'inscription ordinale se fait par section",
+        heading: "La formation conditionne le poste",
         paragraphs: [
-          "Particularité de la profession : l'inscription à l'Ordre national des pharmaciens se fait par section, selon l'activité exercée. Un changement d'activité peut donc supposer un changement de section, à vérifier au moment de la promesse d'embauche.",
+          "L'exercice de l'échographie obstétricale suppose un diplôme interuniversitaire d'échographie, distinct du diplôme d'État de sage-femme.",
+          "Selon la formation et l'organisation de la structure, l'activité couvre les échographies de dépistage des trois trimestres, et parfois une part de suivi.",
         ],
       },
       {
-        heading: "En établissement, le pharmacien relève des statuts médicaux",
+        heading: "Ce qui distingue deux structures",
         paragraphs: [
-          "C'est une source de confusion fréquente dans les services de ressources humaines. En établissement public, le pharmacien relève des statuts de personnel médical, avec les procédures correspondantes, et non des statuts de la fonction publique hospitalière non médicale. Un dossier instruit dans le mauvais circuit fait perdre plusieurs semaines.",
-          "Ses missions dépassent largement la dispensation : pharmacie clinique, stérilisation, préparations, dispositifs médicaux, participation aux commissions de l'établissement.",
+          "Le matériel : génération des appareils, sondes disponibles, logiciel de compte rendu.",
+          "L'organisation des vacations et le temps alloué par examen. C'est ce qui détermine la qualité possible de l'examen autant que le confort de travail.",
+          "L'articulation avec les médecins échographistes de la structure et le recours en cas d'anomalie dépistée.",
         ],
       },
     ],
     faq: [
       {
-        question: "Quelle différence entre pharmacien et préparateur en pharmacie ?",
+        question: "Une sage-femme échographiste travaille-t-elle seule ?",
         answer:
-          "Deux professions distinctes, avec des diplômes et des responsabilités différentes. Le préparateur en pharmacie hospitalière dispose de son propre diplôme et exerce sous la responsabilité du pharmacien.",
+          "Non, et c'est un point à vérifier. L'organisation doit prévoir un recours vers un médecin échographiste en cas d'anomalie dépistée. Une structure qui ne l'a pas organisé fait porter au praticien une responsabilité qui ne devrait pas être la sienne seule.",
+      },
+      {
+        question: "Quelle formation pour pratiquer l'échographie comme sage-femme ?",
+        answer:
+          "Un diplôme interuniversitaire d'échographie, suivi en complément du diplôme d'État de sage-femme. Les conditions d'accès et le contenu varient selon les universités.",
       },
     ],
-    relatedPost: "recruter-pharmacien-officine-hopital",
+  },
+  {
+    slug: "medecin-echographiste",
+    name: "Médecin échographiste",
+    plural: "Médecins échographistes",
+    icon: "target",
+    title: "Emploi médecin échographiste à Paris | TalentCare",
+    description:
+      "Postes de médecin échographiste à Paris en centre d'imagerie et en cabinet. Échographie générale, gynécologique et obstétricale, matériel et vacations.",
+    intro:
+      "L'échographie est pratiquée par des praticiens d'origines variées, titulaires d'une formation dédiée. Les centres parisiens recrutent sur ce profil, en complément ou en dehors de la radiologie.",
+    sections: [
+      {
+        heading: "Un exercice ouvert à plusieurs parcours",
+        paragraphs: [
+          "L'échographie n'est pas réservée à une spécialité unique. Elle est pratiquée par des radiologues, des gynécologues et d'autres praticiens titulaires d'un diplôme interuniversitaire d'échographie.",
+          "Le champ couvert dépend de la formation suivie : échographie générale, gynécologique et obstétricale, ou domaines plus spécifiques.",
+        ],
+      },
+      {
+        heading: "Ce qui compte dans un poste",
+        paragraphs: [
+          "Le matériel disponible et son renouvellement. En échographie, la qualité de l'appareil conditionne directement celle de l'examen.",
+          "Le temps alloué par examen et le nombre de vacations. Un rythme trop serré dégrade l'examen avant de dégrader le praticien.",
+          "L'organisation du compte rendu et l'existence d'un second avis en cas de doute.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "L'échographie est-elle réservée aux radiologues ?",
+        answer:
+          "Non. Elle est pratiquée par des praticiens de plusieurs origines dès lors qu'ils justifient d'une formation dédiée. C'est ce qui explique la variété des profils recrutés sur ces postes.",
+      },
+      {
+        question: "Quelle formation pour pratiquer l'échographie ?",
+        answer:
+          "En dehors du diplôme d'études spécialisées de radiologie, l'exercice repose sur un diplôme interuniversitaire d'échographie, dont le champ dépend de la formation suivie.",
+      },
+    ],
   },
 ];
 

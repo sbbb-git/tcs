@@ -15,7 +15,6 @@ export const site = {
   email: "talentcaresante@gmail.com",
   phone: "07 56 86 94 41",
   phoneE164: "+33756869441",
-  whatsapp: "https://wa.me/message/5WUDBKZN7KFPN1",
   formEndpoint: "https://formspree.io/f/xeeeppez",
   foundingYear: 2026,
   socials: {

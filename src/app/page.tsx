@@ -29,7 +29,15 @@ export const metadata: Metadata = pageMetadata({
 
 export default function HomePage() {
   const posts = getPosts().slice(0, 3);
-  const offers = getOffers().slice(0, 3);
+  const allOffers = getOffers();
+  const offers = allOffers.slice(0, 3);
+  // Seul le nécessaire traverse la frontière serveur/client.
+  const offerRefs = allOffers.map(({ slug, title, ville, region, reference }) => ({
+    slug,
+    title,
+    lieu: ville ?? region,
+    reference,
+  }));
 
   return (
     <>
@@ -42,7 +50,7 @@ export default function HomePage() {
       <PartnerSection />
       <LatestArticles posts={posts} />
       <HomeFaq />
-      <ContactSection />
+      <ContactSection offers={offerRefs} />
     </>
   );
 }

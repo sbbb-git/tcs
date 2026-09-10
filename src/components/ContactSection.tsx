@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Icon, type IconName } from "@/components/Icon";
 import Section, { SectionHeader } from "@/components/Section";
@@ -11,6 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { site } from "@/lib/site";
 
 type Status = "idle" | "sending" | "sent" | "error";
+
+/** Ce qu'il faut d'une offre pour composer le message pré-rempli. */
+export type OfferRef = {
+  slug: string;
+  title: string;
+  lieu: string;
+  reference: string;
+};
 
 const SOCIALS: { key: IconName; label: string; href: string }[] = [
   { key: "linkedin", label: "LinkedIn", href: site.socials.linkedin },
@@ -37,9 +45,32 @@ function Field({
   );
 }
 
-export default function ContactSection() {
+export default function ContactSection({ offers = [] }: { offers?: OfferRef[] }) {
   const [audience, setAudience] = useState("medecin");
   const [status, setStatus] = useState<Status>("idle");
+  const [prefill, setPrefill] = useState("");
+
+  /*
+   * Le bouton « Postuler » d'une annonce renvoie ici avec le slug de l'offre en
+   * paramètre. Le message est alors composé d'avance : sans cela, le candidat
+   * arrive sur un formulaire vide et l'équipe reçoit une demande sans savoir
+   * quel poste elle concerne.
+   *
+   * La lecture se fait après montage plutôt qu'au rendu : le site est exporté
+   * en statique, la page est donc identique pour tous et ne peut pas connaître
+   * le paramètre à la construction.
+   */
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get("offre");
+    if (!slug) return;
+    const offer = offers.find((o) => o.slug === slug);
+    if (!offer) return;
+    setAudience("medecin");
+    setPrefill(
+      `Bonjour,\n\nJe souhaite candidater à l'offre « ${offer.title} » ` +
+        `(${offer.lieu}, réf. ${offer.reference}).\n\n`,
+    );
+  }, [offers]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -109,22 +140,6 @@ export default function ContactSection() {
                 </a>
               </span>
             </li>
-            <li className="flex items-start gap-3.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
-                <Icon name="message" className="h-4 w-4" />
-              </span>
-              <span>
-                <span className="block text-sm font-medium">WhatsApp</span>
-                <a
-                  href={site.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-accent-100/80 transition hover:text-white"
-                >
-                  Envoyez-nous un message
-                </a>
-              </span>
-            </li>
           </ul>
 
           <div className="mt-7 border-t border-white/10 pt-6">
@@ -184,7 +199,14 @@ export default function ContactSection() {
                   </Field>
                 </div>
                 <Field id="message-medecin" label="Parlez-nous de votre recherche">
-                  <Textarea id="message-medecin" name="message" rows={4} placeholder="Type de poste recherché, localisation souhaitée, disponibilité..." />
+                  <Textarea
+                    id="message-medecin"
+                    name="message"
+                    rows={prefill ? 6 : 4}
+                    defaultValue={prefill}
+                    key={prefill}
+                    placeholder="Type de poste recherché, localisation souhaitée, disponibilité..."
+                  />
                 </Field>
                 <button type="submit" className="btn-primary w-full" disabled={sending}>
                   {sending ? (

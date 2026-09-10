@@ -10,8 +10,8 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
     links: [
       { href: "/offres-emploi/", label: "Toutes les offres" },
       { href: "/offres-emploi/metier/medecin-generaliste/", label: "Médecin généraliste" },
-      { href: "/offres-emploi/metier/infirmier/", label: "Infirmier" },
-      { href: "/offres-emploi/metier/medecin-coordonnateur/", label: "Médecin coordonnateur" },
+      { href: "/offres-emploi/metier/radiologue/", label: "Radiologue" },
+      { href: "/offres-emploi/metier/sage-femme/", label: "Sage-femme" },
     ],
   },
   {

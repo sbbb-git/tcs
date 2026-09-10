@@ -40,6 +40,14 @@ export const categoryMeta: Record<string, CategoryMeta> = {
     intro:
       "Recruter un médecin coûte cher ; le garder protège cet investissement. Ces articles portent sur ce qui se joue avant la candidature, la réputation de l'établissement, et après la signature, l'intégration et les conditions d'exercice au quotidien.",
   },
+  "specialites-medicales": {
+    name: "Spécialités médicales",
+    title: "Recrutement par spécialité médicale | TalentCare",
+    description:
+      "Anesthésie, psychiatrie, urgences, radiologie, gériatrie, médecine du travail : ce qui distingue le marché du recrutement d'une spécialité à l'autre.",
+    intro:
+      "Le marché du recrutement médical n'est pas un marché unique. La permanence des soins en anesthésie, la sectorisation en psychiatrie, le plateau technique en radiologie ou l'absence de garde en médecine du travail créent des dynamiques sans rapport entre elles. Ces analyses traitent chaque spécialité pour ce qu'elle est.",
+  },
   "demographie-medicale": {
     name: "Démographie médicale",
     title: "Démographie médicale en France | TalentCare Santé",
@@ -54,6 +62,7 @@ export const categoryMeta: Record<string, CategoryMeta> = {
 export const categoryOrder = [
   "recrutement-medical",
   "remuneration-et-statuts",
+  "specialites-medicales",
   "attractivite-et-fidelisation",
   "demographie-medicale",
 ];

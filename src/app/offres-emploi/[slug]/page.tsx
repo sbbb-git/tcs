@@ -136,7 +136,10 @@ export default async function OfferPage({ params }: Params) {
                 Votre candidature reste confidentielle et n&apos;est transmise
                 qu&apos;avec votre accord explicite.
               </p>
-              <Link href="/#contact" className="btn-primary mt-5 w-full">
+              <Link
+                href={`/?offre=${offer.slug}#contact`}
+                className="btn-primary mt-5 w-full"
+              >
                 <Icon name="send" className="h-[18px] w-[18px]" />
                 Postuler
               </Link>
