@@ -22,6 +22,10 @@ on:
         description: "Rediriger www vers l'apex en 301"
         type: boolean
         default: false
+      ai_bots:
+        description: "Robots IA : sonder puis ouvrir aux robots qui citent"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -326,4 +330,82 @@ jobs:
               print("Création de l'enregistrement www refusée :")
               explain(dns)
               sys.exit(1)
+          PY
+
+      # Le blocage des robots IA vient du robots.txt managé de Cloudflare, pas
+      # du site : src/app/robots.ts autorise déjà les robots de recherche IA,
+      # mais Cloudflare injecte ses propres Disallow au-dessus. On sonde
+      # d'abord ce que le token voit, puis on tente le réglage.
+      - name: Robots IA
+        if: ${{ inputs.ai_bots }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DOMAIN: ${{ env.DOMAIN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+
+          domain = os.environ["DOMAIN"]
+          account = os.environ["CF_ACCOUNT_ID"]
+          token = os.environ["CF_API_TOKEN"]
+          api = "https://api.cloudflare.com/client/v4"
+
+          def call(method, path, body=None):
+              cmd = ["curl", "-sS", "-X", method,
+                     "-H", f"Authorization: Bearer {token}",
+                     "-H", "Content-Type: application/json"]
+              if body is not None:
+                  cmd += ["-d", json.dumps(body)]
+              cmd.append(f"{api}{path}")
+              out = subprocess.run(cmd, capture_output=True, text=True).stdout
+              try:
+                  return json.loads(out)
+              except json.JSONDecodeError:
+                  return {"success": False, "errors": [{"code": 0, "message": out[:300]}]}
+
+          def show(label, res):
+              if res.get("success"):
+                  print(f"  OK   {label}")
+                  return True
+              codes = ", ".join(f"[{e.get('code')}] {e.get('message')}" for e in res.get("errors", []))
+              print(f"  NON  {label} :: {codes}")
+              return False
+
+          zone = call("GET", f"/zones?name={domain}")
+          if not zone.get("success") or not zone.get("result"):
+              print("Zone illisible."); raise SystemExit(1)
+          zone_id = zone["result"][0]["id"]
+          print(f"Zone : {zone_id}\n")
+
+          print("Sondage des points d'entrée :")
+          probes = [
+              ("réglages de zone", "GET", f"/zones/{zone_id}/settings"),
+              ("robots.txt managé (zone)", "GET", f"/zones/{zone_id}/settings/managed_robots_txt"),
+              ("AI Crawl Control (compte)", "GET", f"/accounts/{account}/ai-crawl-control/robots_txt"),
+              ("AI Crawl Control (zone)", "GET", f"/zones/{zone_id}/ai-crawl-control/robots_txt"),
+              ("bots IA (zone)", "GET", f"/zones/{zone_id}/bot_management"),
+          ]
+          reachable = {}
+          for label, method, path in probes:
+              res = call(method, path)
+              if show(label, res):
+                  reachable[label] = res
+
+          settings = reachable.get("réglages de zone")
+          if settings:
+              print("\nRéglages liés aux robots ou à l'IA :")
+              found = False
+              for s in settings.get("result", []):
+                  sid = s.get("id", "")
+                  if any(k in sid for k in ("robot", "ai_", "_ai", "crawl", "bot")):
+                      print(f"  {sid} = {json.dumps(s.get('value'))} (modifiable: {s.get('editable')})")
+                      found = True
+              if not found:
+                  print("  aucun")
+
+          print("\nTentative de désactivation du robots.txt managé :")
+          for path in (f"/zones/{zone_id}/settings/managed_robots_txt",
+                       f"/accounts/{account}/ai-crawl-control/robots_txt"):
+              show(path, call("PATCH", path, {"value": "off", "enabled": False}))
           PY
