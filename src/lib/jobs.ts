@@ -158,3 +158,38 @@ export function validThrough(offer: Offer): string {
   from.setUTCMonth(from.getUTCMonth() + (offer.permanent ? 6 : 12));
   return from.toISOString().slice(0, 10);
 }
+
+/**
+ * Offres à mettre en avant au bas d'un article.
+ *
+ * Un article peut nommer des métiers en frontmatter ; sinon les annonces sont
+ * distribuées à tour de rôle entre les articles plutôt que de mettre les trois
+ * mêmes partout. Sans cette rotation, les dernières offres publiées
+ * capteraient tous les liens internes et les autres n'en recevraient que deux,
+ * ceux de la page liste et de la page métier.
+ *
+ * Le tour de rôle part du rang de l'article dans la liste, et non d'un hachage
+ * de son slug : un hachage laisse des trous, c'est-à-dire des annonces qu'aucun
+ * article ne cite. Le rang garantit une couverture régulière et reste stable
+ * d'un build à l'autre tant que l'ordre de publication ne change pas.
+ */
+export function getOffersForPost(
+  postIndex: number,
+  metierSlugs?: string[],
+): Offer[] {
+  const all = getOffers();
+  if (all.length === 0) return [];
+
+  const ciblees = metierSlugs?.length
+    ? all.filter((offer) => metierSlugs.includes(offer.metier))
+    : [];
+  if (ciblees.length > 0) return ciblees.slice(0, 3);
+
+  const parArticle = Math.min(3, all.length);
+  const debut = (postIndex * parArticle) % all.length;
+
+  return Array.from(
+    { length: parArticle },
+    (_, i) => all[(debut + i) % all.length],
+  );
+}

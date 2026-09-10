@@ -6,11 +6,13 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { Icon } from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
 import MdxContent from "@/components/MdxContent";
+import OfferCard from "@/components/OfferCard";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 import { Faq } from "@/components/mdx/Faq";
 import { KeyPoints } from "@/components/mdx/KeyPoints";
 import { getPost, getPosts, getRelatedPosts, slugify } from "@/lib/blog";
+import { getOffersForPost } from "@/lib/jobs";
 import {
   articleSchema,
   breadcrumbSchema,
@@ -48,6 +50,10 @@ export default async function BlogPostPage({ params }: Params) {
   if (!post) notFound();
 
   const related = getRelatedPosts(slug);
+  const offres = getOffersForPost(
+    getPosts().findIndex((item) => item.slug === slug),
+    post.metiers,
+  );
   const categorySlug = slugify(post.category);
   const crumbs = [
     { name: "Accueil", path: "/" },
@@ -111,6 +117,24 @@ export default async function BlogPostPage({ params }: Params) {
 
           {post.faq && post.faq.length > 0 && <Faq items={post.faq} />}
         </article>
+
+        {offres.length > 0 && (
+          <section className="mt-14" aria-labelledby="offres-article-title">
+            <h2
+              id="offres-article-title"
+              className="text-2xl font-semibold tracking-tight text-ink"
+            >
+              Postes ouverts à Paris
+            </h2>
+            <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {offres.map((offre) => (
+                <li key={offre.slug} className="flex">
+                  <OfferCard offer={offre} headingLevel="h3" />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/*
           Appel à l'action : registre visuel volontairement supérieur à celui

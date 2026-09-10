@@ -25,6 +25,11 @@ export type PostFrontmatter = {
   faq?: { question: string; answer: string }[];
   /** Overrides the computed reading time when set. */
   readingTime?: string;
+  /**
+   * Métiers du jobboard traités par l'article. Renseigné, il commande les
+   * offres affichées en fin de page ; sinon une sélection tournante s'applique.
+   */
+  metiers?: string[];
   /** Set to true to keep a post out of the build entirely. */
   draft?: boolean;
   updated?: string;
