@@ -101,7 +101,7 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
       <SectionHeader
         eyebrow="Contact"
         title="Dites-nous ce que vous cherchez"
-        intro="Praticien en recherche ou structure qui recrute, on lit tout et on répond sous 24 heures."
+        intro="Praticien en recherche ou structure qui recrute, écrivez-nous. Le premier échange est confidentiel et sans engagement."
         id="contact-title"
       />
 
@@ -162,8 +162,8 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
           </div>
 
           <p className="mt-7 inline-flex items-center gap-2 border-t border-white/10 pt-6 text-sm text-accent-100/80">
-            <Icon name="clock" className="h-4 w-4" />
-            Réponse garantie sous 24 heures
+            <Icon name="shield" className="h-4 w-4" />
+            Échange confidentiel, sans engagement
           </p>
         </div>
 
@@ -261,7 +261,7 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
             {status === "sent" && (
               <span className="inline-flex items-center gap-2 font-medium text-accent-700">
                 <Icon name="check" className="h-4 w-4" />
-                Message envoyé. Notre équipe vous recontacte sous 24 heures.
+                Message bien reçu. On revient vers vous rapidement.
               </span>
             )}
             {status === "error" && (

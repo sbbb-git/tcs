@@ -3,27 +3,27 @@ import FeatureSection, { type Feature } from "@/components/FeatureSection";
 const features: Feature[] = [
   {
     icon: "handshake",
-    title: "On refuse les missions qu'on ne sait pas mener",
+    title: "Le bon profil, pas le premier disponible",
     description:
-      "Un poste hors de notre périmètre ou impossible à pourvoir dans vos conditions, on le dit au premier échange plutôt que de l'accepter et de vous faire perdre un trimestre.",
+      "Une structure peut être attractive sans convenir à tous les praticiens. On cherche l'adéquation, parce qu'un praticien qui repart à un an vous ramène au point de départ.",
   },
   {
-    icon: "target",
-    title: "On vous pose les questions du candidat",
-    description:
-      "Combien de praticiens dans l'équipe, quel temps par consultation, quel âge a le matériel. Si vous ne pouvez pas répondre, le recrutement s'arrêtera là, avec nous ou avec un autre.",
-  },
-  {
-    icon: "users",
-    title: "L'approche directe, pas la diffusion",
+    icon: "search",
+    title: "L'approche directe plutôt que la diffusion",
     description:
       "Sur les spécialités tendues, les praticiens sont en poste et ne lisent aucune annonce. Les atteindre suppose de les contacter un par un, dans la confidentialité.",
   },
   {
-    icon: "trendingUp",
-    title: "On suit après la signature",
+    icon: "fileCheck",
+    title: "On vous pose les questions du candidat",
     description:
-      "Un praticien qui part à dix-huit mois, c'est un recrutement à refaire. On reste en contact les premiers mois, des deux côtés.",
+      "Composition de l'équipe, temps par consultation, âge du matériel, organisation du secrétariat. Un praticien les posera au deuxième rendez-vous. Autant y répondre au premier.",
+  },
+  {
+    icon: "heart",
+    title: "Un accompagnement personnalisé et confidentiel",
+    description:
+      "Un seul interlocuteur, du premier échange à la prise de poste. Votre recrutement n'est pas diffusé publiquement si vous ne le souhaitez pas.",
   },
 ];
 
@@ -32,9 +32,9 @@ export default function RecruteursSection() {
     <FeatureSection
       id="recruteurs"
       tone="soft"
-      eyebrow="Vous cherchez un praticien"
-      title="Comment on travaille"
-      intro="Cabinets, centres d'imagerie, maternités et centres de santé, à Paris et en petite couronne."
+      eyebrow="Vous recrutez"
+      title="Plusieurs structures médicales nous font déjà confiance"
+      intro="Cabinets, centres médicaux, centres d'imagerie et centres de santé, à Paris et en petite couronne."
       features={features}
       cta={{ href: "#contact", label: "Nous décrire votre besoin" }}
     />

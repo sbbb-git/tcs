@@ -14,6 +14,7 @@ import {
   jsonLdGraph,
   pageMetadata,
 } from "@/lib/seo";
+import { site } from "@/lib/site";
 import { formatDate } from "@/lib/utils";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -138,7 +139,7 @@ export default async function OfferPage({ params }: Params) {
                 Postuler
               </Link>
               <p className="mt-3 text-center text-xs text-ink-mute">
-                Réponse sous 24 heures
+                Ou par mail à {site.email}
               </p>
             </div>
           </aside>

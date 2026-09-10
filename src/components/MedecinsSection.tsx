@@ -1,34 +1,35 @@
 import FeatureSection, { type Feature } from "@/components/FeatureSection";
 
 /*
- * Chaque carte dit ce qu'on fait, pas ce qu'on est. « Confidentialité
- * garantie » ne veut rien dire ; « rien n'est transmis avant votre accord »
- * décrit un engagement vérifiable.
+ * Chaque carte décrit la façon de travailler du cabinet, telle qu'elle est
+ * pratiquée et telle qu'elle est déjà racontée publiquement. Aucun engagement
+ * chiffré n'y figure : un délai de réponse annoncé qui n'est pas tenu coûte
+ * plus cher que l'absence de promesse.
  */
 const features: Feature[] = [
   {
+    icon: "message",
+    title: "On commence par votre projet, pas par nos postes",
+    description:
+      "Votre rythme idéal, le type de structure que vous visez, libéral ou salariat et surtout pourquoi. Tant que ce n'est pas clair, aucune annonce ne peut l'être.",
+  },
+  {
     icon: "shield",
-    title: "Rien ne part sans votre accord",
+    title: "Votre candidature reste confidentielle",
     description:
-      "On vous présente le poste, vous décidez. Votre CV n'arrive chez personne avant que vous ayez dit oui, poste par poste.",
+      "Rien ne part chez une structure avant que vous ayez dit oui, poste par poste. C'est la condition de base quand on est déjà en exercice.",
   },
   {
-    icon: "search",
-    title: "On vous dit ce qu'il y a derrière l'annonce",
+    icon: "users",
+    title: "Des postes qui ne passent pas par une annonce",
     description:
-      "Effectif réel de l'équipe, organisation des gardes, temps par consultation, âge du parc d'appareils. On le demande à la structure avant de vous en parler.",
+      "Une partie des structures parisiennes recrutent par relation et ne diffusent rien. On y accède parce qu'elles nous appellent, pas parce qu'on publie.",
   },
   {
-    icon: "bookmark",
-    title: "Des postes qui ne sont publiés nulle part",
+    icon: "target",
+    title: "Une candidature ciblée plutôt que dix envoyées",
     description:
-      "Une partie des structures parisiennes ne diffuse pas d'annonce et recrute par relation. Ce sont souvent les meilleures conditions.",
-  },
-  {
-    icon: "clock",
-    title: "Une réponse sous 24 heures",
-    description:
-      "Y compris quand la réponse est non. Un silence de trois semaines vous fait perdre plus de temps qu'un refus le lendemain.",
+      "Multiplier les candidatures ne compense pas un projet flou. Quand le projet est posé, deux ou trois pistes suffisent, et elles aboutissent.",
   },
 ];
 
@@ -37,11 +38,11 @@ export default function MedecinsSection() {
     <FeatureSection
       id="medecins"
       tone="white"
-      eyebrow="Vous cherchez un poste"
-      title="Ce qu'on vous doit avant que vous postuliez"
-      intro="Un praticien qui change de poste engage plusieurs années. Il a le droit de savoir dans quoi il entre."
+      eyebrow="Vous êtes praticien"
+      title="Comment on travaille avec vous"
+      intro="Changer de poste engage plusieurs années. Autant partir de ce que vous voulez faire, avant de regarder qui recrute."
       features={features}
-      cta={{ href: "/offres-emploi/", label: "Voir les postes ouverts" }}
+      cta={{ href: "/offres-emploi/", label: "Voir les postes" }}
     />
   );
 }

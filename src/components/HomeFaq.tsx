@@ -13,7 +13,7 @@ export const homeFaq: FaqItem[] = [
   {
     question: "Concrètement, vous faites quoi ?",
     answer:
-      "On met en relation des médecins et des sages-femmes avec des structures parisiennes qui recrutent. Côté praticien : on présente les postes, on vérifie ce qu'il y a derrière, on ne transmet rien sans accord. Côté structure : on va chercher les profils, y compris ceux qui ne répondent pas aux annonces.",
+      "On met en relation des médecins et des sages-femmes avec des structures parisiennes qui recrutent. Côté praticien : on part de votre projet, on présente les postes qui y correspondent et on ne transmet rien sans votre accord. Côté structure : on va chercher les profils, y compris ceux qui ne lisent aucune annonce.",
   },
   {
     question: "Vous prenez quelles spécialités ?",
@@ -33,7 +33,7 @@ export const homeFaq: FaqItem[] = [
   {
     question: "Ça prend combien de temps ?",
     answer:
-      "Cela dépend du poste. En cabinet ou en centre, quelques semaines suffisent parfois. Sur un poste rare, comptez plusieurs mois : les praticiens visés sont en poste et ne bougent pas du jour au lendemain. On préfère le dire d'emblée.",
+      "Cela dépend du poste. En cabinet ou en centre, quelques semaines suffisent parfois. Sur une spécialité tendue, comptez plusieurs mois : les praticiens visés sont en poste et ne bougent pas du jour au lendemain. Autant le dire d'emblée.",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function HomeFaq() {
         >
           Écrivez-nous
         </Link>
-        , on répond sous 24 heures.
+        , on vous répond directement.
       </p>
 
       <dl className="mx-auto max-w-3xl space-y-3">
