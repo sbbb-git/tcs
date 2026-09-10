@@ -186,6 +186,16 @@ La reconstruction quotidienne est ce qui fait sortir les articles datés dans le
 futur. Sans elle, un article programmé resterait invisible jusqu'au prochain
 push.
 
+Deux particularités de GitHub Actions à connaître :
+
+- Les tâches planifiées s'exécutent depuis la **branche par défaut du dépôt**,
+  qui n'est pas nécessairement `main`. Le workflow force donc explicitement le
+  checkout sur `main` : le contenu publié est toujours celui de `main`, quel que
+  soit le déclencheur et quelle que soit la branche par défaut.
+- GitHub **désactive les workflows planifiés** après une longue période sans
+  activité sur le dépôt. Si les articles programmés cessent de paraître, c'est la
+  première chose à vérifier dans l'onglet Actions.
+
 ### Ce que le déploiement vérifie en ligne
 
 Après publication, `scripts/smoke-check.mjs` interroge le site réellement servi :

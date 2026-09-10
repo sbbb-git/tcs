@@ -32,8 +32,16 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      # Toujours main, quel que soit le déclencheur.
+      #
+      # GitHub exécute les tâches planifiées depuis la branche PAR DÉFAUT du
+      # dépôt, qui n'est pas forcément main. Sans ce ref explicite, la
+      # reconstruction quotidienne publierait le contenu de la branche par
+      # défaut — et un article corrigé sur main ne sortirait jamais.
       - name: Récupérer le dépôt
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Vérifier la configuration
         env:
