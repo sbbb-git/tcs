@@ -1,72 +1,120 @@
 import Link from "next/link";
-import { Heart } from "lucide-react";
 
+import { Icon, type IconName } from "@/components/Icon";
+import { Logo } from "@/components/Header";
 import { partner, site } from "@/lib/site";
 
-const primaryLinks = [
-  { href: "/#medecins", label: "Professionnels de santé" },
-  { href: "/#recruteurs", label: "Recruteurs" },
-  { href: "/blog", label: "Blog" },
-  { href: "/#contact", label: "Contact" },
+const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
+  {
+    title: "Offres d'emploi",
+    links: [
+      { href: "/offres-emploi/", label: "Toutes les offres" },
+      { href: "/offres-emploi/metier/medecin-generaliste/", label: "Médecin généraliste" },
+      { href: "/offres-emploi/metier/infirmier/", label: "Infirmier" },
+      { href: "/offres-emploi/metier/medecin-coordonnateur/", label: "Médecin coordonnateur" },
+    ],
+  },
+  {
+    title: "Ressources",
+    links: [
+      { href: "/blog/", label: "Tous les articles" },
+      { href: "/blog/categorie/recrutement-medical/", label: "Recrutement médical" },
+      { href: "/blog/categorie/remuneration-et-statuts/", label: "Rémunération et statuts" },
+      { href: "/blog/categorie/demographie-medicale/", label: "Démographie médicale" },
+    ],
+  },
+  {
+    title: "Le cabinet",
+    links: [
+      { href: "/#medecins", label: "Professionnels de santé" },
+      { href: "/#recruteurs", label: "Recruteurs" },
+      { href: "/#contact", label: "Contact" },
+      { href: "/mentions-legales/", label: "Mentions légales" },
+    ],
+  },
 ];
 
-const legalLinks = [
-  { href: "/mentions-legales/", label: "Mentions légales" },
-  { href: "/confidentialite/", label: "Confidentialité" },
+const SOCIALS: { key: IconName; label: string; href: string }[] = [
+  { key: "linkedin", label: "LinkedIn", href: site.socials.linkedin },
+  { key: "facebook", label: "Facebook", href: site.socials.facebook },
+  { key: "instagram", label: "Instagram", href: site.socials.instagram },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground px-4 py-12 text-background">
-      <div className="container mx-auto max-w-6xl">
-        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-              <Heart className="h-5 w-5 text-primary-foreground" aria-hidden="true" />
+    <footer className="bg-ink text-white">
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
+          <div>
+            <Link href="/" className="text-white">
+              <Logo />
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-accent-100/80">
+              Cabinet de recrutement spécialisé santé. Nous accompagnons les
+              praticiens dans leur mobilité et les établissements dans leurs
+              recrutements, partout en France.
+            </p>
+            <ul className="mt-5 flex gap-2">
+              {SOCIALS.map((s) => (
+                <li key={s.key}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 transition hover:bg-white/20"
+                  >
+                    <Icon name={s.key} className="h-4 w-4" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {COLUMNS.map((col) => (
+            <div key={col.title}>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-300">
+                {col.title}
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-accent-100/80 transition hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <span className="text-xl font-bold">
-              TalentCare <span className="text-primary">Santé</span>
-            </span>
-          </Link>
-
-          <nav className="flex flex-wrap justify-center gap-6 text-sm" aria-label="Pied de page">
-            {primaryLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-background/70 transition-colors hover:text-primary"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <p className="text-sm text-background/50">
-            © {site.foundingYear} {site.name}
-          </p>
+          ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-background/10 pt-6 text-sm md:flex-row">
-          <nav className="flex flex-wrap justify-center gap-6" aria-label="Informations légales">
-            {legalLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-background/50 transition-colors hover:text-primary"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <p className="text-background/50">
-            Cabinet de recrutement spécialisé santé — {site.areaServed} · Partenaire{" "}
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-accent-100/60 md:flex-row md:items-center md:justify-between">
+          <p>
+            © {site.foundingYear} {site.name}. Tous droits réservés.
+          </p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link href="/confidentialite/" className="transition hover:text-white">
+              Confidentialité
+            </Link>
+            <a
+              href={`tel:${site.phoneE164}`}
+              className="inline-flex items-center gap-1.5 transition hover:text-white"
+            >
+              <Icon name="phone" className="h-3.5 w-3.5" />
+              {site.phone}
+            </a>
             <a
               href={partner.links.home}
-              className="text-background/70 transition-colors hover:text-primary"
+              className="inline-flex items-center gap-1.5 transition hover:text-white"
             >
-              {partner.name}
+              Partenaire {partner.name}
+              <Icon name="externalLink" className="h-3.5 w-3.5" />
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </footer>

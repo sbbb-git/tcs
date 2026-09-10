@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import Breadcrumbs from "@/components/Breadcrumbs";
-import PostCard from "@/components/PostCard";
 import JsonLd from "@/components/JsonLd";
+import PostCard from "@/components/PostCard";
 import { getCategories, getPosts } from "@/lib/blog";
 import { breadcrumbSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Blog — recrutement médical en France | TalentCare Santé",
+  title: "Blog : recrutement médical en France | TalentCare",
   description:
     "Analyses et conseils pratiques sur le recrutement médical en France : démographie, rémunérations, statuts, marque employeur et fidélisation des praticiens.",
   path: "/blog/",
@@ -21,6 +21,11 @@ export const metadata: Metadata = pageMetadata({
   ],
 });
 
+const crumbs = [
+  { name: "Accueil", path: "/" },
+  { name: "Blog", path: "/blog/" },
+];
+
 export default function BlogPage() {
   const posts = getPosts();
   const categories = getCategories();
@@ -29,10 +34,7 @@ export default function BlogPage() {
     <>
       <JsonLd
         data={jsonLdGraph([
-          breadcrumbSchema([
-            { name: "Accueil", path: "/" },
-            { name: "Blog", path: "/blog/" },
-          ]),
+          breadcrumbSchema(crumbs),
           {
             "@type": "CollectionPage",
             "@id": absoluteUrl("/blog/#collection"),
@@ -52,54 +54,46 @@ export default function BlogPage() {
         ])}
       />
 
-      <div className="px-4 pb-20 pt-32">
-        <div className="container mx-auto max-w-6xl">
-          <Breadcrumbs
-            items={[
-              { name: "Accueil", path: "/" },
-              { name: "Blog", path: "/blog/" },
-            ]}
-          />
-
-          <div className="mb-12 max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-              Blog
-            </p>
-            <h1 className="mb-4 mt-2 text-4xl font-bold text-foreground md:text-5xl">
-              Recrutement médical en France
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Analyses, conseils pratiques et tendances pour recruter et
-              fidéliser les médecins en France.
-            </p>
-          </div>
+      <div className="border-b border-line bg-soft">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <Breadcrumbs items={crumbs} />
+          <p className="eyebrow">Blog</p>
+          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-4xl lg:text-5xl">
+            Recrutement médical en France
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">
+            Analyses, conseils pratiques et tendances pour recruter et fidéliser
+            les professionnels de santé.
+          </p>
 
           {categories.length > 1 && (
-            <nav aria-label="Catégories" className="mb-12">
+            <nav aria-label="Catégories" className="mt-7">
               <ul className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <li key={category.slug}>
                     <Link
                       href={`/blog/categorie/${category.slug}/`}
-                      className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+                      className="inline-flex items-center gap-2 rounded-lg bg-bg px-3.5 py-2 text-sm font-medium text-ink ring-1 ring-line transition hover:text-accent-700 hover:ring-accent-400"
                     >
                       {category.name}
-                      <span className="text-muted-foreground">{category.count}</span>
+                      <span className="text-ink-mute">{category.count}</span>
                     </Link>
                   </li>
                 ))}
               </ul>
             </nav>
           )}
-
-          <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
-              <li key={post.slug} className="flex">
-                <PostCard post={post} />
-              </li>
-            ))}
-          </ul>
         </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <li key={post.slug} className="flex">
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );

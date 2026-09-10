@@ -1,34 +1,38 @@
-import { Info, TriangleAlert } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { Icon } from "@/components/Icon";
 import { cn } from "@/lib/utils";
 
 type CalloutProps = {
   type?: "info" | "warning";
   title?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-/** Highlights a practical caveat inside an article without breaking the page rhythm. */
+/**
+ * Encart secondaire, posé là où la question se pose dans la lecture.
+ *
+ * Son registre visuel reste volontairement en dessous de celui de l'appel au
+ * contact : un encart qui crie aussi fort lui prend ses clics. `not-prose`
+ * empêche les règles du texte long de s'appliquer à l'intérieur.
+ */
 export function Callout({ type = "info", title, children }: CalloutProps) {
-  const Icon = type === "warning" ? TriangleAlert : Info;
+  const warning = type === "warning";
 
   return (
     <aside
       className={cn(
-        "mb-6 rounded-lg border-l-4 bg-card p-5 shadow-sm",
-        type === "warning" ? "border-destructive" : "border-primary",
+        "not-prose my-8 rounded-xl p-5 ring-1",
+        warning ? "bg-soft ring-accent-200" : "bg-soft ring-line",
       )}
     >
-      <p
-        className={cn(
-          "mb-2 inline-flex items-center gap-2 font-semibold",
-          type === "warning" ? "text-destructive" : "text-primary",
-        )}
-      >
-        <Icon className="h-4 w-4" aria-hidden="true" />
-        {title ?? (type === "warning" ? "À noter" : "Bon à savoir")}
+      <p className="flex items-center gap-2 text-sm font-semibold text-accent-700">
+        <Icon name={warning ? "alert" : "info"} className="h-4 w-4" />
+        {title ?? (warning ? "À noter" : "Bon à savoir")}
       </p>
-      <div className="[&>p:last-child]:mb-0">{children}</div>
+      <div className="mt-2.5 space-y-3 leading-relaxed text-ink-soft [&_a]:font-medium [&_a]:text-accent-700 [&_a]:underline [&_a]:underline-offset-2">
+        {children}
+      </div>
     </aside>
   );
 }

@@ -3,43 +3,49 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Menu, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/Icon";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const NAV = [
+  { href: "/offres-emploi/", label: "Offres d'emploi" },
   { href: "/#medecins", label: "Professionnels de santé" },
   { href: "/#recruteurs", label: "Recruteurs" },
-  { href: "/blog", label: "Blog" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/blog/", label: "Blog" },
 ];
+
+export function Logo({ className }: { className?: string }) {
+  return (
+    <span className={cn("flex items-center gap-2.5", className)}>
+      <span className="icon-pill h-9 w-9 rounded-lg">
+        <Icon name="heart" className="h-[18px] w-[18px]" />
+      </span>
+      <span className="text-lg font-bold tracking-tight">
+        TalentCare <span className="text-accent-600">Santé</span>
+      </span>
+    </span>
+  );
+}
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close the drawer on navigation, otherwise it survives the route change.
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="container mx-auto flex items-center justify-between px-4 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <Heart className="h-5 w-5 text-primary-foreground" aria-hidden="true" />
-          </div>
-          <span className="text-xl font-bold text-foreground">
-            TalentCare <span className="text-primary">Santé</span>
-          </span>
+    <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3.5 sm:px-6 lg:px-8">
+        <Link href="/" className="text-ink">
+          <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
-          {navItems.map((item) => (
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigation principale">
+          {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm font-medium text-ink-soft transition hover:text-accent-700"
             >
               {item.label}
             </Link>
@@ -47,46 +53,43 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button asChild className="hidden md:inline-flex">
-            <Link href="/#contact">Nous contacter</Link>
-          </Button>
-
+          <Link href="/#contact" className="btn-primary btn-sm hidden sm:inline-flex">
+            Nous contacter
+          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink ring-1 ring-line transition hover:bg-soft lg:hidden"
             aria-expanded={open}
-            aria-controls="mobile-nav"
+            aria-controls="menu-mobile"
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <Icon name={open ? "close" : "menu"} />
           </button>
         </div>
       </div>
 
       <nav
-        id="mobile-nav"
+        id="menu-mobile"
         aria-label="Navigation mobile"
-        className={cn(
-          "overflow-hidden border-t border-border bg-background md:hidden",
-          open ? "block" : "hidden",
-        )}
+        className={cn("border-t border-line bg-bg lg:hidden", open ? "block" : "hidden")}
       >
-        <ul className="container mx-auto flex flex-col gap-1 px-4 py-4">
-          {navItems.map((item) => (
+        <ul className="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+          {NAV.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="block rounded-md px-2 py-2.5 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+                className="flex items-center justify-between rounded-lg px-2 py-3 font-medium text-ink-soft transition hover:bg-soft hover:text-accent-700"
               >
                 {item.label}
+                <Icon name="chevronRight" className="h-4 w-4 text-ink-mute" />
               </Link>
             </li>
           ))}
           <li className="pt-2">
-            <Button asChild className="w-full">
-              <Link href="/#contact">Nous contacter</Link>
-            </Button>
+            <Link href="/#contact" className="btn-primary w-full">
+              Nous contacter
+            </Link>
           </li>
         </ul>
       </nav>

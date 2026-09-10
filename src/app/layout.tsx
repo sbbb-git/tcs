@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0284c7",
+  themeColor: "#0284C5",
   width: "device-width",
   initialScale: 1,
 };
@@ -53,9 +53,12 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      style={{ ["--font-sans" as string]: "'Inter Variable', system-ui, sans-serif" }}
+      style={{
+        ["--font-sans" as string]:
+          "'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      }}
     >
-      <body className="min-h-screen bg-background font-sans">
+      <body className="min-h-screen bg-bg font-sans">
         <a href="#contenu" className="skip-link">
           Aller au contenu
         </a>

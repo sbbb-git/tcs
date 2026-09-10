@@ -1,99 +1,79 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Icon, type IconName } from "@/components/Icon";
+import Section, { SectionHeader } from "@/components/Section";
 
 type Testimonial = {
   quote: string;
-  initials: string;
   name: string;
   role: string;
+  /*
+   * Une icône de rôle, jamais les initiales du nom : une grille de pastilles
+   * « SL CH AM CP » ressemble à des avatars par défaut, pas à un pictogramme.
+   */
+  icon: IconName;
 };
 
-const testimonials: Testimonial[] = [
+const TESTIMONIALS: Testimonial[] = [
   {
     quote:
       "Grâce à TalentCare Santé, j'ai trouvé un poste qui correspond parfaitement à mes attentes. L'accompagnement personnalisé a fait toute la différence.",
-    initials: "SL",
     name: "Dr. S. Lemoine",
     role: "Médecin généraliste",
+    icon: "stethoscope",
   },
   {
     quote:
       "Une collaboration efficace et réactive. L'équipe a su identifier rapidement les profils dont nous avions besoin pour renforcer nos équipes.",
-    initials: "CH",
     name: "Centre Hospitalier Régional",
     role: "Établissement public",
+    icon: "building",
   },
   {
     quote:
       "Professionnalisme et discrétion exemplaires. Je recommande vivement TalentCare Santé à tous mes confrères en recherche de nouvelles opportunités.",
-    initials: "AM",
     name: "Dr. A. Moreau",
     role: "Chirurgien",
+    icon: "shield",
   },
   {
     quote:
       "Leur connaissance du secteur et la qualité des candidats proposés sont remarquables. Un partenaire de confiance pour nos recrutements.",
-    initials: "CP",
     name: "Clinique Privée du Parc",
     role: "Établissement privé",
+    icon: "handshake",
   },
 ];
 
 export default function TestimonialsSection() {
   return (
-    <section
-      id="temoignages"
-      className="bg-secondary/50 px-4 py-20"
-      aria-labelledby="temoignages-title"
-    >
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-            Témoignages
-          </p>
-          <h2
-            id="temoignages-title"
-            className="mb-4 mt-2 text-3xl font-bold text-foreground md:text-4xl"
-          >
-            Ils nous font confiance
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Découvrez les retours de nos clients, professionnels de santé et
-            établissements qui ont choisi TalentCare Santé.
-          </p>
-        </div>
+    <Section id="temoignages" tone="soft" labelledBy="temoignages-title">
+      <SectionHeader
+        eyebrow="Témoignages"
+        title="Ils nous font confiance"
+        intro="Les retours des professionnels de santé et des établissements que nous avons accompagnés."
+        id="temoignages-title"
+      />
 
-        <ul className="grid gap-6 md:grid-cols-2">
-          {testimonials.map((testimonial) => (
-            <li key={testimonial.name} className="flex">
-              <Card className="w-full border-none bg-card shadow-lg transition-shadow hover:shadow-xl">
-                <CardContent className="p-6">
-                  <figure>
-                    <blockquote className="mb-6 italic text-foreground">
-                      “{testimonial.quote}”
-                    </blockquote>
-                    <figcaption className="flex items-center gap-4">
-                      <span
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
-                        aria-hidden="true"
-                      >
-                        {testimonial.initials}
-                      </span>
-                      <span>
-                        <span className="block font-semibold text-foreground">
-                          {testimonial.name}
-                        </span>
-                        <span className="block text-sm text-muted-foreground">
-                          {testimonial.role}
-                        </span>
-                      </span>
-                    </figcaption>
-                  </figure>
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      <ul className="grid gap-5 md:grid-cols-2">
+        {TESTIMONIALS.map((item) => (
+          <li key={item.name}>
+            <figure className="card h-full">
+              <Icon name="message" className="h-6 w-6 text-accent-300" />
+              <blockquote className="mt-4 leading-relaxed text-ink">
+                {item.quote}
+              </blockquote>
+              <figcaption className="mt-5 flex items-center gap-3 border-t border-line pt-5">
+                <span className="icon-pill-soft h-10 w-10">
+                  <Icon name={item.icon} className="h-4 w-4" />
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold text-ink">{item.name}</span>
+                  <span className="block text-xs text-ink-mute">{item.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </Section>
   );
 }

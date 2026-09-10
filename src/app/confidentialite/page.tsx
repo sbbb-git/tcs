@@ -8,7 +8,7 @@ import { legal } from "@/lib/legal";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Politique de confidentialité — TalentCare Santé",
+  title: "Politique de confidentialité, TalentCare Santé",
   description:
     "Comment TalentCare Santé collecte et traite vos données : finalités, base légale, durée de conservation, destinataires et exercice de vos droits RGPD.",
   path: "/confidentialite/",
@@ -24,27 +24,27 @@ export default function ConfidentialitePage() {
     <>
       <JsonLd data={jsonLdGraph([breadcrumbSchema(crumbs)])} />
 
-      <div className="px-4 pb-20 pt-32">
-        <div className="container mx-auto max-w-3xl">
+      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+        <div>
           <Breadcrumbs items={crumbs} />
 
-          <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-ink md:text-4xl">
             Politique de confidentialité
           </h1>
-          <p className="mb-10 text-lg text-muted-foreground">
+          <p className="mb-10 text-lg leading-relaxed text-ink-soft">
             Cette page décrit les données que {site.name} collecte via ce site,
             l&apos;usage qui en est fait et les droits dont vous disposez.
           </p>
 
           <section className="mb-10">
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Responsable du traitement
             </h2>
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="leading-relaxed text-ink-soft">
               {legal.companyName}, joignable à l&apos;adresse{" "}
               <a
                 href={`mailto:${site.email}`}
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
               >
                 {site.email}
               </a>{" "}
@@ -52,7 +52,7 @@ export default function ConfidentialitePage() {
               figure dans les{" "}
               <Link
                 href="/mentions-legales/"
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
               >
                 mentions légales
               </Link>
@@ -61,23 +61,23 @@ export default function ConfidentialitePage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Données collectées et finalités
             </h2>
-            <p className="mb-4 leading-relaxed text-muted-foreground">
+            <p className="mb-4 leading-relaxed text-ink-soft">
               Les seules données collectées sont celles que vous saisissez
               volontairement dans les formulaires de contact : nom, adresse
               e-mail, numéro de téléphone, et selon le formulaire, votre
               spécialité ou le nom de votre établissement, ainsi que le message
               libre que vous rédigez.
             </p>
-            <p className="mb-4 leading-relaxed text-muted-foreground">
+            <p className="mb-4 leading-relaxed text-ink-soft">
               Ces données servent exclusivement à traiter votre demande : vous
               recontacter, étudier votre candidature ou votre besoin de
               recrutement, et assurer le suivi de la relation. Elles ne sont ni
               vendues, ni cédées, ni utilisées à des fins publicitaires.
             </p>
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="leading-relaxed text-ink-soft">
               La base légale du traitement est votre consentement, matérialisé
               par l&apos;envoi du formulaire, ainsi que l&apos;exécution de
               mesures précontractuelles prises à votre demande.
@@ -85,10 +85,10 @@ export default function ConfidentialitePage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Destinataires et sous-traitants
             </h2>
-            <ul className="list-disc space-y-2 pl-6 leading-relaxed text-muted-foreground">
+            <ul className="list-disc space-y-2 pl-6 leading-relaxed text-ink-soft">
               <li>
                 L&apos;équipe de {site.name}, seule destinataire du contenu de
                 vos demandes.
@@ -105,10 +105,10 @@ export default function ConfidentialitePage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Durée de conservation
             </h2>
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="leading-relaxed text-ink-soft">
               Les candidatures sont conservées deux ans à compter du dernier
               contact, durée recommandée par la CNIL en matière de recrutement.
               Les demandes émanant d&apos;établissements sont conservées le
@@ -119,10 +119,10 @@ export default function ConfidentialitePage() {
           </section>
 
           <section className="mb-10">
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Cookies et mesure d&apos;audience
             </h2>
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="leading-relaxed text-ink-soft">
               Ce site ne dépose aucun cookie publicitaire ni traceur
               publicitaire. Aucune bannière de consentement n&apos;est donc
               nécessaire pour naviguer.
@@ -130,30 +130,30 @@ export default function ConfidentialitePage() {
           </section>
 
           <section>
-            <h2 className="mb-4 text-2xl font-bold text-foreground">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight text-ink">
               Vos droits
             </h2>
-            <p className="mb-4 leading-relaxed text-muted-foreground">
+            <p className="mb-4 leading-relaxed text-ink-soft">
               Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès,
               de rectification, d&apos;effacement, de limitation, d&apos;
               opposition et de portabilité sur vos données. Pour les exercer,
               écrivez à{" "}
               <a
                 href={`mailto:${site.email}`}
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
               >
                 {site.email}
               </a>
               .
             </p>
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="leading-relaxed text-ink-soft">
               Si la réponse apportée ne vous satisfait pas, vous pouvez
               introduire une réclamation auprès de la CNIL,{" "}
               <a
                 href="https://www.cnil.fr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
               >
                 cnil.fr
               </a>

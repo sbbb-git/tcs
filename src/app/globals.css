@@ -3,56 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  /*
-   * Design tokens carried over unchanged from the original TalentCare Santé
-   * site. Keep them in sync with tailwind.config.ts.
-   */
-  :root {
-    --background: 209 40% 96%;
-    --foreground: 222 47% 11%;
-
-    --card: 210 40% 98%;
-    --card-foreground: 222 47% 11%;
-
-    --popover: 214 31% 91%;
-    --popover-foreground: 222 47% 11%;
-
-    --primary: 200 98% 39%;
-    --primary-foreground: 204 100% 97%;
-
-    --secondary: 215 24% 26%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 215 20% 65%;
-    --muted-foreground: 222 47% 11%;
-
-    --accent: 210 40% 98%;
-    --accent-foreground: 215 19% 34%;
-
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
-
-    --border: 212 26% 83%;
-    --input: 212 26% 83%;
-    --ring: 200 98% 39%;
-
-    --radius: 0.5rem;
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  /* Anchored headings sit below the fixed header when jumped to. */
-  :target {
-    scroll-margin-top: 6rem;
-  }
-
   html {
     scroll-behavior: smooth;
   }
@@ -62,13 +12,160 @@
       scroll-behavior: auto;
     }
   }
+
+  body {
+    @apply bg-bg text-ink-soft antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* Le focus clavier reste visible : ne jamais supprimer cet anneau. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent-600 ring-offset-2 ring-offset-bg;
+  }
+
+  /* Les ancres ne passent pas sous l'en-tête fixe. */
+  :target {
+    scroll-margin-top: 6rem;
+  }
+
+  ::selection {
+    @apply bg-accent-100 text-ink;
+  }
 }
 
 @layer components {
-  /* Skip link, visible only when focused via keyboard. */
+  /*
+   * Deux boutons, définis une fois. Dès qu'un bouton est composé à la main sur
+   * une page, il diverge, et le site finit avec quatre bleus légèrement
+   * différents. Un seul primaire par écran visible : s'il y en a deux, aucun
+   * n'est primaire.
+   */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent-700
+           px-5 py-3 font-semibold text-white shadow-sm transition
+           hover:bg-accent-800;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3
+           font-semibold text-ink ring-1 ring-line transition hover:bg-soft;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  /*
+   * Motif de carte unique. `ring-1` plutôt que `border` : l'anneau ne participe
+   * pas au calcul de taille, donc une carte survolée ne décale pas ses voisines.
+   * Pas d'ombre au repos : le relief doit signifier « cliquable ».
+   */
+  .card {
+    @apply rounded-2xl bg-bg p-6 ring-1 ring-line;
+  }
+
+  .card-link {
+    @apply card relative transition-all hover:-translate-y-0.5 hover:shadow-xl hover:ring-accent-400;
+  }
+
+  /* Sur-titre : situe la page en trois mots et donne une accroche de couleur sans bouton. */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-widest text-accent-700;
+  }
+
   .skip-link {
     @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]
-           focus:rounded-md focus:bg-primary focus:px-4 focus:py-2
-           focus:text-primary-foreground focus:shadow-lg;
+           focus:rounded-lg focus:bg-accent-700 focus:px-4 focus:py-2
+           focus:font-semibold focus:text-white focus:shadow-lg;
+  }
+
+  /* Pastille d'icône. Le dégradé est réservé aux petites surfaces. */
+  .icon-pill {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+           bg-gradient-to-br from-accent-600 to-accent-400 text-white;
+  }
+
+  .icon-pill-soft {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+           bg-accent-50 text-accent-700 ring-1 ring-accent-100;
+  }
+}
+
+@layer components {
+  /*
+   * Mise en forme du contenu long.
+   *
+   * `mt-12` avant chaque H2 est la valeur la plus importante de ce fichier :
+   * c'est elle qui donne au texte long son rythme. Un H2 collé au paragraphe
+   * précédent transforme un article en mur.
+   */
+  .prose-content h2 {
+    @apply mb-4 mt-12 scroll-mt-28 text-2xl font-semibold tracking-tight text-ink md:text-3xl;
+  }
+
+  .prose-content h3 {
+    @apply mb-3 mt-8 scroll-mt-28 text-xl font-semibold tracking-tight text-ink;
+  }
+
+  .prose-content p {
+    @apply mb-4 leading-relaxed text-ink-soft;
+  }
+
+  /* Les liens du corps sont soulignés : c'est le seul indicateur qui survit au daltonisme. */
+  .prose-content a {
+    @apply font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800;
+  }
+
+  .prose-content strong {
+    @apply font-semibold text-ink;
+  }
+
+  .prose-content ul {
+    @apply mb-5 list-disc space-y-2 pl-6 text-ink-soft;
+  }
+
+  .prose-content ol {
+    @apply mb-5 list-decimal space-y-2 pl-6 text-ink-soft;
+  }
+
+  .prose-content li {
+    @apply leading-relaxed;
+  }
+
+  .prose-content blockquote {
+    @apply my-6 rounded-r border-l-4 border-accent-300 bg-soft py-3 pl-5 italic text-ink;
+  }
+
+  .prose-content hr {
+    @apply my-10 border-line;
+  }
+
+  .prose-content code {
+    @apply rounded bg-soft px-1.5 py-0.5 text-[0.9em] text-ink ring-1 ring-line;
+  }
+
+  /* Les tableaux larges défilent dans leur conteneur, jamais la page. */
+  .prose-content .table-wrap {
+    @apply mb-6 overflow-x-auto rounded-xl ring-1 ring-line;
+  }
+
+  .prose-content table {
+    @apply w-full border-collapse text-left text-sm;
+  }
+
+  .prose-content thead {
+    @apply bg-soft;
+  }
+
+  .prose-content th {
+    @apply border-b border-line px-4 py-3 font-semibold text-ink;
+  }
+
+  .prose-content td {
+    @apply border-b border-line px-4 py-3 align-top text-ink-soft;
+  }
+
+  .prose-content tr:last-child td {
+    @apply border-b-0;
   }
 }

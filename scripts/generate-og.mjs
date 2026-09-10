@@ -22,9 +22,10 @@ try {
 const OUT = path.join(process.cwd(), "public", "og");
 fs.mkdirSync(OUT, { recursive: true });
 
-const PRIMARY = "#0284c5";
-const INK = "#0f1729";
-const PAPER = "#f1f5f9";
+const PRIMARY = "#0284C5";
+const ACCENT_DARK = "#046FA6";
+const INK = "#0B2A3F";
+const PAPER = "#F2F8FC";
 
 const heart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
   stroke-linecap="round" stroke-linejoin="round">
@@ -51,19 +52,19 @@ const ogHtml = shell(
    </div>`,
   `body{width:1200px;height:630px;background:${PAPER};color:${INK}}
    .card{width:100%;height:100%;padding:68px 80px 78px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-   .rule{position:absolute;left:0;right:0;bottom:0;height:14px;background:${PRIMARY}}
+   .rule{position:absolute;left:0;right:0;bottom:0;height:14px;background:linear-gradient(90deg,${ACCENT_DARK},${PRIMARY})}
    .brand{display:flex;align-items:center;gap:18px;font-size:38px;font-weight:700}
    .brand b{color:${PRIMARY};font-weight:700}
-   .mark{width:76px;height:76px;border-radius:20px;background:${PRIMARY};color:#f0f9ff;display:flex;align-items:center;justify-content:center}
+   .mark{width:76px;height:76px;border-radius:20px;background:linear-gradient(135deg,${ACCENT_DARK},${PRIMARY});color:#f0f9ff;display:flex;align-items:center;justify-content:center}
    .mark svg{width:40px;height:40px}
    h1{font-size:64px;line-height:1.12;font-weight:700;letter-spacing:-0.02em;max-width:20ch}
    h1 em{font-style:normal;color:${PRIMARY}}
-   .foot{font-size:28px;color:#475569;font-weight:400}`,
+   .foot{font-size:28px;color:#2B4E68;font-weight:400}`,
 );
 
 const logoHtml = shell(
   `<div class="mark">${heart}</div>`,
-  `body{width:512px;height:512px;background:${PRIMARY};display:flex;align-items:center;justify-content:center}
+  `body{width:512px;height:512px;background:linear-gradient(135deg,${ACCENT_DARK},${PRIMARY});display:flex;align-items:center;justify-content:center}
    .mark{color:#f0f9ff;display:flex}
    .mark svg{width:288px;height:288px;stroke-width:2}`,
 );

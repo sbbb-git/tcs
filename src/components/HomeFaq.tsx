@@ -1,23 +1,22 @@
 import Link from "next/link";
 
+import Section, { SectionHeader } from "@/components/Section";
+
 export type FaqItem = { question: string; answer: string };
 
 /**
  * FAQ de la page d'accueil.
  *
- * Les réponses ne portent que sur ce que le site affirme par ailleurs :
- * périmètre des métiers, couverture nationale, confidentialité, types
- * d'établissements. Rien sur les délais ni les tarifs, qui varient et ne
- * peuvent pas être affirmés ici sans risque de dire faux.
- *
- * Le contenu est identique à celui déclaré en FAQPage : une FAQ balisée mais
- * invisible est une infraction aux règles de Google, pas une astuce.
+ * Les réponses ne portent que sur ce que le site affirme par ailleurs : rien
+ * sur les tarifs, et les délais restent qualitatifs. Le contenu est identique à
+ * celui déclaré en FAQPage, une FAQ balisée mais invisible étant une infraction
+ * aux règles de Google.
  */
 export const homeFaq: FaqItem[] = [
   {
     question: "Quels professionnels de santé recrutez-vous ?",
     answer:
-      "Médecins généralistes et spécialistes, infirmiers, aides-soignants, pharmaciens et plus largement les métiers du soin. Chaque profession relève d'un marché différent — statuts, spécialisations, canaux — et suppose une approche adaptée.",
+      "Médecins généralistes et spécialistes, infirmiers, aides-soignants, pharmaciens et plus largement les métiers du soin. Chaque profession relève d'un marché différent, avec ses statuts, ses spécialisations et ses canaux, et suppose une approche adaptée.",
   },
   {
     question: "Dans quelles régions intervenez-vous ?",
@@ -43,46 +42,31 @@ export const homeFaq: FaqItem[] = [
 
 export default function HomeFaq() {
   return (
-    <section className="px-4 py-20" aria-labelledby="faq-accueil-title">
-      <div className="container mx-auto max-w-4xl">
-        <div className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-            Questions fréquentes
-          </p>
-          <h2
-            id="faq-accueil-title"
-            className="mb-4 mt-2 text-3xl font-bold text-foreground md:text-4xl"
-          >
-            Ce qu&apos;on nous demande le plus
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Une question qui ne figure pas ici ?{" "}
-            <Link
-              href="#contact"
-              className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-            >
-              Écrivez-nous
-            </Link>
-            , nous répondons sous 24h.
-          </p>
-        </div>
+    <Section tone="white" width="wide" labelledBy="faq-accueil-title">
+      <SectionHeader
+        eyebrow="Questions fréquentes"
+        title="Ce qu'on nous demande le plus"
+        id="faq-accueil-title"
+      />
+      <p className="mx-auto -mt-6 mb-10 max-w-2xl text-center text-ink-soft">
+        Une question qui ne figure pas ici ?{" "}
+        <Link
+          href="#contact"
+          className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
+        >
+          Écrivez-nous
+        </Link>
+        , nous répondons sous 24 heures.
+      </p>
 
-        <dl className="space-y-4">
-          {homeFaq.map((item) => (
-            <div
-              key={item.question}
-              className="rounded-lg border-none bg-card p-6 shadow-lg"
-            >
-              <dt className="mb-2 text-lg font-semibold text-foreground">
-                {item.question}
-              </dt>
-              <dd className="leading-relaxed text-muted-foreground">
-                {item.answer}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
+      <dl className="mx-auto max-w-3xl space-y-3">
+        {homeFaq.map((item) => (
+          <div key={item.question} className="card">
+            <dt className="font-semibold text-ink">{item.question}</dt>
+            <dd className="mt-2 leading-relaxed text-ink-soft">{item.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </Section>
   );
 }

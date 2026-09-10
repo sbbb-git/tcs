@@ -1,86 +1,61 @@
 import type { Config } from "tailwindcss";
 
-// The palette below is lifted verbatim from the original TalentCare Santé
-// build so the redesign is pixel-identical. Values stay as bare HSL triplets
-// so Tailwind can compose them with opacity modifiers (`bg-secondary/50`).
+/*
+ * Une seule source de vérité pour la couleur, l'espacement et les rayons.
+ * Aucune valeur en dur dans un composant : c'est ce qui permet de rebrander le
+ * site en changeant les dix valeurs de `accent`.
+ */
 const config: Config = {
-  darkMode: ["class"],
-  content: [
-    "./src/**/*.{ts,tsx,mdx}",
-    "./content/**/*.{md,mdx}",
-  ],
+  content: ["./src/**/*.{ts,tsx,mdx}", "./content/**/*.{md,mdx}"],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: { "2xl": "1400px" },
-    },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        bg: "#FFFFFF",
+        /* Fond des bandes alternées. */
+        soft: "#F2F8FC",
+        /* Trois niveaux d'encre, pas quatre. Un quatrième devient vite un gris arbitraire. */
+        ink: {
+          DEFAULT: "#0B2A3F", // titres
+          soft: "#2B4E68", // corps de texte : jamais du noir pur
+          mute: "#64879F", // métadonnées uniquement, contraste 3.8:1
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
+        /* Toutes les bordures et anneaux. Un bleu pâle, pas un gris. */
+        line: "#DDE9F1",
+        /*
+         * Une seule teinte d'accent, échelle complète. Le bleu de la marque
+         * (#0284C5) occupe le rang 500 : il échoue AA sur blanc en texte, donc
+         * il sert aux aplats et au logo, tandis que 600 et 700 portent le texte
+         * et les fonds de bouton. Contrastes vérifiés avant écriture des pages.
+         */
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          50: "#EFF7FD",
+          100: "#D8ECFA",
+          200: "#B2DBF4",
+          300: "#79C1EA",
+          400: "#2FA4DC",
+          500: "#0284C5",
+          600: "#046FA6",
+          700: "#075882",
+          800: "#0C4967",
+          900: "#103D55",
+          950: "#0A2739",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        "fade-in-up": {
-          from: { opacity: "0", transform: "translateY(8px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in-up": "fade-in-up 0.4s ease-out both",
+        "fade-in": "fade-in 0.2s ease-out both",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
 
 export default config;

@@ -1,24 +1,21 @@
 import type { Post } from "@/lib/blog";
 
 /**
- * Bloc questions-réponses de fin d'article. Le balisage FAQPage associé est
- * émis par la page : les deux décrivent donc toujours le même contenu, ce que
- * Google exige — une FAQ déclarée mais invisible est une infraction.
+ * Questions-réponses de fin d'article. Le balisage FAQPage est émis par la
+ * page, de sorte que le bloc visible et les données structurées portent
+ * toujours le même contenu.
  */
 export function Faq({ items }: { items: NonNullable<Post["faq"]> }) {
   return (
-    <section className="mt-14" aria-labelledby="faq-title">
-      <h2 id="faq-title" className="mb-6 text-2xl font-bold text-foreground">
+    <section className="not-prose mt-14" aria-labelledby="faq-title">
+      <h2 id="faq-title" className="text-2xl font-semibold tracking-tight text-ink">
         Questions fréquentes
       </h2>
-      <dl className="space-y-4">
+      <dl className="mt-6 space-y-3">
         {items.map((item) => (
-          <div
-            key={item.question}
-            className="rounded-lg border border-border bg-card p-6"
-          >
-            <dt className="mb-2 font-semibold text-foreground">{item.question}</dt>
-            <dd className="leading-relaxed text-muted-foreground">{item.answer}</dd>
+          <div key={item.question} className="rounded-xl bg-soft p-5 ring-1 ring-line">
+            <dt className="font-semibold text-ink">{item.question}</dt>
+            <dd className="mt-2 leading-relaxed text-ink-soft">{item.answer}</dd>
           </div>
         ))}
       </dl>

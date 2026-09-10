@@ -7,13 +7,15 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import PartnerSection from "@/components/PartnerSection";
 import LatestArticles from "@/components/LatestArticles";
+import LatestOffers from "@/components/LatestOffers";
 import HomeFaq, { homeFaq } from "@/components/HomeFaq";
 import JsonLd from "@/components/JsonLd";
 import { getPosts } from "@/lib/blog";
+import { getOffers } from "@/lib/jobs";
 import { faqSchema, jsonLdGraph, pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Recrutement médical et paramédical — TalentCare Santé",
+  title: "Recrutement médical et paramédical, TalentCare Santé",
   description:
     "Cabinet de recrutement spécialisé santé : nous accompagnons médecins et soignants dans leur carrière, et les établissements dans leurs recrutements.",
   path: "/",
@@ -27,11 +29,13 @@ export const metadata: Metadata = pageMetadata({
 
 export default function HomePage() {
   const posts = getPosts().slice(0, 3);
+  const offers = getOffers().slice(0, 3);
 
   return (
     <>
       <JsonLd data={jsonLdGraph([serviceSchema(), faqSchema(homeFaq)])} />
       <Hero />
+      <LatestOffers offers={offers} />
       <MedecinsSection />
       <RecruteursSection />
       <TestimonialsSection />
