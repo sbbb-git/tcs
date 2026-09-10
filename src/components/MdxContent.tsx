@@ -6,7 +6,6 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import { Callout } from "@/components/mdx/Callout";
-import { site } from "@/lib/site";
 
 /**
  * Components available inside MDX.
@@ -106,14 +105,6 @@ const components = {
     />
   ),
   Callout,
-  Contact: () => (
-    <Link
-      href="/#contact"
-      className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-    >
-      {site.name}
-    </Link>
-  ),
 };
 
 export default function MdxContent({ source }: { source: string }) {
