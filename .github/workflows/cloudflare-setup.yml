@@ -26,6 +26,10 @@ on:
         description: "Robots IA : sonder puis ouvrir aux robots qui citent"
         type: boolean
         default: false
+      www_via_pages:
+        description: "www vers l'apex par Pages (sans Dynamic Redirect)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -381,10 +385,16 @@ jobs:
           print("Sondage des points d'entrée :")
           probes = [
               ("réglages de zone", "GET", f"/zones/{zone_id}/settings"),
-              ("robots.txt managé (zone)", "GET", f"/zones/{zone_id}/settings/managed_robots_txt"),
-              ("AI Crawl Control (compte)", "GET", f"/accounts/{account}/ai-crawl-control/robots_txt"),
-              ("AI Crawl Control (zone)", "GET", f"/zones/{zone_id}/ai-crawl-control/robots_txt"),
-              ("bots IA (zone)", "GET", f"/zones/{zone_id}/bot_management"),
+              ("AI Crawl Control tirets (zone)", "GET", f"/zones/{zone_id}/ai-crawl-control/robots_txt"),
+              ("AI Crawl Control tirets (compte)", "GET", f"/accounts/{account}/ai-crawl-control/robots_txt"),
+              ("ai_crawl_control (zone)", "GET", f"/zones/{zone_id}/ai_crawl_control/robots_txt"),
+              ("ai_crawl_control (compte)", "GET", f"/accounts/{account}/ai_crawl_control/robots_txt"),
+              ("ai_crawl_control racine (zone)", "GET", f"/zones/{zone_id}/ai_crawl_control"),
+              ("content signals (zone)", "GET", f"/zones/{zone_id}/content_signals"),
+              ("managed_robots_txt (zone)", "GET", f"/zones/{zone_id}/managed_robots_txt"),
+              ("réglage managed_robots_txt", "GET", f"/zones/{zone_id}/settings/managed_robots_txt"),
+              ("bot_management (zone)", "GET", f"/zones/{zone_id}/bot_management"),
+              ("managed_headers (zone)", "GET", f"/zones/{zone_id}/managed_headers"),
           ]
           reachable = {}
           for label, method, path in probes:
@@ -394,18 +404,109 @@ jobs:
 
           settings = reachable.get("réglages de zone")
           if settings:
-              print("\nRéglages liés aux robots ou à l'IA :")
-              found = False
-              for s in settings.get("result", []):
-                  sid = s.get("id", "")
-                  if any(k in sid for k in ("robot", "ai_", "_ai", "crawl", "bot")):
-                      print(f"  {sid} = {json.dumps(s.get('value'))} (modifiable: {s.get('editable')})")
-                      found = True
-              if not found:
-                  print("  aucun")
+              ids = sorted(s.get("id", "") for s in settings.get("result", []))
+              print(f"\n{len(ids)} réglages de zone lisibles :")
+              print("  " + ", ".join(ids))
 
           print("\nTentative de désactivation du robots.txt managé :")
           for path in (f"/zones/{zone_id}/settings/managed_robots_txt",
                        f"/accounts/{account}/ai-crawl-control/robots_txt"):
               show(path, call("PATCH", path, {"value": "off", "enabled": False}))
+          PY
+
+      # Voie de rechange à la Redirect Rule : le token n'a pas la permission
+      # Dynamic Redirect, mais Pages sait rediriger un nom d'hôte depuis le
+      # fichier _redirects du site. Il faut pour cela que www soit rattaché au
+      # projet Pages et résolve, sinon la règle n'est jamais évaluée.
+      #
+      # La règle doit être DÉJÀ déployée avant de lancer cette étape. Si elle
+      # ne se déclenche pas, l'étape supprime l'enregistrement DNS qu'elle vient
+      # de créer : mieux vaut www injoignable que www servant le même contenu
+      # que l'apex sous un second nom d'hôte.
+      - name: www vers l'apex par Pages
+        if: ${{ inputs.www_via_pages }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DOMAIN: ${{ env.DOMAIN }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, time
+
+          domain = os.environ["DOMAIN"]
+          www = f"www.{domain}"
+          account = os.environ["CF_ACCOUNT_ID"]
+          project = os.environ["PROJECT_NAME"]
+          token = os.environ["CF_API_TOKEN"]
+          api = "https://api.cloudflare.com/client/v4"
+
+          def call(method, path, body=None):
+              cmd = ["curl", "-sS", "-X", method,
+                     "-H", f"Authorization: Bearer {token}",
+                     "-H", "Content-Type: application/json"]
+              if body is not None:
+                  cmd += ["-d", json.dumps(body)]
+              cmd.append(f"{api}{path}")
+              out = subprocess.run(cmd, capture_output=True, text=True).stdout
+              try:
+                  return json.loads(out)
+              except json.JSONDecodeError:
+                  return {"success": False, "errors": [{"code": 0, "message": out[:300]}]}
+
+          def errs(res):
+              return ", ".join(f"[{e.get('code')}] {e.get('message')}" for e in res.get("errors", []))
+
+          # 1) Rattacher www au projet Pages.
+          res = call("POST", f"/accounts/{account}/pages/projects/{project}/domains",
+                     {"name": www})
+          if res.get("success"):
+              print(f"{www} rattaché au projet Pages.")
+          elif "already exists" in errs(res).lower() or any(
+                  e.get("code") == 8000007 for e in res.get("errors", [])):
+              print(f"{www} était déjà rattaché.")
+          else:
+              print(f"Rattachement refusé : {errs(res)}")
+              raise SystemExit(1)
+
+          # 2) L'enregistrement DNS.
+          zone = call("GET", f"/zones?name={domain}")
+          zone_id = zone["result"][0]["id"]
+          dns = call("POST", f"/zones/{zone_id}/dns_records", {
+              "type": "CNAME", "name": www, "content": f"{project}.pages.dev",
+              "proxied": True, "comment": "Redirigé en 301 vers l'apex par _redirects",
+          })
+          record_id = None
+          if dns.get("success"):
+              record_id = dns["result"]["id"]
+              print(f"{www} créé : CNAME -> {project}.pages.dev")
+          elif any(e.get("code") == 81053 for e in dns.get("errors", [])):
+              print(f"{www} existait déjà.")
+          else:
+              print(f"Création DNS refusée : {errs(dns)}")
+              raise SystemExit(1)
+
+          # 3) Vérifier que la redirection se déclenche vraiment.
+          print("\nPropagation, puis vérification...")
+          statut = location = None
+          for essai in range(12):
+              time.sleep(15)
+              out = subprocess.run(
+                  ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code} %{redirect_url}",
+                   "--max-time", "10", f"https://{www}/offres-emploi/"],
+                  capture_output=True, text=True).stdout.split(" ", 1)
+              statut = out[0]
+              location = out[1].strip() if len(out) > 1 else ""
+              print(f"  essai {essai + 1} : {statut} {location}")
+              if statut == "301" and location.startswith(f"https://{domain}/"):
+                  print(f"\nOK : {www} redirige en 301 vers l'apex, chemin préservé.")
+                  raise SystemExit(0)
+
+          print("\nLa redirection ne se déclenche pas.")
+          if record_id:
+              rm = call("DELETE", f"/zones/{zone_id}/dns_records/{record_id}")
+              print("Enregistrement DNS retiré." if rm.get("success")
+                    else f"Retrait DNS échoué : {errs(rm)}")
+              print("www redevient injoignable, ce qui vaut mieux qu'un doublon indexable.")
+          raise SystemExit(1)
           PY

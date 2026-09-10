@@ -1,9 +1,14 @@
-# Cloudflare Pages redirects (path-level only).
+# Redirections Cloudflare Pages.
 #
-# The apex/www choice is NOT made here: a hostname redirect is configured as a
-# Redirect Rule in the Cloudflare dashboard, on the zone, not in this file.
+# La première règle porte sur le nom d'hôte : Pages accepte une source
+# absolue, ce qui permet de rediriger www vers l'apex sans passer par une
+# Redirect Rule de zone. C'est délibéré, le token d'API ne dispose pas de la
+# permission Dynamic Redirect et cette voie n'en a pas besoin.
 #
-# Legacy paths from the previous build, kept so old links and any indexed URL
-# land on the current page instead of a 404.
+# Elle doit rester en tête : la première règle qui correspond l'emporte.
+https://www.talentcaresante.fr/* https://talentcaresante.fr/:splat 301
+
+# Anciens chemins de la version précédente, conservés pour que les liens et
+# les URL déjà indexées arrivent sur la page actuelle plutôt que sur un 404.
 /blog/salaire-medecin-hospitalier-2026  /blog/salaire-medecin-hospitalier/  301
 /blog/salaire-medecin-hospitalier-2026/ /blog/salaire-medecin-hospitalier/  301
