@@ -17,6 +17,24 @@ import fs from "node:fs";
 import path from "node:path";
 
 const OUT_DIR = path.join(process.cwd(), "out");
+
+/*
+ * Origine du site, déduite de la balise canonique de l'accueil plutôt que
+ * codée en dur : le contrôle suit ainsi le domaine sans qu'on ait à le
+ * renseigner à deux endroits.
+ */
+function siteOrigin() {
+  const home = path.join(OUT_DIR, "index.html");
+  if (!fs.existsSync(home)) return null;
+  const href = /<link[^>]+rel=["']canonical["'][^>]*>/i
+    .exec(fs.readFileSync(home, "utf8"))?.[0]
+    ?.match(/href=["']([^"']+)["']/)?.[1];
+  try {
+    return href ? new URL(href).origin : null;
+  } catch {
+    return null;
+  }
+}
 const STRICT = process.argv.includes("--strict");
 
 const TITLE_MAX = 60;
@@ -56,6 +74,30 @@ const debt = (page, message) => debts.push(`${page} — ${message}`);
 /* ------------------------------------------------------------------ */
 /* helpers                                                             */
 /* ------------------------------------------------------------------ */
+
+/*
+ * Dimensions réelles d'un PNG, lues dans son en-tête IHDR.
+ *
+ * Le format impose une signature de 8 octets, puis un bloc IHDR dont la
+ * largeur et la hauteur occupent les octets 16 à 23, en gros-boutiste. Aucune
+ * dépendance n'est donc nécessaire pour les lire, et c'est le seul moyen de
+ * vérifier qu'une image annoncée en 1200 x 630 l'est réellement.
+ */
+const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+
+function pngSize(file) {
+  let head;
+  try {
+    const fd = fs.openSync(file, "r");
+    head = Buffer.alloc(24);
+    fs.readSync(fd, head, 0, 24, 0);
+    fs.closeSync(fd);
+  } catch {
+    return null;
+  }
+  if (!head.subarray(0, 8).equals(PNG_SIGNATURE)) return null;
+  return { width: head.readUInt32BE(16), height: head.readUInt32BE(20) };
+}
 
 function walk(dir) {
   const out = [];
@@ -188,6 +230,7 @@ for (const file of files) {
     if (!title) fail(route, "balise <title> absente ou vide.");
     if (!description) fail(route, "meta description absente.");
     if (!ogImage) fail(route, "og:image absente.");
+    else checkOgImage(route, html, ogImage);
     if (!canonical) fail(route, "URL canonique absente.");
 
     if (title) {
@@ -382,3 +425,64 @@ if (!errors.length && !debts.length) {
 }
 
 if (errors.length || (STRICT && debts.length)) process.exit(1);
+
+/*
+ * L'og:image est la seule image que le site ne peut pas éviter, et la seule
+ * dont le défaut ne se voit jamais depuis le site lui-même : il n'apparaît
+ * qu'au moment d'un partage, sur un autre service. Trois pièges connus :
+ *
+ *  - un SVG, valide et léger, mais qu'aucun réseau social ne rend : le partage
+ *    part sans aperçu ;
+ *  - une image hébergée ailleurs, dont on ne maîtrise ni la durée de vie ni
+ *    le temps de réponse ;
+ *  - des dimensions déclarées qui ne correspondent pas au fichier. Le code
+ *    applique la même largeur et la même hauteur à toute image de substitution,
+ *    donc une page qui fournit la sienne annonce facilement des dimensions
+ *    fausses, et les validateurs recadrent ou refusent.
+ */
+function checkOgImage(route, html, ogImage) {
+  const origin = siteOrigin();
+  if (origin && !ogImage.startsWith(origin)) {
+    fail(route, `og:image hébergée hors du domaine : ${ogImage}`);
+    return;
+  }
+
+  let relative;
+  try {
+    relative = new URL(ogImage).pathname.replace(/^\//, "");
+  } catch {
+    fail(route, `og:image n'est pas une URL absolue : ${ogImage}`);
+    return;
+  }
+  const file = path.join(OUT_DIR, relative);
+
+  if (!fs.existsSync(file)) {
+    fail(route, `og:image introuvable dans le build : ${relative}`);
+    return;
+  }
+
+  const size = pngSize(file);
+  if (!size) {
+    fail(route, `og:image n'est pas un PNG : ${relative} (les réseaux sociaux ne rendent pas le SVG)`);
+    return;
+  }
+
+  if (size.width < 1200 || size.height < 630) {
+    fail(
+      route,
+      `og:image trop petite : ${size.width} x ${size.height}, minimum 1200 x 630.`,
+    );
+  }
+
+  const declared = {
+    width: Number(metaContent(html, "property", "og:image:width")),
+    height: Number(metaContent(html, "property", "og:image:height")),
+  };
+  if (declared.width && declared.height
+      && (declared.width !== size.width || declared.height !== size.height)) {
+    fail(
+      route,
+      `og:image annoncée ${declared.width} x ${declared.height} mais le fichier fait ${size.width} x ${size.height}.`,
+    );
+  }
+}
