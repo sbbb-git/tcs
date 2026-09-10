@@ -17,6 +17,9 @@ type FeatureSectionProps = {
   features: Feature[];
   cta: { href: string; label: string };
   tone?: "white" | "soft";
+  /** Photo d'accompagnement, optionnelle. Toujours chargée en différé : aucune
+   *  de ces bandes n'est visible sans défiler. */
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 /**
@@ -31,10 +34,24 @@ export default function FeatureSection({
   features,
   cta,
   tone = "white",
+  image,
 }: FeatureSectionProps) {
   return (
     <Section id={id} tone={tone} labelledBy={`${id}-title`}>
       <SectionHeader eyebrow={eyebrow} title={title} intro={intro} id={`${id}-title`} />
+
+      {image && (
+        <div className="mb-9 overflow-hidden rounded-2xl ring-1 ring-line">
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            className="h-[220px] w-full object-cover sm:h-[300px]"
+          />
+        </div>
+      )}
 
       <ul className="grid gap-5 sm:grid-cols-2">
         {features.map((feature) => (

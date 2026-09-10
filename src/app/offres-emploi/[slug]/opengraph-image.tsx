@@ -7,15 +7,25 @@ import { site } from "@/lib/site";
 /*
  * Carte de partage propre à chaque annonce.
  *
- * Sur un jobboard, le partage social est un canal réel : une offre relayée sur
- * LinkedIn ou en message privé sort avec son intitulé, sa spécialité et son
- * arrondissement composés dans l'image, au lieu du visuel générique du site.
- * C'est une composition typographique rendue par Satori, sans navigateur, sans
+ * Sur un jobboard, le partage est un canal réel : une offre relayée sort avec
+ * son intitulé, son lieu et son contrat plutôt qu'avec le visuel générique du
+ * site. Composition typographique rendue par Satori, sans navigateur, sans
  * photographie et sans modèle génératif.
+ *
+ * Le parti pris est celui d'une annonce imprimée : fond clair, un seul aplat
+ * de couleur qui tient la composition, une hiérarchie portée par la taille du
+ * texte et non par des cadres. Pas de dégradé, pas de pastilles arrondies :
+ * c'est ce vocabulaire-là qui fait « gabarit » au premier coup d'œil.
  */
 export const size = OG_SIZE;
 export const contentType = "image/png";
 export const alt = "Offre d'emploi TalentCare Santé";
+
+const INK = "#0B2A3F";
+const INK_SOFT = "#2B4E68";
+const ACCENT = "#0284C5";
+const ACCENT_DARK = "#075882";
+const LINE = "#DDE9F1";
 
 export function generateStaticParams() {
   return getOffers().map((offer) => ({ slug: offer.slug }));
@@ -28,15 +38,11 @@ export default async function Image({
 }) {
   const { slug } = await params;
   const offer = getOffer(slug);
-
   const lieu = offer ? (offer.ville ?? offer.region) : null;
-  const faits = offer && lieu ? [lieu, offer.contrat, offer.structure] : [];
 
   /*
-   * Le titre de l'annonce porte la mention « (H/F) » et répète le lieu, deux
-   * informations que la carte donne déjà par ailleurs : le lieu en pastille,
-   * et la mention légale n'a pas de sens sur une image de partage. Les retirer
-   * laisse la place à l'intitulé lui-même, en grand.
+   * Le titre porte « (H/F) » et répète le lieu, deux informations que la carte
+   * donne déjà ailleurs. Les retirer laisse la place à l'intitulé lui-même.
    */
   let titre = offer?.title ?? "Recrutement médical à Paris";
   titre = titre.replace(/\s*\(H\/F\)/i, "");
@@ -45,6 +51,8 @@ export default async function Image({
   }
   titre = titre.trim();
 
+  const conditions = offer ? [offer.contrat, offer.structure] : [];
+
   return new ImageResponse(
     (
       <div
@@ -52,78 +60,90 @@ export default async function Image({
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px 80px",
-          background: "linear-gradient(135deg, #0B2A3F 0%, #075882 100%)",
-          color: "#FFFFFF",
+          background: "#FFFFFF",
           fontFamily: "sans-serif",
         }}
       >
-        {/* Occupe toute la hauteur libre et s'y centre : aligné en haut, le
-            bloc laissait près de la moitié de la carte vide. */}
+        {/* L'aplat vertical tient toute la composition, à la place d'un cadre. */}
+        <div style={{ width: 22, background: ACCENT, display: "flex" }} />
+
         <div
           style={{
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            padding: "68px 72px 0 72px",
           }}
         >
           <div
             style={{
-              fontSize: 26,
-              letterSpacing: 4,
-              textTransform: "uppercase",
-              color: "#7DD0F5",
-              fontWeight: 600,
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
             }}
           >
-            Offre d&apos;emploi
-          </div>
-          <div
-            style={{
-              marginTop: 28,
-              fontSize: titre.length > 34 ? 64 : 78,
-              fontWeight: 700,
-              lineHeight: 1.08,
-              letterSpacing: -1.5,
-            }}
-          >
-            {titre}
-          </div>
+            <div
+              style={{
+                display: "flex",
+                fontSize: 25,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+                color: ACCENT_DARK,
+                fontWeight: 700,
+              }}
+            >
+              {lieu ? `Offre d'emploi · ${lieu}` : "Offre d'emploi"}
+            </div>
 
-          {/* Les pastilles restent accrochées au titre : détachées en bas de
-              carte, elles laissaient une bande vide au milieu. */}
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 40 }}>
-            {faits.map((fait) => (
+            <div
+              style={{
+                display: "flex",
+                marginTop: 26,
+                fontSize: titre.length > 34 ? 66 : 80,
+                fontWeight: 700,
+                lineHeight: 1.05,
+                letterSpacing: -2,
+                color: INK,
+              }}
+            >
+              {titre}
+            </div>
+
+            {conditions.length > 0 && (
               <div
-                key={fait}
                 style={{
-                  fontSize: 27,
-                  padding: "12px 24px",
-                  borderRadius: 999,
-                  background: "rgba(255,255,255,0.12)",
-                  border: "1px solid rgba(255,255,255,0.22)",
+                  display: "flex",
+                  marginTop: 30,
+                  fontSize: 30,
+                  color: INK_SOFT,
                 }}
               >
-                {fait}
+                {conditions.join("  ·  ")}
               </div>
-            ))}
+            )}
           </div>
-        </div>
 
-        <div
-          style={{
-            paddingTop: 32,
-            borderTop: "1px solid rgba(255,255,255,0.18)",
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: 28,
-          }}
-        >
-          <div style={{ fontWeight: 700 }}>{site.name}</div>
-          <div style={{ color: "#A9D8EF" }}>talentcaresante.fr</div>
+          {/* Le bandeau inversé ferme la carte et porte la signature. */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginLeft: -72,
+              marginRight: -72,
+              padding: "30px 72px",
+              background: INK,
+              color: "#FFFFFF",
+              fontSize: 27,
+              borderTop: `1px solid ${LINE}`,
+            }}
+          >
+            <div style={{ display: "flex", fontWeight: 700 }}>{site.name}</div>
+            <div style={{ display: "flex", color: "#A9D8EF" }}>
+              talentcaresante.fr
+            </div>
+          </div>
         </div>
       </div>
     ),

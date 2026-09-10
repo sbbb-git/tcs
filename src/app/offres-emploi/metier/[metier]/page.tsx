@@ -73,6 +73,21 @@ export default async function MetierPage({ params }: Params) {
         </div>
       </div>
 
+      {metier.image && (
+        <div className="mx-auto max-w-5xl px-4 pt-12 sm:px-6 lg:px-8">
+          <div className="overflow-hidden rounded-2xl ring-1 ring-line">
+            <img
+              src={metier.image.src}
+              alt={metier.image.alt}
+              width={metier.image.width}
+              height={metier.image.height}
+              loading="lazy"
+              className="h-[200px] w-full object-cover sm:h-[280px]"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
         {offers.length > 0 && (
           <section className="mb-16" aria-labelledby="offres-title">

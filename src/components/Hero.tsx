@@ -60,28 +60,25 @@ export default function Hero() {
             </ul>
           </div>
 
-          <figure className="rounded-2xl bg-soft p-7 ring-1 ring-line lg:p-8">
-            <Icon name="message" className="h-6 w-6 text-accent-600" />
-            <blockquote className="mt-4 space-y-3 text-[15px] leading-relaxed text-ink-soft">
-              <p>
-                Ce matin, un médecin m&apos;appelle, un peu hésitant. Plusieurs
-                opportunités sur la table, mais aucune qui lui ressemble
-                vraiment.
-              </p>
-              <p>
-                On a pris le temps d&apos;échanger : son rythme idéal, le type
-                de structure qu&apos;il cherchait, libéral ou salariat et
-                pourquoi.
-              </p>
-              <p className="font-medium text-ink">
-                En clarifiant tout ça, les choses se sont débloquées. Pas besoin
-                de multiplier les candidatures quand le projet est clair.
-              </p>
-            </blockquote>
-            <figcaption className="mt-6 border-t border-line pt-5 text-sm text-ink-mute">
-              Marion, TalentCare Santé
-            </figcaption>
-          </figure>
+          {/*
+            La boîte est dimensionnée en CSS, pas par le fichier : la hauteur
+            est fixée par palier et l'image la remplit en `object-cover`.
+            L'espace est donc réservé avant l'arrivée de l'image, quelle que
+            soit sa taille réelle, et la mise en page ne saute pas.
+
+            Seule image de la page à être chargée sans attendre, parce qu'elle
+            est visible sans défiler. Toutes les autres sont en `lazy`.
+          */}
+          <div className="overflow-hidden rounded-2xl ring-1 ring-line">
+            <img
+              src="/images/consultation.webp"
+              alt="Médecin en consultation à son bureau, dans un cabinet parisien"
+              width={1240}
+              height={900}
+              loading="eager"
+              className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[460px]"
+            />
+          </div>
         </div>
       </div>
     </section>

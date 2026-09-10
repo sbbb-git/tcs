@@ -24,6 +24,12 @@ export type Metier = {
   sections: { heading: string; paragraphs: string[] }[];
   faq: { question: string; answer: string }[];
   relatedPost?: string;
+  /**
+   * Illustration propre à la spécialité, quand il en existe une qui montre
+   * réellement de quoi le métier est fait. Absente par défaut : une photo
+   * générique posée sur les sept pages n'apprendrait rien et se verrait.
+   */
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 export const metiers: Metier[] = [
@@ -74,6 +80,12 @@ export const metiers: Metier[] = [
     name: "Radiologue",
     plural: "Radiologues",
     icon: "scan",
+    image: {
+      src: "/images/imagerie.webp",
+      alt: "Console d'interprétation d'imagerie médicale, coupe et outils de lecture",
+      width: 1600,
+      height: 700,
+    },
     title: "Emploi radiologue à Paris | TalentCare Santé",
     description:
       "Postes de radiologue à Paris en centre d'imagerie et en établissement. Plateau technique, part de téléradiologie et organisation des vacations.",

@@ -35,6 +35,12 @@ export default function RecruteursSection() {
       eyebrow="Vous recrutez"
       title="Plusieurs structures médicales nous font déjà confiance"
       intro="Cabinets, centres médicaux, centres d'imagerie et centres de santé, à Paris et en petite couronne."
+      image={{
+        src: "/images/examen-clinique.webp",
+        alt: "Mesure de la tension artérielle lors d'une consultation",
+        width: 1120,
+        height: 840,
+      }}
       features={features}
       cta={{ href: "#contact", label: "Nous décrire votre besoin" }}
     />

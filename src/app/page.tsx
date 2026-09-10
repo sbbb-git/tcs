@@ -7,6 +7,7 @@ import ContactSection from "@/components/ContactSection";
 import PartnerSection from "@/components/PartnerSection";
 import LatestArticles from "@/components/LatestArticles";
 import LatestOffers from "@/components/LatestOffers";
+import QuoteSection from "@/components/QuoteSection";
 import HomeFaq, { homeFaq } from "@/components/HomeFaq";
 import JsonLd from "@/components/JsonLd";
 import { getPosts } from "@/lib/blog";
@@ -43,6 +44,7 @@ export default function HomePage() {
       <JsonLd data={jsonLdGraph([serviceSchema(), faqSchema(homeFaq)])} />
       <Hero />
       <LatestOffers offers={offers} />
+      <QuoteSection />
       <MedecinsSection />
       <RecruteursSection />
       <PartnerSection />
