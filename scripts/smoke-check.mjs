@@ -149,6 +149,38 @@ try {
   errors.push(`Analyse du robots.txt impossible : ${err.message}`);
 }
 
+/* --- la clé IndexNow est bien servie --- */
+
+/*
+ * IndexNow valide la propriété du domaine en lisant ce fichier. S'il n'est pas
+ * servi, chaque soumission est refusée par un 403 — code qui signifie « clé
+ * invalide » et non « trop de requêtes », d'où des heures perdues à chercher
+ * une limite de débit qui n'existe pas.
+ */
+try {
+  const siteTs = await import("node:fs").then((fs) =>
+    fs.readFileSync("src/lib/site.ts", "utf8"),
+  );
+  const key = /indexNowKey:\s*"([^"]+)"/.exec(siteTs)?.[1];
+
+  if (key) {
+    const res = await fetchWithRetry(`${base}/${key}.txt`);
+    const body = (await res.text()).trim();
+    if (res.status !== 200) {
+      errors.push(`Clé IndexNow non servie : /${key}.txt répond ${res.status}.`);
+    } else if (body !== key) {
+      errors.push(
+        `Le fichier /${key}.txt ne contient pas la clé attendue — toute ` +
+          "soumission IndexNow sera refusée.",
+      );
+    } else {
+      console.log(`  clé IndexNow servie et conforme`);
+    }
+  }
+} catch (err) {
+  errors.push(`Vérification de la clé IndexNow impossible : ${err.message}`);
+}
+
 /* --- le sitemap pointe vers le bon domaine --- */
 try {
   const xml = await (await fetchWithRetry(base + "/sitemap.xml")).text();

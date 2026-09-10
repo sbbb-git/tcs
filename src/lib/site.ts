@@ -24,6 +24,20 @@ export const site = {
     instagram: "https://www.instagram.com/talentcare_sante/",
   },
   areaServed: "France",
+
+  /*
+   * Clé IndexNow, générée depuis Bing Webmaster Tools.
+   *
+   * Elle n'est pas secrète : le protocole impose qu'elle soit servie en clair à
+   * `https://<domaine>/<clé>.txt`, ce que fait le fichier du même nom dans
+   * public/. C'est précisément ce fichier qui prouve à Bing que celui qui
+   * soumet des URL contrôle bien le domaine.
+   *
+   * Une clé inventée plutôt que générée par Bing renvoie un 403 permanent à
+   * chaque soumission — et ce 403 signifie « clé invalide », pas « trop de
+   * requêtes ».
+   */
+  indexNowKey: "73120872d51a44d3b035fabbb4a4fa5d",
 } as const;
 
 /**

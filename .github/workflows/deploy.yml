@@ -137,3 +137,15 @@ jobs:
       # réponse (bloc ajouté au robots.txt, réécriture des liens mailto:).
       - name: Vérifier le site en ligne
         run: npm run smoke -- https://talentcaresante.fr
+
+      # Prévient Bing, Yandex et les autres moteurs participants qu'une page a
+      # changé. Uniquement les pages du jour : renvoyer tout le site à chaque
+      # déploiement noierait le signal. Google n'utilise pas IndexNow — pour lui
+      # c'est le sitemap et Search Console qui comptent.
+      #
+      # Après la vérification en ligne : le fichier de clé doit déjà être servi.
+      # Échec toléré, un refus de soumission ne doit pas invalider un
+      # déploiement par ailleurs correct.
+      - name: Signaler les nouveautés à IndexNow
+        continue-on-error: true
+        run: npm run indexnow
