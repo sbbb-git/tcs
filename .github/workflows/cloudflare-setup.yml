@@ -642,9 +642,9 @@ jobs:
               except json.JSONDecodeError:
                   return {"success": False, "errors": [{"code": 0, "message": out[:200]}]}
 
-          # Empreinte du secret : ne révèle pas le token, mais change si le
-          # secret change. C'est le seul moyen de savoir d'un run à l'autre si
-          # la valeur stockée dans GitHub a bougé.
+          # Empreinte du secret : ne révèle pas le token, mais change si sa
+          # VALEUR change. Elle ne dit rien de ses droits, qu'on peut modifier
+          # dans Cloudflare sans que la valeur bouge.
           print(f"Empreinte du secret : {hashlib.sha256(token.encode()).hexdigest()[:12]}")
           print(f"Longueur : {len(token)} caractères\n")
 
@@ -689,8 +689,10 @@ jobs:
                   verdict = "NON " if 10000 in codes or 9109 in codes else "?   "
                   print(f"  {verdict} {label} :: {msg}")
 
-          print("\nSi 'Dynamic Redirect: Read' est refusé alors que l'empreinte")
-          print("du secret a changé, la permission n'a pas été ajoutée au token.")
-          print("Si l'empreinte est identique au run précédent, c'est le secret")
-          print("GitHub qui n'a pas été mis à jour.")
+          print("\nL'empreinte identifie la VALEUR du secret, pas ses droits.")
+          print("Modifier les permissions d'un token existant dans Cloudflare ne")
+          print("change pas sa valeur : l'empreinte reste alors la même alors que")
+          print("les droits ci-dessus ont bougé. Seule la création d'un nouveau")
+          print("token, ou un secret GitHub réécrit, la fait changer.")
+          print("\nC'est donc la liste ci-dessus qui fait foi, pas l'empreinte.")
           PY
