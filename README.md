@@ -34,6 +34,7 @@ npm run dev          # http://localhost:3000
 | `npm run seo:check` | Contrôles SEO sur `out/` (voir plus bas) |
 | `npm run seo:check:strict` | Idem, la dette qualité devient bloquante |
 | `npm run smoke -- <url>` | Contrôles sur le site en ligne (défaut : la production) |
+| `npm run indexnow` | Signale les pages du jour à IndexNow (`--dry-run` pour simuler) |
 | `npm run verify` | `typecheck` + `build` + `seo:check` |
 | `npm run og` | Régénère `public/og/*.png` (nécessite `npm i -D playwright`) |
 
@@ -196,12 +197,31 @@ Deux particularités de GitHub Actions à connaître :
   activité sur le dépôt. Si les articles programmés cessent de paraître, c'est la
   première chose à vérifier dans l'onglet Actions.
 
+### IndexNow
+
+Après chaque déploiement, les articles parus ou modifiés **le jour même** sont
+signalés à IndexNow, qui prévient Bing, Yandex, Seznam et Naver. Seules ces pages
+et celles qui les listent sont soumises : renvoyer le site entier à chaque
+déploiement noierait le signal, le protocole servant à dire « cette page a
+changé » et non à transmettre un plan de site.
+
+Google n'utilise pas IndexNow. Pour lui, c'est le sitemap et Search Console qui
+comptent.
+
+La clé (`indexNowKey` dans `src/lib/site.ts`) est servie en clair à la racine par
+`public/<clé>.txt` : le protocole l'exige, c'est ce fichier qui prouve que celui
+qui soumet contrôle le domaine. **Ce n'est donc pas un secret** — contrairement au
+token Cloudflare, qui lui n'a rien à faire dans le dépôt.
+
+Elle doit avoir été **générée par Bing Webmaster Tools**. Une clé inventée renvoie
+un 403 permanent, et ce code signifie « clé invalide », pas « trop de requêtes ».
+
 ### Ce que le déploiement vérifie en ligne
 
 Après publication, `scripts/smoke-check.mjs` interroge le site réellement servi :
 codes de réponse, 404 effectif, URL canonique, cohérence du sitemap, groupes
-contradictoires dans le robots.txt, et réécriture des liens `mailto:` par
-l'hébergeur. Le contrôle contourne le cache du CDN, sinon il validerait parfois
+contradictoires dans le robots.txt, présence et conformité du fichier de clé
+IndexNow, et réécriture des liens `mailto:` par l'hébergeur. Le contrôle contourne le cache du CDN, sinon il validerait parfois
 la version précédente.
 
 C'est nécessaire parce que le fichier servi n'est pas celui du dépôt : Cloudflare
@@ -236,6 +256,8 @@ Fait :
 - [x] `robots.txt` aligné sur la politique managée de Cloudflare, sans groupe
       contradictoire.
 - [x] Purge du CDN et vérification du site servi à chaque déploiement.
+- [x] Clé IndexNow en place, fichier de vérification servi, soumission
+      automatique des pages du jour (première soumission acceptée en 200).
 
 Reste à faire :
 
@@ -249,10 +271,8 @@ Reste à faire :
       il n'y a donc pas de contenu servi en double.
 - [ ] Créer la propriété Google Search Console et soumettre
       `https://talentcaresante.fr/sitemap.xml`.
-- [ ] Créer le compte Bing Webmaster Tools et y soumettre le même sitemap.
-- [ ] Générer la clé IndexNow **depuis Bing Webmaster Tools**. Une clé inventée
-      renvoie un 403 permanent, qui signifie « clé invalide » et non « trop de
-      requêtes ».
+- [ ] Soumettre le sitemap dans Bing Webmaster Tools (le compte existe déjà,
+      la clé IndexNow en provient).
 - [ ] Vérifier l'aperçu de partage sur LinkedIn et Facebook.
 
 La variable GitHub `CLOUDFLARE_PROJECT_NAME` n'est plus lue : le nom du projet
