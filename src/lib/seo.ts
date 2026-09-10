@@ -7,7 +7,7 @@ const OG_IMAGE = {
   url: absoluteUrl("/og/default.png"),
   width: 1200,
   height: 630,
-  alt: `${site.name} — cabinet de recrutement spécialisé santé`,
+  alt: `${site.name}, cabinet de recrutement spécialisé santé`,
 } as const;
 
 type PageMetaInput = {
@@ -24,7 +24,7 @@ type PageMetaInput = {
 /**
  * Builds the metadata for a page, including the canonical URL.
  *
- * `title` is used verbatim — no template suffix is appended — because the
+ * `title` is used verbatim, no template suffix is appended, because the
  * 60-character budget checked at build time covers the whole rendered title.
  * Write titles that already carry the brand when it helps the snippet.
  */
@@ -157,6 +157,70 @@ export function articleSchema(post: Post) {
     author: { "@id": absoluteUrl("/#organization") },
     publisher: { "@id": absoluteUrl("/#organization") },
     isPartOf: { "@id": absoluteUrl("/#website") },
+  };
+}
+
+/**
+ * Balisage d'une offre d'emploi.
+ *
+ * Google retire des résultats toute offre sans date de fin de validité ou dont
+ * l'échéance est passée : `validThrough` n'est donc pas facultatif. L'organisme
+ * recruteur est le cabinet, ce qui est le cas d'usage prévu pour un
+ * intermédiaire de recrutement.
+ *
+ * Une offre balisée doit correspondre à un poste réellement ouvert. Une annonce
+ * fictive relève des règles anti-spam et expose à une action manuelle.
+ */
+export function jobPostingSchema(offer: {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  validThrough: string;
+  contrat: string;
+  region: string;
+  localite?: string;
+  reference: string;
+  metierName: string;
+}) {
+  const url = absoluteUrl(`/offres-emploi/${offer.slug}/`);
+
+  const EMPLOYMENT_TYPE: Record<string, string> = {
+    CDI: "FULL_TIME",
+    CDD: "TEMPORARY",
+    "Praticien hospitalier": "FULL_TIME",
+    "Libéral": "CONTRACTOR",
+    Vacation: "PART_TIME",
+  };
+
+  return {
+    "@type": "JobPosting",
+    "@id": `${url}#jobposting`,
+    title: offer.title,
+    description: offer.description,
+    datePosted: offer.date,
+    validThrough: `${offer.validThrough}T23:59:59+02:00`,
+    employmentType: EMPLOYMENT_TYPE[offer.contrat] ?? "OTHER",
+    identifier: {
+      "@type": "PropertyValue",
+      name: site.name,
+      value: offer.reference,
+    },
+    hiringOrganization: { "@id": absoluteUrl("/#organization") },
+    jobLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "FR",
+        ...(offer.region !== "France entière"
+          ? { addressRegion: offer.region }
+          : {}),
+        ...(offer.localite ? { addressLocality: offer.localite } : {}),
+      },
+    },
+    occupationalCategory: offer.metierName,
+    industry: "Santé",
+    url,
   };
 }
 

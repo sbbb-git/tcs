@@ -8,7 +8,7 @@ export const site = {
   url: "https://talentcaresante.fr",
   locale: "fr_FR",
   lang: "fr",
-  title: "TalentCare Santé — Cabinet de recrutement médical et paramédical",
+  title: "TalentCare Santé, Cabinet de recrutement médical et paramédical",
   description:
     "Cabinet de recrutement spécialisé santé. Nous accompagnons les professionnels de santé dans leur carrière et les hôpitaux, cliniques et EHPAD dans leurs recrutements.",
   tagline: "Le trait d'union entre talents médicaux et établissements de santé",
@@ -34,7 +34,7 @@ export const site = {
    * soumet des URL contrôle bien le domaine.
    *
    * Une clé inventée plutôt que générée par Bing renvoie un 403 permanent à
-   * chaque soumission — et ce 403 signifie « clé invalide », pas « trop de
+   * chaque soumission, et ce 403 signifie « clé invalide », pas « trop de
    * requêtes ».
    */
   indexNowKey: "73120872d51a44d3b035fabbb4a4fa5d",
@@ -44,7 +44,7 @@ export const site = {
  * Opti-CDS accompagne les centres de santé (création, dossier ARS, subventions,
  * organisation). Son offre est complémentaire de la nôtre : nous plaçons les
  * praticiens, Opti-CDS structure la structure qui les accueille. Les liens sont
- * éditoriaux et suivis — c'est un partenaire réel, pas un échange payé.
+ * éditoriaux et suivis, c'est un partenaire réel, pas un échange payé.
  */
 export const partner = {
   name: "Opti-CDS",
@@ -69,7 +69,7 @@ export const socialLinks = [
   { key: "instagram", label: "Instagram", href: site.socials.instagram },
 ] as const;
 
-/** Absolute URL for a site-relative path — required by OG tags and sitemaps. */
+/** Absolute URL for a site-relative path, required by OG tags and sitemaps. */
 export function absoluteUrl(path = "/"): string {
   return new URL(path, site.url).toString();
 }

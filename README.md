@@ -38,6 +38,86 @@ npm run dev          # http://localhost:3000
 | `npm run verify` | `typecheck` + `build` + `seo:check` |
 | `npm run og` | Régénère `public/og/*.png` (nécessite `npm i -D playwright`) |
 
+## Le système de design
+
+Le site suit les fondations décrites dans `designguidelines.md` : une page est
+une pile de bandes pleine largeur alternant deux fonds, séparées par un filet.
+
+- **Jetons** : tout passe par `tailwind.config.ts`. Aucune couleur en dur dans
+  un composant. Une seule teinte d'accent, déclinée de 50 à 950. Trois niveaux
+  d'encre : `ink` pour les titres, `ink-soft` pour le corps, `ink-mute` pour les
+  métadonnées.
+- **Le bleu de la marque (#0284C5) occupe le rang 500**, pas 600. Il échoue le
+  contraste AA sur blanc en taille de texte (4,11:1) : il sert donc aux aplats
+  et au logo, tandis que `accent-600` et `accent-700` portent le texte et les
+  fonds de bouton. Tous les contrastes ont été vérifiés avant écriture des
+  pages.
+- **Trois largeurs de conteneur** : `max-w-3xl` pour le texte long, `max-w-5xl`
+  pour les grilles, `max-w-6xl` pour les en-têtes et pieds. Le composant
+  `Section` les encapsule.
+- **Deux boutons**, `.btn-primary` et `.btn-secondary`, définis dans
+  `globals.css` et jamais recomposés en classes inline. Un seul primaire par
+  écran visible.
+- **Cartes** : `.card` et `.card-link`, avec `ring-1` plutôt que `border` pour
+  qu'un survol ne décale pas les voisines. Pas d'ombre au repos.
+- **Icônes** : jeu fermé dans `src/components/Icon.tsx`, aucune bibliothèque
+  installée. Jamais l'initiale d'un titre dans une pastille, et une icône de
+  rubrique ne réutilise pas celle d'une de ses cartes.
+
+Ce qu'on s'interdit : une deuxième couleur d'accent, un dégradé en fond de
+bande, une ombre au repos, une animation d'apparition au défilement, une image
+d'illustration sans fonction, le mode sombre.
+
+**Pas de tiret cadratin dans les textes.** Un contrôle du build le vérifie.
+
+## Le jobboard
+
+Une offre par fichier dans `content/offres/`. Le nom du fichier devient l'URL :
+`content/offres/mon-offre.mdx` donne `/offres-emploi/mon-offre/`.
+
+```mdx
+---
+title: "Médecin généraliste en centre de santé (H/F)"
+description: "Résumé de 110 à 160 caractères."
+metier: "medecin-generaliste"      # doit exister dans src/lib/metiers.ts
+region: "Île-de-France"            # doit exister dans REGIONS
+ville: "Paris et petite couronne"  # libellé affiché, peut rester vague
+localite: "Paris"                  # commune précise, uniquement si elle existe
+contrat: "CDI"                     # CDI, CDD, Praticien hospitalier, Libéral, Vacation
+structure: "Centre de santé"
+temps: "Temps plein"
+remuneration: "Selon expérience"
+date: "2026-09-10"
+reference: "TCS-MG-IDF"
+permanent: true                    # poste ouvert en continu
+---
+```
+
+`ville` et `localite` sont volontairement distincts : schema.org attend une
+commune réelle en `addressLocality`, et y déclarer « Plusieurs départements »
+produirait une donnée structurée fausse.
+
+### Ce que le balisage engage
+
+Chaque offre émet un `JobPosting`. **Une offre balisée doit correspondre à un
+poste réellement ouvert** : une annonce fictive relève des règles anti-spam de
+Google et expose à une action manuelle, en plus d'attirer de vraies
+candidatures. Retirez ou passez en `draft: true` une offre pourvue.
+
+`validThrough` est calculé automatiquement, six mois pour un poste permanent et
+un an sinon. Google retire des résultats toute offre dont l'échéance est passée.
+
+### Les pages métier
+
+`src/lib/metiers.ts` porte à la fois la taxonomie et le contenu éditorial des
+pages `/offres-emploi/metier/...`. C'est là que se joue le référencement : une
+page métier vaut par son texte, pas par sa liste d'offres.
+
+La taxonomie est volontairement courte. Décliner trente pages sur une même
+trame produirait des pages satellites, que Google traite comme telles.
+N'ajoutez un métier que si vous avez de quoi y écrire quelque chose de
+substantiel.
+
 ## Écrire un article
 
 Un fichier `.mdx` par article dans `content/blog/`. Le nom du fichier devient
@@ -45,7 +125,7 @@ l'URL : `content/blog/mon-article.mdx` → `/blog/mon-article/`.
 
 ```mdx
 ---
-title: "Titre affiché et balise <title> — 60 caractères maximum"
+title: "Titre affiché et balise <title>, 60 caractères maximum"
 description: "Meta description, entre 110 et 160 caractères."
 excerpt: "Résumé affiché sur les cartes du blog."
 date: "2026-06-15"
@@ -89,7 +169,7 @@ partir des titres `##` et `###`.
 Le champ `faq` prend une liste de `question` / `answer`. Le bloc est affiché en
 fin d'article **et** déclaré en données structurées : les deux décrivent donc le
 même contenu, ce que Google exige. À réserver aux vraies questions posées par les
-lecteurs — une FAQ artificielle ne gagne rien et alourdit la page.
+lecteurs, une FAQ artificielle ne gagne rien et alourdit la page.
 
 ```mdx
 <Callout title="Bon à savoir">
@@ -101,7 +181,7 @@ Un avertissement.
 </Callout>
 ```
 
-> **Attention** — `next-mdx-remote` v6 n'évalue plus les expressions `{…}` dans
+> **Attention**, `next-mdx-remote` v6 n'évalue plus les expressions `{…}` dans
 > le MDX : c'est le correctif de son avis de sécurité. Un attribut de la forme
 > `<Composant items={[...]} />` est ignoré **silencieusement** et le composant
 > reçoit `undefined`. Toute donnée structurée passe donc par le frontmatter.
@@ -126,7 +206,7 @@ publication groupée ressemble à de la génération de masse.
 `scripts/seo-check.mjs` s'exécute sur le HTML réellement produit dans `out/`, et
 non sur les sources. Il sort en code non nul pour interrompre un déploiement.
 
-**Erreurs bloquantes** — toujours :
+**Erreurs bloquantes**, toujours :
 
 - `<title>`, meta description, `og:image` ou URL canonique absente ;
 - titre ou description en doublon entre deux pages ;
@@ -136,12 +216,13 @@ non sur les sources. Il sort en code non nul pour interrompre un déploiement.
 - lien interne pointant vers une URL absente du build ;
 - composant non rendu apparaissant en texte brut dans le HTML ;
 - attribut MDX en expression `{…}` ;
+- présence d'un tiret cadratin dans une page ;
 - plus de deux articles programmés à la même date future ;
-- lien d'un article vers un autre qui ne paraîtra qu'après lui — le lien serait
+- lien d'un article vers un autre qui ne paraîtra qu'après lui, le lien serait
   mort dans l'intervalle. Ce contrôle porte sur tout le corpus, articles
   programmés compris, et pas seulement sur ce qui est déjà en ligne.
 
-**Dette qualité** — signalée, bloquante avec `--strict` :
+**Dette qualité**, signalée, bloquante avec `--strict` :
 
 - `<title>` de plus de 60 caractères ;
 - meta description hors de la fenêtre 110–160 caractères ;
@@ -151,7 +232,7 @@ non sur les sources. Il sort en code non nul pour interrompre un déploiement.
 Passez à `npm run seo:check:strict` dans la commande de build une fois la dette
 résorbée. L'activer trop tôt ne ferait que bloquer la production.
 
-## Déploiement — GitHub Actions vers Cloudflare Pages
+## Déploiement, GitHub Actions vers Cloudflare Pages
 
 Le projet Cloudflare Pages est de type **Direct Upload** : il n'a pas de
 configuration de build côté Cloudflare. C'est GitHub Actions qui construit et
@@ -210,7 +291,7 @@ comptent.
 
 La clé (`indexNowKey` dans `src/lib/site.ts`) est servie en clair à la racine par
 `public/<clé>.txt` : le protocole l'exige, c'est ce fichier qui prouve que celui
-qui soumet contrôle le domaine. **Ce n'est donc pas un secret** — contrairement au
+qui soumet contrôle le domaine. **Ce n'est donc pas un secret**, contrairement au
 token Cloudflare, qui lui n'a rien à faire dans le dépôt.
 
 Elle doit avoir été **générée par Bing Webmaster Tools**. Une clé inventée renvoie
@@ -239,7 +320,7 @@ créerait deux groupes contradictoires.
    sur la zone. Deux hostnames servant le même site divisent les signaux et
    dupliquent chaque page dans les rapports. `src/lib/site.ts` déclare
    actuellement l'apex.
-2. **Email Address Obfuscation** (Scrape Shield) — déjà désactivé. Activée,
+2. **Email Address Obfuscation** (Scrape Shield), déjà désactivé. Activée,
    l'option réécrit les liens `mailto:` vers une URL technique qui renvoie 404
    aux robots, sur chaque page du site. Le contrôle en ligne la détecte si elle
    revient.
@@ -251,7 +332,7 @@ Fait :
 
 - [x] Projet Cloudflare Pages `talentcaresante` créé et déployé depuis la CI.
 - [x] Domaine `talentcaresante.fr` rattaché au projet, enregistrement DNS posé.
-- [x] Obfuscation d'e-mail Cloudflare désactivée — les liens `mailto:` sont de
+- [x] Obfuscation d'e-mail Cloudflare désactivée, les liens `mailto:` sont de
       nouveau lisibles par les robots.
 - [x] `robots.txt` aligné sur la politique managée de Cloudflare, sans groupe
       contradictoire.

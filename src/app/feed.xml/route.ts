@@ -12,7 +12,7 @@ function escapeXml(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
-/** RSS feed — how aggregators and several assistant crawlers discover new posts. */
+/** RSS feed, how aggregators and several assistant crawlers discover new posts. */
 export function GET() {
   const posts = getPosts();
   const updated = posts[0]?.date;
@@ -34,7 +34,7 @@ export function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(site.name)} — Blog</title>
+    <title>${escapeXml(site.name)}, Blog</title>
     <link>${absoluteUrl("/blog/")}</link>
     <description>${escapeXml(
       "Analyses et conseils pratiques sur le recrutement médical en France.",

@@ -15,14 +15,14 @@ import { absoluteUrl } from "@/lib/site";
  *
  *  1. Ne jamais redéclarer un agent que Cloudflare bloque. Deux groupes
  *     contradictoires pour un même agent ont un comportement indéfini selon le
- *     robot — c'est le cas qu'on veut éviter, pas une subtilité théorique.
+ *     robot, c'est le cas qu'on veut éviter, pas une subtilité théorique.
  *  2. Ne pas reposer un groupe `User-agent: *` : celui de Cloudflare suffit, et
  *     un doublon n'apporte rien.
  *
  * Les agents listés ci-dessous sont uniquement des robots de recherche et de
  * citation : ils construisent l'index dont les réponses citent la source et
  * envoient donc des visiteurs. Aucun n'est bloqué par Cloudflare, il n'y a donc
- * pas de conflit — ils sont nommés pour qu'une évolution de la politique
+ * pas de conflit, ils sont nommés pour qu'une évolution de la politique
  * managée ne les emporte pas silencieusement.
  *
  * Pour autoriser l'entraînement des modèles, la bascule est côté Cloudflare

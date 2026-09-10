@@ -43,7 +43,7 @@ export type Heading = { id: string; text: string; level: 2 | 3 };
 
 export type Category = { slug: string; name: string; count: number };
 
-/** Accent-insensitive, URL-safe slug — "Démographie médicale" -> "demographie-medicale". */
+/** Accent-insensitive, URL-safe slug, "Démographie médicale" -> "demographie-medicale". */
 export function slugify(value: string): string {
   return value
     .normalize("NFD")
@@ -93,7 +93,7 @@ function countWords(body: string): number {
   return plain.split(/\s+/).filter(Boolean).length;
 }
 
-/** Midnight UTC today — posts dated later than this are held back. */
+/** Midnight UTC today, posts dated later than this are held back. */
 function todayUtc(): Date {
   const now = new Date();
   return new Date(

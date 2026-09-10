@@ -24,6 +24,16 @@ const DESC_MIN = 110;
 const DESC_MAX = 160;
 const MIN_WORDS = 350;
 
+/*
+ * Une annonce est structurellement plus courte qu'un article : elle décrit un
+ * poste, pas un sujet. Lui imposer le seuil des pages de contenu pousserait à
+ * la rembourrer d'un texte identique d'une offre à l'autre, ce qui est pire
+ * qu'une page courte. Le seuil reste néanmoins non nul : une annonce de trois
+ * lignes n'a rien à indexer.
+ */
+const MIN_WORDS_OFFER = 250;
+const OFFER_PAGE = /^\/offres-emploi\/(?!metier\/)[^/]+\/?$/;
+
 /**
  * Listings and legal notices are legitimately short: their job is to route or
  * to inform, not to rank on a query. The word-count floor targets the pages
@@ -32,6 +42,7 @@ const MIN_WORDS = 350;
 const NOT_CONTENT = [
   /^\/blog\/?$/,
   /^\/blog\/categorie\//,
+  /^\/offres-emploi\/?$/,
   /^\/mentions-legales\/?$/,
   /^\/confidentialite\/?$/,
 ];
@@ -146,6 +157,18 @@ for (const file of files) {
     fail(route, `${h1Count} balise(s) <h1> — il en faut exactement une.`);
   }
 
+  /*
+   * Le tiret cadratin est une signature d'écriture assistée en français, où la
+   * virgule, le deux-points ou la parenthèse font le même travail. Le bannir
+   * est une décision éditoriale, tenue ici plutôt que laissée à la relecture.
+   */
+  if (isContentPage) {
+    const dashes = (visibleText(html).match(/—/g) ?? []).length;
+    if (dashes > 0) {
+      fail(route, `${dashes} tiret(s) cadratin dans le texte. Utiliser une virgule, un deux-points ou une parenthèse.`);
+    }
+  }
+
   // A JSX tag that reached the output as literal text, e.g. "<Callout>".
   const leaked = visibleText(html).match(/<\/?[A-Z][A-Za-z0-9]*\s*\/?>/g);
   if (leaked) {
@@ -219,8 +242,9 @@ for (const file of files) {
 
     if (!NOT_CONTENT.some((pattern) => pattern.test(route))) {
       const words = countWords(visibleText(html));
-      if (words < MIN_WORDS) {
-        debt(route, `${words} mots réels (minimum ${MIN_WORDS}).`);
+      const floor = OFFER_PAGE.test(route) ? MIN_WORDS_OFFER : MIN_WORDS;
+      if (words < floor) {
+        debt(route, `${words} mots réels (minimum ${floor}).`);
       }
     }
   }

@@ -38,7 +38,7 @@ export const categoryMeta: Record<string, CategoryMeta> = {
     description:
       "Marque employeur, conditions d'exercice, intégration et fidélisation : ce qui décide un médecin à rejoindre un établissement, puis à y rester.",
     intro:
-      "Recruter un médecin coûte cher ; le garder protège cet investissement. Ces articles portent sur ce qui se joue avant la candidature — la réputation de l'établissement — et après la signature — l'intégration et les conditions d'exercice au quotidien.",
+      "Recruter un médecin coûte cher ; le garder protège cet investissement. Ces articles portent sur ce qui se joue avant la candidature, la réputation de l'établissement, et après la signature, l'intégration et les conditions d'exercice au quotidien.",
   },
   "demographie-medicale": {
     name: "Démographie médicale",
@@ -50,7 +50,7 @@ export const categoryMeta: Record<string, CategoryMeta> = {
   },
 };
 
-/** Order used on the blog index — most structural topic first. */
+/** Order used on the blog index, most structural topic first. */
 export const categoryOrder = [
   "recrutement-medical",
   "remuneration-et-statuts",
