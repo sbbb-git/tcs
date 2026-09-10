@@ -24,3 +24,12 @@
 
 /robots.txt
   Cache-Control: public, max-age=300, must-revalidate
+
+# Les cartes de partage des annonces sont rendues au build par la convention
+# `opengraph-image` de Next, qui produit des fichiers SANS extension. Un
+# hébergeur statique devine alors le type MIME et se trompe : les robots des
+# réseaux sociaux refusent la réponse et le partage part sans aperçu. Le type
+# doit donc être imposé ici.
+/offres-emploi/:slug/opengraph-image
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800

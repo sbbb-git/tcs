@@ -15,7 +15,12 @@ type PageMetaInput = {
   description: string;
   path: string;
   keywords?: readonly string[];
-  ogImage?: string;
+  /**
+   * Carte de partage propre à la page. Les dimensions sont exigées plutôt que
+   * déduites : appliquer celles de l'image par défaut à une image différente
+   * produit des balises qui mentent, et les validateurs recadrent ou refusent.
+   */
+  ogImage?: { path: string; width: number; height: number; alt: string };
   type?: "website" | "article";
   publishedTime?: string;
   modifiedTime?: string;
@@ -40,7 +45,12 @@ export function pageMetadata({
 }: PageMetaInput): Metadata {
   const url = absoluteUrl(path);
   const image = ogImage
-    ? { ...OG_IMAGE, url: absoluteUrl(ogImage) }
+    ? {
+        url: absoluteUrl(ogImage.path),
+        width: ogImage.width,
+        height: ogImage.height,
+        alt: ogImage.alt,
+      }
     : OG_IMAGE;
 
   return {

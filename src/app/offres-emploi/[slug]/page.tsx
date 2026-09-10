@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import MdxContent from "@/components/MdxContent";
 import OfferCard from "@/components/OfferCard";
 import { getOffer, getOffers, getOffersByMetier, validThrough } from "@/lib/jobs";
+import { OG_SIZE, offerOgImagePath } from "@/lib/og";
 import {
   breadcrumbSchema,
   jobPostingSchema,
@@ -32,6 +33,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: offer.title,
     description: offer.description,
     path: `/offres-emploi/${offer.slug}/`,
+    ogImage: {
+      path: offerOgImagePath(offer.slug),
+      ...OG_SIZE,
+      // Décrit ce que la carte montre. Reprendre le titre y répéterait le
+      // lieu, que la plupart des intitulés portent déjà.
+      alt: `${offer.metierMeta.name}, ${offer.ville ?? offer.region}, ${offer.contrat}`,
+    },
   });
 }
 
