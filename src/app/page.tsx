@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import MedecinsSection from "@/components/MedecinsSection";
 import RecruteursSection from "@/components/RecruteursSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import PartnerSection from "@/components/PartnerSection";
 import LatestArticles from "@/components/LatestArticles";
@@ -15,15 +14,15 @@ import { getOffers } from "@/lib/jobs";
 import { faqSchema, jsonLdGraph, pageMetadata, serviceSchema } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Recrutement médical et paramédical, TalentCare Santé",
+  title: "Recrutement de médecins à Paris | TalentCare Santé",
   description:
-    "Cabinet de recrutement spécialisé santé : nous accompagnons médecins et soignants dans leur carrière, et les établissements dans leurs recrutements.",
+    "Cabinet de recrutement médical à Paris : médecins généralistes et spécialistes, sages-femmes, échographistes. Candidature confidentielle.",
   path: "/",
   keywords: [
-    "cabinet de recrutement médical",
-    "recrutement paramédical",
-    "recruter un médecin",
-    "emploi santé",
+    "cabinet de recrutement médical Paris",
+    "recruter un médecin Paris",
+    "emploi médecin Paris",
+    "recrutement sage-femme",
   ],
 });
 
@@ -46,7 +45,6 @@ export default function HomePage() {
       <LatestOffers offers={offers} />
       <MedecinsSection />
       <RecruteursSection />
-      <TestimonialsSection />
       <PartnerSection />
       <LatestArticles posts={posts} />
       <HomeFaq />

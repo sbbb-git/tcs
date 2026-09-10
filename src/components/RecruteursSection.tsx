@@ -2,27 +2,28 @@ import FeatureSection, { type Feature } from "@/components/FeatureSection";
 
 const features: Feature[] = [
   {
-    icon: "users",
-    title: "Vivier de talents qualifiés",
+    icon: "handshake",
+    title: "On refuse les missions qu'on ne sait pas mener",
     description:
-      "Accédez à notre base de professionnels de santé pré-qualifiés.",
+      "Un poste hors de notre périmètre ou impossible à pourvoir dans vos conditions, on le dit au premier échange plutôt que de l'accepter et de vous faire perdre un trimestre.",
   },
   {
     icon: "target",
-    title: "Matching précis",
+    title: "On vous pose les questions du candidat",
     description:
-      "Nous identifions les profils correspondant exactement à vos besoins.",
+      "Combien de praticiens dans l'équipe, quel temps par consultation, quel âge a le matériel. Si vous ne pouvez pas répondre, le recrutement s'arrêtera là, avec nous ou avec un autre.",
   },
   {
-    icon: "zap",
-    title: "Réactivité",
-    description: "Une équipe mobilisée pour répondre rapidement à vos besoins.",
+    icon: "users",
+    title: "L'approche directe, pas la diffusion",
+    description:
+      "Sur les spécialités tendues, les praticiens sont en poste et ne lisent aucune annonce. Les atteindre suppose de les contacter un par un, dans la confidentialité.",
   },
   {
-    icon: "globe",
-    title: "Engagement pour la continuité des soins",
+    icon: "trendingUp",
+    title: "On suit après la signature",
     description:
-      "Nous contribuons à assurer la présence médicale là où les besoins sont réels, au service des patients et des territoires.",
+      "Un praticien qui part à dix-huit mois, c'est un recrutement à refaire. On reste en contact les premiers mois, des deux côtés.",
   },
 ];
 
@@ -31,11 +32,11 @@ export default function RecruteursSection() {
     <FeatureSection
       id="recruteurs"
       tone="soft"
-      eyebrow="Établissements & Recruteurs"
-      title="Recrutez les meilleurs talents de santé"
-      intro="Hôpitaux, cliniques, EHPAD, cabinets… Nous comprenons vos enjeux et trouvons les profils adaptés."
+      eyebrow="Vous cherchez un praticien"
+      title="Comment on travaille"
+      intro="Cabinets, centres d'imagerie, maternités et centres de santé, à Paris et en petite couronne."
       features={features}
-      cta={{ href: "#contact", label: "Confier un recrutement" }}
+      cta={{ href: "#contact", label: "Nous décrire votre besoin" }}
     />
   );
 }

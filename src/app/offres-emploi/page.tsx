@@ -10,9 +10,9 @@ import { breadcrumbSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Offres d'emploi santé et médical | TalentCare",
+  title: "Offres d'emploi médecin et sage-femme à Paris",
   description:
-    "Postes de médecin, infirmier, aide-soignant et pharmacien en hôpital, clinique, EHPAD et centre de santé, partout en France. Candidature confidentielle.",
+    "Postes de médecin généraliste, radiologue, ORL, médecin esthétique, sage-femme et échographiste à Paris. Candidature transmise avec votre accord.",
   path: "/offres-emploi/",
   keywords: [
     "offre emploi médecin",
@@ -42,7 +42,7 @@ export default function OffersPage() {
             "@id": absoluteUrl("/offres-emploi/#collection"),
             name: "Offres d'emploi TalentCare Santé",
             description:
-              "Postes ouverts en établissement de santé et en structure d'exercice coordonné, partout en France.",
+              "Postes de médecin et de sage-femme à Paris, en cabinet, centre d'imagerie, centre de santé et maternité.",
             inLanguage: "fr-FR",
             isPartOf: { "@id": absoluteUrl("/#website") },
           },
@@ -54,12 +54,12 @@ export default function OffersPage() {
           <Breadcrumbs items={crumbs} />
           <p className="eyebrow">Offres d&apos;emploi</p>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-4xl lg:text-5xl">
-            Postes ouverts en établissement de santé
+            Médecins et sages-femmes, à Paris
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            Médecins, infirmiers, aides-soignants et pharmaciens, en hôpital,
-            clinique, EHPAD et centre de santé. Votre candidature n&apos;est
-            transmise qu&apos;avec votre accord, poste par poste.
+            Cabinets, centres d&apos;imagerie, centres de santé et maternités
+            parisiens. Votre candidature n&apos;est transmise qu&apos;avec votre
+            accord, structure par structure.
           </p>
 
           <nav aria-label="Métiers" className="mt-7">

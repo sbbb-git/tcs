@@ -13,7 +13,7 @@ export default function LatestArticles({ posts }: { posts: Post[] }) {
       <SectionHeader
         eyebrow="Ressources"
         title="Comprendre le recrutement médical"
-        intro="Nos analyses sur la démographie médicale, les rémunérations, les statuts et l'attractivité des établissements."
+        intro="Statuts, rémunération, conditions d'exercice : ce qu'on explique en entretien, écrit une bonne fois."
         id="articles-title"
       />
 

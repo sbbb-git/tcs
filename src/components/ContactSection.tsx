@@ -100,8 +100,8 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
     <Section id="contact" tone="soft" width="full" labelledBy="contact-title">
       <SectionHeader
         eyebrow="Contact"
-        title="Parlons de votre projet"
-        intro="Que vous soyez professionnel de santé ou recruteur, notre équipe est à votre écoute."
+        title="Dites-nous ce que vous cherchez"
+        intro="Praticien en recherche ou structure qui recrute, on lit tout et on répond sous 24 heures."
         id="contact-title"
       />
 

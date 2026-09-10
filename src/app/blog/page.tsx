@@ -9,9 +9,9 @@ import { breadcrumbSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Blog : recrutement médical en France | TalentCare",
+  title: "Blog : recrutement et exercice médical | TalentCare",
   description:
-    "Analyses et conseils pratiques sur le recrutement médical en France : démographie, rémunérations, statuts, marque employeur et fidélisation des praticiens.",
+    "Statuts, rémunération, conditions d'exercice, spécialités : ce qu'un praticien et une structure ont besoin de savoir avant un recrutement médical.",
   path: "/blog/",
   keywords: [
     "recrutement médical",

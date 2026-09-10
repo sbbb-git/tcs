@@ -50,9 +50,9 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-accent-100/80">
-              Cabinet de recrutement spécialisé santé. Nous accompagnons les
-              praticiens dans leur mobilité et les établissements dans leurs
-              recrutements, partout en France.
+              Cabinet de recrutement médical à Paris. Médecins, sages-femmes
+              et échographistes, pour les cabinets, centres d&apos;imagerie et
+              maternités parisiens.
             </p>
             <ul className="mt-5 flex gap-2">
               {SOCIALS.map((s) => (

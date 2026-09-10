@@ -1,77 +1,52 @@
 import Link from "next/link";
 
-import { Icon, type IconName } from "@/components/Icon";
-
-const COVERED: { icon: IconName; label: string; detail: string }[] = [
-  { icon: "stethoscope", label: "Médecins", detail: "Généralistes et spécialistes" },
-  { icon: "heart", label: "Soignants", detail: "Infirmiers, aides-soignants" },
-  { icon: "shield", label: "Pharmaciens", detail: "Officine et hospitaliers" },
-  { icon: "building", label: "Encadrement", detail: "Coordination et direction" },
-];
+import { Icon } from "@/components/Icon";
 
 export default function Hero() {
   return (
     <section className="border-b border-line bg-bg">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
-            <p className="eyebrow">Cabinet de recrutement spécialisé santé</p>
+            <p className="eyebrow">Cabinet de recrutement médical · Paris</p>
 
-            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight text-ink md:text-5xl lg:text-6xl">
-              Le trait d&apos;union entre{" "}
-              <span className="bg-gradient-to-r from-accent-600 to-accent-400 bg-clip-text text-transparent">
-                talents médicaux
-              </span>{" "}
-              et établissements de santé
+            <h1 className="mt-3 max-w-2xl text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl lg:text-6xl">
+              Recrutement de médecins et de sages-femmes.
             </h1>
 
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
-              Nous accompagnons les professionnels de santé dans leur carrière et
-              les hôpitaux, cliniques, EHPAD et centres de santé dans leurs
-              recrutements, partout en France.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+              Vous cherchez un poste, ou vous cherchez un praticien. Dans les
+              deux cas on vous répond sous 24 heures, y compris pour dire que
+              nous ne sommes pas les bons.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/offres-emploi/" className="btn-primary">
-                <Icon name="search" className="h-[18px] w-[18px]" />
-                Voir les offres d&apos;emploi
+                Voir les postes ouverts
+                <Icon name="arrowRight" className="h-[18px] w-[18px]" />
               </Link>
               <Link href="#recruteurs" className="btn-secondary">
-                <Icon name="building" className="h-[18px] w-[18px]" />
-                Je recrute
+                Nous confier un recrutement
               </Link>
             </div>
-
-            <p className="mt-6 inline-flex items-center gap-2 text-sm text-ink-mute">
-              <Icon name="clock" className="h-4 w-4" />
-              Réponse garantie sous 24 heures, candidature confidentielle
-            </p>
           </div>
 
-          <div className="card">
-            <p className="eyebrow">Les métiers que nous couvrons</p>
-            <ul className="mt-5 space-y-4">
-              {COVERED.map((item) => (
-                <li key={item.label} className="flex items-start gap-3.5">
-                  <span className="icon-pill-soft">
-                    <Icon name={item.icon} className="h-[18px] w-[18px]" />
-                  </span>
-                  <span>
-                    <span className="block font-semibold text-ink">{item.label}</span>
-                    <span className="block text-sm text-ink-soft">{item.detail}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 border-t border-line pt-5">
-              <Link
-                href="/offres-emploi/"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-accent-700 hover:text-accent-800"
-              >
-                Parcourir les postes ouverts
-                <Icon name="arrowRight" className="h-4 w-4" />
-              </Link>
-            </div>
+          <div className="rounded-2xl bg-soft p-6 ring-1 ring-line lg:p-7">
+            <p className="text-sm leading-relaxed text-ink-soft">
+              Un poste vacant, ce n&apos;est pas une ligne dans un tableau de
+              bord. C&apos;est une file active qui se ferme, des délais de
+              rendez-vous qui s&apos;allongent et une équipe qui absorbe la
+              charge en attendant.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+              C&apos;est pour ça qu&apos;on préfère refuser une mission
+              qu&apos;on ne sait pas mener plutôt que de vous faire perdre trois
+              mois.
+            </p>
+            <p className="mt-6 border-t border-line pt-5 text-sm font-semibold text-ink">
+              Généraliste, radiologue, ORL, médecine esthétique, sage-femme,
+              échographie.
+            </p>
           </div>
         </div>
       </div>
