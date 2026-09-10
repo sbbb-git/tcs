@@ -15,9 +15,9 @@ export const metadata: Metadata = pageMetadata({
     "Postes de médecin généraliste, radiologue, ORL, médecin esthétique, sage-femme et échographiste à Paris. Candidature transmise avec votre accord.",
   path: "/offres-emploi/",
   keywords: [
-    "offre emploi médecin",
-    "emploi infirmier",
-    "recrutement santé",
+    "offre emploi médecin Paris",
+    "emploi sage-femme Paris",
+    "recrutement médical Paris",
     "annonces médicales",
   ],
 });
@@ -42,7 +42,7 @@ export default function OffersPage() {
             "@id": absoluteUrl("/offres-emploi/#collection"),
             name: "Offres d'emploi TalentCare Santé",
             description:
-              "Postes de médecin et de sage-femme à Paris, en cabinet, centre d'imagerie, centre de santé et maternité.",
+              "Postes de médecin et de sage-femme à Paris, en cabinet, centre médical, centre d'imagerie et centre de santé.",
             inLanguage: "fr-FR",
             isPartOf: { "@id": absoluteUrl("/#website") },
           },
@@ -57,9 +57,9 @@ export default function OffersPage() {
             Médecins et sages-femmes, à Paris
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            Cabinets, centres d&apos;imagerie, centres de santé et maternités
-            parisiens. Votre candidature n&apos;est transmise qu&apos;avec votre
-            accord, structure par structure.
+            Cabinets, centres médicaux, centres d&apos;imagerie et centres de
+            santé parisiens. Votre candidature n&apos;est transmise
+            qu&apos;avec votre accord, structure par structure.
           </p>
 
           <nav aria-label="Métiers" className="mt-7">

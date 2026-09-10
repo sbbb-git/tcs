@@ -13,7 +13,7 @@ export default function LatestOffers({ offers }: { offers: Offer[] }) {
       <SectionHeader
         eyebrow="Postes à pourvoir"
         title="Postes ouverts à Paris"
-        intro="Cabinets, centres d'imagerie, centres de santé et maternités parisiens. Candidature transmise avec votre accord uniquement."
+        intro="Cabinets, centres médicaux, centres d'imagerie et centres de santé parisiens. Candidature transmise avec votre accord uniquement."
         id="offres-accueil-title"
       />
 

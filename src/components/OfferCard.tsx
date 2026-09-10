@@ -35,7 +35,7 @@ export default function OfferCard({
       <ul className="mt-4 flex flex-wrap gap-2 text-xs">
         <li className="inline-flex items-center gap-1.5 rounded-lg bg-soft px-2.5 py-1.5 text-ink-soft ring-1 ring-line">
           <Icon name="mapPin" className="h-3.5 w-3.5 text-ink-mute" />
-          {offer.region}
+          {offer.ville ?? offer.region}
         </li>
         <li className="inline-flex items-center gap-1.5 rounded-lg bg-soft px-2.5 py-1.5 text-ink-soft ring-1 ring-line">
           <Icon name="fileText" className="h-3.5 w-3.5 text-ink-mute" />
