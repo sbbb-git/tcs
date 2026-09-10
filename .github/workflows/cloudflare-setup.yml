@@ -256,8 +256,12 @@ jobs:
 
       # www n'existe pas : la règle de redirection est donc posée AVANT
       # l'enregistrement DNS. Dans l'ordre inverse, un échec de la règle
-      # laisserait www servir le même site que l'apex — deux hostnames pour un
+      # laisserait www servir le même site que l'apex, deux hostnames pour un
       # même contenu, exactement ce qu'on cherche à éviter.
+      #
+      # Le jeu de règles est lu puis réécrit augmenté de la nôtre, jamais
+      # remplacé : l'API de cette phase n'accepte que des PUT sur l'ensemble du
+      # ruleset, et un PUT nu effacerait les redirections déjà en place.
       - name: Rediriger www vers l'apex
         if: ${{ inputs.setup_www }}
         env:
@@ -265,15 +269,17 @@ jobs:
           DOMAIN: ${{ env.DOMAIN }}
         run: |
           python3 - <<'PY'
-          import json, os, subprocess, sys
+          import json, os, subprocess, sys, time
 
           domain = os.environ["DOMAIN"]
+          www = f"www.{domain}"
           token = os.environ["CF_API_TOKEN"]
           api = "https://api.cloudflare.com/client/v4"
-          headers = ["-H", f"Authorization: Bearer {token}", "-H", "Content-Type: application/json"]
 
           def call(method, path, body=None):
-              cmd = ["curl", "-sS", "-X", method, *headers]
+              cmd = ["curl", "-sS", "-X", method,
+                     "-H", f"Authorization: Bearer {token}",
+                     "-H", "Content-Type: application/json"]
               if body is not None:
                   cmd += ["-d", json.dumps(body)]
               cmd.append(f"{api}{path}")
@@ -281,63 +287,102 @@ jobs:
               try:
                   return json.loads(out)
               except json.JSONDecodeError:
-                  return {"success": False, "errors": [{"code": 0, "message": out[:200]}]}
+                  return {"success": False, "errors": [{"code": 0, "message": out[:300]}]}
 
-          def explain(res):
-              for e in res.get("errors", []):
-                  print(f"  [{e.get('code')}] {e.get('message')}")
+          def errs(res):
+              return ", ".join(f"[{e.get('code')}] {e.get('message')}"
+                               for e in res.get("errors", []))
 
           zone = call("GET", f"/zones?name={domain}")
           if not zone.get("success") or not zone.get("result"):
-              print(f"Zone {domain} illisible.")
-              explain(zone)
+              print(f"Zone {domain} illisible : {errs(zone)}")
               sys.exit(1)
           zone_id = zone["result"][0]["id"]
 
-          # 1) La règle de redirection.
           phase = "/rulesets/phases/http_request_dynamic_redirect/entrypoint"
-          rule = {
-              "rules": [{
-                  "action": "redirect",
-                  "description": f"www.{domain} vers l'apex",
-                  "expression": f'(http.host eq "www.{domain}")',
-                  "action_parameters": {
-                      "from_value": {
-                          "status_code": 301,
-                          "target_url": {
-                              "expression": f'concat("https://{domain}", http.request.uri.path)'
-                          },
-                          "preserve_query_string": True,
-                      }
-                  },
-              }]
+          notre_regle = {
+              "action": "redirect",
+              "description": f"{www} vers l'apex",
+              "expression": f'(http.host eq "{www}")',
+              "action_parameters": {
+                  "from_value": {
+                      "status_code": 301,
+                      "target_url": {
+                          "expression": f'concat("https://{domain}", http.request.uri.path)'
+                      },
+                      "preserve_query_string": True,
+                  }
+              },
           }
-          res = call("PUT", f"/zones/{zone_id}{phase}", rule)
+
+          # 1) Lire l'existant pour ne rien écraser.
+          actuel = call("GET", f"/zones/{zone_id}{phase}")
+          existantes = []
+          if actuel.get("success"):
+              existantes = actuel.get("result", {}).get("rules", []) or []
+              print(f"{len(existantes)} règle(s) de redirection déjà en place, conservée(s).")
+          elif any(e.get("code") == 10000 for e in actuel.get("errors", [])):
+              print(f"Lecture des règles refusée : {errs(actuel)}")
+              print("  -> permission Dynamic Redirect absente du token.")
+              sys.exit(1)
+          else:
+              print("Aucun jeu de règles existant.")
+
+          deja = [r for r in existantes
+                  if r.get("expression") == notre_regle["expression"]]
+          if deja:
+              print("La règle www existait déjà, elle est remplacée par la même.")
+              existantes = [r for r in existantes if r not in deja]
+
+          garde = [{k: r[k] for k in ("action", "expression", "description",
+                                      "action_parameters", "enabled")
+                    if k in r} for r in existantes]
+
+          res = call("PUT", f"/zones/{zone_id}{phase}", {"rules": garde + [notre_regle]})
           if not res.get("success"):
-              print("Création de la règle de redirection refusée :")
-              explain(res)
+              print(f"Création de la règle refusée : {errs(res)}")
               print("  -> permission Dynamic Redirect:Edit absente du token.")
               print("\nÀ faire à la main : Cloudflare > le domaine > Rules > Redirect Rules")
-              print(f"  Si http.host = www.{domain}  ->  301 vers https://{domain} (préserver le chemin)")
+              print(f"  Si http.host = {www}  ->  301 vers https://{domain} (préserver le chemin)")
               sys.exit(1)
           print("Règle de redirection 301 posée.")
 
           # 2) L'enregistrement DNS, seulement une fois la règle en place.
           dns = call("POST", f"/zones/{zone_id}/dns_records", {
-              "type": "CNAME",
-              "name": f"www.{domain}",
-              "content": domain,
-              "proxied": True,
-              "comment": "Redirigé en 301 vers l'apex",
+              "type": "CNAME", "name": www, "content": domain,
+              "proxied": True, "comment": "Redirigé en 301 vers l'apex",
           })
+          record_id = None
           if dns.get("success"):
-              print(f"Enregistrement www créé : CNAME -> {domain} (proxy activé)")
+              record_id = dns["result"]["id"]
+              print(f"{www} créé : CNAME -> {domain} (proxy activé)")
           elif any(e.get("code") == 81053 for e in dns.get("errors", [])):
-              print("L'enregistrement www existe déjà.")
+              print(f"{www} existait déjà.")
           else:
-              print("Création de l'enregistrement www refusée :")
-              explain(dns)
+              print(f"Création DNS refusée : {errs(dns)}")
               sys.exit(1)
+
+          # 3) Vérifier le comportement réel, pas seulement le succès de l'API.
+          print("\nPropagation, puis vérification...")
+          for essai in range(12):
+              time.sleep(15)
+              out = subprocess.run(
+                  ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code} %{redirect_url}",
+                   "--max-time", "10", f"https://{www}/offres-emploi/?a=1"],
+                  capture_output=True, text=True).stdout.split(" ", 1)
+              statut = out[0]
+              cible = out[1].strip() if len(out) > 1 else ""
+              print(f"  essai {essai + 1} : {statut} {cible}")
+              if statut == "301" and cible.startswith(f"https://{domain}/offres-emploi/"):
+                  print(f"\nOK : {www} redirige en 301 vers l'apex, chemin et requête préservés.")
+                  sys.exit(0)
+
+          print("\nLa redirection ne se déclenche pas. Retour en arrière :")
+          if record_id:
+              rm = call("DELETE", f"/zones/{zone_id}/dns_records/{record_id}")
+              print("  DNS retiré." if rm.get("success") else f"  DNS : {errs(rm)}")
+              print("  www redevient injoignable, ce qui vaut mieux qu'un doublon indexable.")
+          sys.exit(1)
           PY
 
       # Le blocage des robots IA vient du robots.txt managé de Cloudflare, pas
