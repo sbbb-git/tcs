@@ -258,7 +258,7 @@ export const metiers: Metier[] = [
       {
         question: "Une sage-femme échographiste travaille-t-elle seule ?",
         answer:
-          "Non, et c'est un point à vérifier. L'organisation doit prévoir un recours vers un médecin échographiste en cas d'anomalie dépistée. Une structure qui ne l'a pas organisé fait porter au praticien une responsabilité qui ne devrait pas être la sienne seule.",
+          "Non, et c'est un point à vérifier. L'organisation doit prévoir un recours vers un médecin échographiste en cas d'anomalie dépistée. Une structure qui ne l'a pas prévu fait porter au praticien une responsabilité qui ne devrait pas être la sienne seule.",
       },
       {
         question: "Quelle formation pour pratiquer l'échographie comme sage-femme ?",
@@ -290,7 +290,7 @@ export const metiers: Metier[] = [
         paragraphs: [
           "Le matériel disponible et son renouvellement. En échographie, la qualité de l'appareil conditionne directement celle de l'examen.",
           "Le temps alloué par examen et le nombre de vacations. Un rythme trop serré dégrade l'examen avant de dégrader le praticien.",
-          "L'organisation du compte rendu et l'existence d'un second avis en cas de doute.",
+          "L'organisation du compte rendu et le circuit prévu en cas de doute.",
         ],
       },
     ],

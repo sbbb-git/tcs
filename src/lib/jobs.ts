@@ -59,9 +59,9 @@ export type OfferFrontmatter = {
   date: string;
   reference: string;
   /**
-   * Poste ouvert en continu plutôt qu'une vacance ponctuelle. Un cabinet de
-   * recrutement a des besoins permanents sur certains profils ; le dire
-   * explicitement évite de faire passer une offre-type pour un poste unique.
+   * Recrutement récurrent plutôt que vacance ponctuelle. N'apparaît pas dans
+   * l'interface : le champ ne sert qu'à calculer la durée de validité déclarée
+   * en données structurées.
    */
   permanent?: boolean;
   draft?: boolean;
@@ -151,7 +151,7 @@ export function getRegionsWithOffers(): { region: Region; count: number }[] {
  *
  * Google demande une offre à jour : une annonce sans échéance, ou dont
  * l'échéance est dépassée, sort des résultats. Six mois glissants pour un
- * poste ouvert en continu, un an pour les autres.
+ * recrutement récurrent, un an pour les autres.
  */
 export function validThrough(offer: Offer): string {
   const from = new Date(`${offer.date}T00:00:00Z`);

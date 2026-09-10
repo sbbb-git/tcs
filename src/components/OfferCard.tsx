@@ -51,14 +51,8 @@ export default function OfferCard({
         {offer.description}
       </p>
 
-      <p className="mt-5 flex items-center justify-between border-t border-line pt-4 text-xs text-ink-mute">
-        <span>Réf. {offer.reference}</span>
-        {offer.permanent && (
-          <span className="inline-flex items-center gap-1.5">
-            <Icon name="trendingUp" className="h-3.5 w-3.5" />
-            Poste ouvert en continu
-          </span>
-        )}
+      <p className="mt-5 border-t border-line pt-4 text-xs text-ink-mute">
+        Réf. {offer.reference}
       </p>
     </article>
   );

@@ -98,12 +98,6 @@ export default async function OfferPage({ params }: Params) {
               Publiée le <time dateTime={offer.date}>{formatDate(offer.date)}</time>
             </span>
             <span>Réf. {offer.reference}</span>
-            {offer.permanent && (
-              <span className="inline-flex items-center gap-1.5 text-accent-700">
-                <Icon name="trendingUp" className="h-4 w-4" />
-                Poste ouvert en continu
-              </span>
-            )}
           </p>
         </div>
       </div>
