@@ -76,6 +76,7 @@ sources officielles.
 | `category` | oui | Doit exister dans `src/lib/categories.ts` |
 | `keywords` | non | Mots-clés visés |
 | `keyPoints` | non | Encadré de synthèse en tête d'article |
+| `faq` | non | Questions-réponses en fin d'article, déclarées en `FAQPage` |
 | `updated` | non | Date de dernière mise à jour |
 | `draft` | non | `true` exclut l'article du build |
 
@@ -83,6 +84,11 @@ Le temps de lecture est calculé automatiquement, et le sommaire est construit �
 partir des titres `##` et `###`.
 
 ### Composants disponibles dans le MDX
+
+Le champ `faq` prend une liste de `question` / `answer`. Le bloc est affiché en
+fin d'article **et** déclaré en données structurées : les deux décrivent donc le
+même contenu, ce que Google exige. À réserver aux vraies questions posées par les
+lecteurs — une FAQ artificielle ne gagne rien et alourdit la page.
 
 ```mdx
 <Callout title="Bon à savoir">
@@ -129,7 +135,10 @@ non sur les sources. Il sort en code non nul pour interrompre un déploiement.
 - lien interne pointant vers une URL absente du build ;
 - composant non rendu apparaissant en texte brut dans le HTML ;
 - attribut MDX en expression `{…}` ;
-- plus de deux articles programmés à la même date future.
+- plus de deux articles programmés à la même date future ;
+- lien d'un article vers un autre qui ne paraîtra qu'après lui — le lien serait
+  mort dans l'intervalle. Ce contrôle porte sur tout le corpus, articles
+  programmés compris, et pas seulement sur ce qui est déjà en ligne.
 
 **Dette qualité** — signalée, bloquante avec `--strict` :
 

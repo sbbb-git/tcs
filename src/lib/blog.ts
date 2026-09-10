@@ -17,6 +17,12 @@ export type PostFrontmatter = {
   keywords?: string[];
   /** Summary bullets shown above the article body. */
   keyPoints?: string[];
+  /**
+   * Questions-réponses affichées en fin d'article et déclarées en FAQPage.
+   * À réserver aux vraies questions posées par les lecteurs : un bloc FAQ
+   * artificiel ne gagne rien et alourdit la page.
+   */
+  faq?: { question: string; answer: string }[];
   /** Overrides the computed reading time when set. */
   readingTime?: string;
   /** Set to true to keep a post out of the build entirely. */

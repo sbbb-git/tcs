@@ -264,6 +264,51 @@ if (fs.existsSync(CONTENT_DIR_MDX)) {
   }
 }
 
+/* --- liens internes entre articles, programmés compris --- */
+
+/*
+ * Le contrôle sur out/ ne voit que les articles déjà publiés. Un article
+ * programmé qui pointe vers un article publié plus tard produirait un lien mort
+ * le jour de sa sortie — et le build ne le signalerait qu'à ce moment-là, sur
+ * la branche de production. On vérifie donc le corpus entier, dates comprises.
+ */
+const BLOG_DIR = path.join(process.cwd(), "content", "blog");
+const todayIso = new Date().toISOString().slice(0, 10);
+if (fs.existsSync(BLOG_DIR)) {
+  const posts = new Map();
+  for (const file of fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx"))) {
+    const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
+    posts.set(file.replace(/\.mdx$/, ""), {
+      file,
+      date: /^date:\s*"?(\d{4}-\d{2}-\d{2})/m.exec(raw)?.[1] ?? "",
+      body: raw.replace(/^---[\s\S]*?\n---\n/, ""),
+    });
+  }
+
+  for (const [slug, post] of posts) {
+    const links = [...post.body.matchAll(/\]\((\/blog\/[^)\s]*)\)/g)].map((m) => m[1]);
+    for (const link of new Set(links)) {
+      const targetSlug = link.replace(/^\/blog\//, "").replace(/\/$/, "");
+      if (targetSlug.startsWith("categorie/")) continue;
+
+      const target = posts.get(targetSlug);
+      if (!target) {
+        fail(`content/blog/${post.file}`, `lien vers un article inexistant : ${link}`);
+      } else if (target.date > post.date && target.date > todayIso) {
+        // Entre deux articles déjà parus, l'ordre des dates n'a plus d'effet :
+        // les deux sont visibles. Le problème ne se pose que lorsque la cible
+        // est encore à venir au moment où l'article source est, lui, visible.
+        fail(
+          `content/blog/${post.file}`,
+          `lien vers « ${targetSlug} », qui ne paraît que le ${target.date} ` +
+            `alors que cet article est visible dès le ${post.date} : le lien ` +
+            "serait mort dans l'intervalle.",
+        );
+      }
+    }
+  }
+}
+
 /* --- publishing rhythm --- */
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");

@@ -9,12 +9,14 @@ import MdxContent from "@/components/MdxContent";
 import PostCard from "@/components/PostCard";
 import TableOfContents from "@/components/TableOfContents";
 import { KeyPoints } from "@/components/mdx/KeyPoints";
+import { Faq } from "@/components/mdx/Faq";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getPost, getPosts, getRelatedPosts, slugify } from "@/lib/blog";
 import {
   articleSchema,
   breadcrumbSchema,
+  faqSchema,
   jsonLdGraph,
   pageMetadata,
 } from "@/lib/seo";
@@ -59,7 +61,11 @@ export default async function BlogPostPage({ params }: Params) {
   return (
     <>
       <JsonLd
-        data={jsonLdGraph([articleSchema(post), breadcrumbSchema(crumbs)])}
+        data={jsonLdGraph([
+          articleSchema(post),
+          breadcrumbSchema(crumbs),
+          ...(post.faq?.length ? [faqSchema(post.faq)] : []),
+        ])}
       />
 
       <div className="px-4 pb-20 pt-32">
@@ -121,6 +127,8 @@ export default async function BlogPostPage({ params }: Params) {
             <div>
               <MdxContent source={post.body} />
             </div>
+
+            {post.faq && post.faq.length > 0 && <Faq items={post.faq} />}
           </article>
 
           <aside className="mt-14 rounded-lg bg-secondary/50 p-8 text-center">
