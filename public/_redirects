@@ -1,13 +1,10 @@
-# Redirections Cloudflare Pages.
+# Redirections Cloudflare Pages, au niveau du chemin uniquement.
 #
-# La première règle porte sur le nom d'hôte : Pages accepte une source
-# absolue, ce qui permet de rediriger www vers l'apex sans passer par une
-# Redirect Rule de zone. C'est délibéré, le token d'API ne dispose pas de la
-# permission Dynamic Redirect et cette voie n'en a pas besoin.
+# Le choix apex/www ne se fait PAS ici. Une source absolue du type
+# `https://www.exemple.fr/*` a été essayée et vérifiée : Pages ne la traite
+# pas, www répondait 200 au lieu de 301. La redirection de nom d'hôte se
+# configure sur la zone, pas dans ce fichier.
 #
-# Elle doit rester en tête : la première règle qui correspond l'emporte.
-https://www.talentcaresante.fr/* https://talentcaresante.fr/:splat 301
-
 # Anciens chemins de la version précédente, conservés pour que les liens et
 # les URL déjà indexées arrivent sur la page actuelle plutôt que sur un 404.
 /blog/salaire-medecin-hospitalier-2026  /blog/salaire-medecin-hospitalier/  301

@@ -26,8 +26,12 @@ on:
         description: "Robots IA : sonder puis ouvrir aux robots qui citent"
         type: boolean
         default: false
-      www_via_pages:
-        description: "www vers l'apex par Pages (sans Dynamic Redirect)"
+      www_via_pagerule:
+        description: "www vers l'apex par Page Rule (permission distincte)"
+        type: boolean
+        default: false
+      detach_www:
+        description: "Détacher www du projet Pages et retirer son DNS"
         type: boolean
         default: false
 
@@ -414,30 +418,25 @@ jobs:
               show(path, call("PATCH", path, {"value": "off", "enabled": False}))
           PY
 
-      # Voie de rechange à la Redirect Rule : le token n'a pas la permission
-      # Dynamic Redirect, mais Pages sait rediriger un nom d'hôte depuis le
-      # fichier _redirects du site. Il faut pour cela que www soit rattaché au
-      # projet Pages et résolve, sinon la règle n'est jamais évaluée.
+      # Les Page Rules sont l'ancien mécanisme de redirection de Cloudflare et
+      # relèvent d'une permission distincte de Dynamic Redirect. Le token peut
+      # donc avoir l'une sans l'autre : c'est la dernière voie automatisable
+      # avant de passer la main.
       #
-      # La règle doit être DÉJÀ déployée avant de lancer cette étape. Si elle
-      # ne se déclenche pas, l'étape supprime l'enregistrement DNS qu'elle vient
-      # de créer : mieux vaut www injoignable que www servant le même contenu
-      # que l'apex sous un second nom d'hôte.
-      - name: www vers l'apex par Pages
-        if: ${{ inputs.www_via_pages }}
+      # Même garde-fou que précédemment : si la redirection ne se déclenche
+      # pas, l'étape retire ce qu'elle a créé plutôt que de laisser www servir
+      # le même contenu que l'apex.
+      - name: www vers l'apex par Page Rule
+        if: ${{ inputs.www_via_pagerule }}
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           DOMAIN: ${{ env.DOMAIN }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
         run: |
           python3 - <<'PY'
           import json, os, subprocess, time
 
           domain = os.environ["DOMAIN"]
           www = f"www.{domain}"
-          account = os.environ["CF_ACCOUNT_ID"]
-          project = os.environ["PROJECT_NAME"]
           token = os.environ["CF_API_TOKEN"]
           api = "https://api.cloudflare.com/client/v4"
 
@@ -457,38 +456,41 @@ jobs:
           def errs(res):
               return ", ".join(f"[{e.get('code')}] {e.get('message')}" for e in res.get("errors", []))
 
-          # 1) Rattacher www au projet Pages.
-          res = call("POST", f"/accounts/{account}/pages/projects/{project}/domains",
-                     {"name": www})
-          if res.get("success"):
-              print(f"{www} rattaché au projet Pages.")
-          elif "already exists" in errs(res).lower() or any(
-                  e.get("code") == 8000007 for e in res.get("errors", [])):
-              print(f"{www} était déjà rattaché.")
-          else:
-              print(f"Rattachement refusé : {errs(res)}")
-              raise SystemExit(1)
+          zone_id = call("GET", f"/zones?name={domain}")["result"][0]["id"]
 
-          # 2) L'enregistrement DNS.
-          zone = call("GET", f"/zones?name={domain}")
-          zone_id = zone["result"][0]["id"]
-          dns = call("POST", f"/zones/{zone_id}/dns_records", {
-              "type": "CNAME", "name": www, "content": f"{project}.pages.dev",
-              "proxied": True, "comment": "Redirigé en 301 vers l'apex par _redirects",
+          # 1) La Page Rule, avant tout enregistrement DNS.
+          rule = call("POST", f"/zones/{zone_id}/pagerules", {
+              "targets": [{"target": "url", "constraint": {
+                  "operator": "matches", "value": f"{www}/*"}}],
+              "actions": [{"id": "forwarding_url", "value": {
+                  "url": f"https://{domain}/$1", "status_code": 301}}],
+              "status": "active",
+              "priority": 1,
           })
-          record_id = None
-          if dns.get("success"):
-              record_id = dns["result"]["id"]
-              print(f"{www} créé : CNAME -> {project}.pages.dev")
+          if not rule.get("success"):
+              print(f"Page Rule refusée : {errs(rule)}")
+              print("  -> le token n'a pas non plus la permission Page Rules:Edit.")
+              raise SystemExit(1)
+          rule_id = rule["result"]["id"]
+          print(f"Page Rule créée : {www}/* -> https://{domain}/$1 en 301")
+
+          # 2) L'enregistrement DNS, seulement ensuite.
+          dns = call("POST", f"/zones/{zone_id}/dns_records", {
+              "type": "CNAME", "name": www, "content": domain,
+              "proxied": True, "comment": "Redirigé en 301 vers l'apex par Page Rule",
+          })
+          record_id = dns["result"]["id"] if dns.get("success") else None
+          if record_id:
+              print(f"{www} créé : CNAME -> {domain}")
           elif any(e.get("code") == 81053 for e in dns.get("errors", [])):
               print(f"{www} existait déjà.")
           else:
               print(f"Création DNS refusée : {errs(dns)}")
+              call("DELETE", f"/zones/{zone_id}/pagerules/{rule_id}")
               raise SystemExit(1)
 
-          # 3) Vérifier que la redirection se déclenche vraiment.
+          # 3) Vérification réelle.
           print("\nPropagation, puis vérification...")
-          statut = location = None
           for essai in range(12):
               time.sleep(15)
               out = subprocess.run(
@@ -498,15 +500,63 @@ jobs:
               statut = out[0]
               location = out[1].strip() if len(out) > 1 else ""
               print(f"  essai {essai + 1} : {statut} {location}")
-              if statut == "301" and location.startswith(f"https://{domain}/"):
-                  print(f"\nOK : {www} redirige en 301 vers l'apex, chemin préservé.")
+              if statut in ("301", "302") and location.startswith(f"https://{domain}/"):
+                  print(f"\nOK : {www} redirige en {statut} vers l'apex, chemin préservé.")
                   raise SystemExit(0)
 
-          print("\nLa redirection ne se déclenche pas.")
+          print("\nLa redirection ne se déclenche pas. Retour en arrière :")
           if record_id:
               rm = call("DELETE", f"/zones/{zone_id}/dns_records/{record_id}")
-              print("Enregistrement DNS retiré." if rm.get("success")
-                    else f"Retrait DNS échoué : {errs(rm)}")
-              print("www redevient injoignable, ce qui vaut mieux qu'un doublon indexable.")
+              print("  DNS retiré." if rm.get("success") else f"  DNS : {errs(rm)}")
+          rm = call("DELETE", f"/zones/{zone_id}/pagerules/{rule_id}")
+          print("  Page Rule retirée." if rm.get("success") else f"  Page Rule : {errs(rm)}")
           raise SystemExit(1)
+          PY
+
+      # Remet www dans son état d'origine : ni rattaché au projet Pages, ni
+      # résolu. Un www rattaché mais sans DNS est un piège : le jour où
+      # quelqu'un ajoute l'enregistrement sans poser la redirection, le site
+      # est servi en double sous deux noms d'hôte.
+      - name: Détacher www
+        if: ${{ inputs.detach_www }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DOMAIN: ${{ env.DOMAIN }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+
+          domain = os.environ["DOMAIN"]
+          www = f"www.{domain}"
+          account = os.environ["CF_ACCOUNT_ID"]
+          project = os.environ["PROJECT_NAME"]
+          token = os.environ["CF_API_TOKEN"]
+          api = "https://api.cloudflare.com/client/v4"
+
+          def call(method, path):
+              out = subprocess.run(
+                  ["curl", "-sS", "-X", method,
+                   "-H", f"Authorization: Bearer {token}",
+                   "-H", "Content-Type: application/json", f"{api}{path}"],
+                  capture_output=True, text=True).stdout
+              try:
+                  return json.loads(out)
+              except json.JSONDecodeError:
+                  return {"success": False, "errors": [{"code": 0, "message": out[:200]}]}
+
+          zone_id = call("GET", f"/zones?name={domain}")["result"][0]["id"]
+
+          recs = call("GET", f"/zones/{zone_id}/dns_records?name={www}")
+          for rec in recs.get("result", []):
+              res = call("DELETE", f"/zones/{zone_id}/dns_records/{rec['id']}")
+              print(f"DNS {www} retiré." if res.get("success") else "DNS non retiré.")
+          else:
+              if not recs.get("result"):
+                  print(f"Aucun enregistrement DNS {www}.")
+
+          res = call("DELETE", f"/accounts/{account}/pages/projects/{project}/domains/{www}")
+          print(f"{www} détaché du projet Pages." if res.get("success")
+                else f"Détachement : {json.dumps(res.get('errors'))}")
           PY
