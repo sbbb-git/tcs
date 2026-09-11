@@ -48,7 +48,8 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
     title: "Le cabinet",
     links: [
       { href: "/#medecins", label: "Professionnels de santé" },
-      { href: "/#recruteurs", label: "Recruteurs" },
+      { href: "/recruter/", label: "Recruter un praticien" },
+      { href: "/fiches-metiers/", label: "Fiches métiers" },
       { href: "/#contact", label: "Contact" },
       { href: "/mentions-legales/", label: "Mentions légales" },
     ],

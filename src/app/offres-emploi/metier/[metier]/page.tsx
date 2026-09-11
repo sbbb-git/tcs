@@ -9,6 +9,7 @@ import OfferCard from "@/components/OfferCard";
 import { getOffersByMetier } from "@/lib/jobs";
 import { getPost } from "@/lib/blog";
 import { getFicheByMetier } from "@/lib/fiches";
+import { getRecruterPageByMetier } from "@/lib/recruter";
 import { metierBySlug, metiers } from "@/lib/metiers";
 import { breadcrumbSchema, faqSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 
@@ -39,6 +40,7 @@ export default async function MetierPage({ params }: Params) {
   const offers = getOffersByMetier(slug);
   const relatedPost = metier.relatedPost ? getPost(metier.relatedPost) : undefined;
   const fiche = getFicheByMetier(metier.slug);
+  const pageRecruteur = getRecruterPageByMetier(metier.slug);
 
   const crumbs = [
     { name: "Accueil", path: "/" },
@@ -177,6 +179,21 @@ export default async function MetierPage({ params }: Params) {
                 fiche métier {metier.name.toLowerCase()}
               </Link>{" "}
               détaille la formation, les missions et la rémunération.
+            </p>
+          </aside>
+        )}
+
+        {pageRecruteur && (
+          <aside className="mt-4 max-w-3xl rounded-xl bg-soft p-5 ring-1 ring-line">
+            <p className="text-sm leading-relaxed text-ink-soft">
+              Vous cherchez à recruter plutôt qu&apos;à être recruté ? Voir{" "}
+              <Link
+                href={`/recruter/${pageRecruteur.slug}/`}
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
+              >
+                recruter un {metier.name.toLowerCase()}
+              </Link>
+              .
             </p>
           </aside>
         )}

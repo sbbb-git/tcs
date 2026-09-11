@@ -35,7 +35,7 @@ export default function RecruteursSection() {
         height: 840,
       }}
       features={features}
-      cta={{ href: "#contact", label: "Nous décrire votre besoin" }}
+      cta={{ href: "/recruter/", label: "Recruter par spécialité" }}
     />
   );
 }
