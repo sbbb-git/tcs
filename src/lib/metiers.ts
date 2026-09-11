@@ -38,6 +38,12 @@ export const metiers: Metier[] = [
     name: "Médecin généraliste",
     plural: "Médecins généralistes",
     icon: "stethoscope",
+    image: {
+      src: "/images/metier-generaliste.webp",
+      alt: "Auscultation d'un patient au stéthoscope lors d'une consultation",
+      width: 1400,
+      height: 460,
+    },
     title: "Emploi médecin généraliste à Paris | TalentCare",
     description:
       "Postes de médecin généraliste à Paris : centre de santé, cabinet de groupe, salariat ou libéral. Patientèle constituée, pas de gestion administrative.",
@@ -125,6 +131,12 @@ export const metiers: Metier[] = [
     name: "ORL",
     plural: "ORL",
     icon: "ear",
+    image: {
+      src: "/images/metier-orl.webp",
+      alt: "Examen du conduit auditif à l'otoscope",
+      width: 1400,
+      height: 460,
+    },
     title: "Emploi ORL à Paris | TalentCare Santé",
     description:
       "Postes d'oto-rhino-laryngologiste à Paris, en cabinet de groupe comme en établissement. Part de consultation, d'exploration et de chirurgie.",
@@ -165,6 +177,12 @@ export const metiers: Metier[] = [
     name: "Médecin esthétique",
     plural: "Médecins esthétiques",
     icon: "sparkles",
+    image: {
+      src: "/images/metier-esthetique.webp",
+      alt: "Geste de médecine esthétique sur le visage d'une patiente",
+      width: 1400,
+      height: 460,
+    },
     title: "Emploi médecin esthétique à Paris | TalentCare",
     description:
       "Postes de médecin esthétique à Paris en centre et en cabinet. Formation requise, cadre déontologique de la publicité et organisation de l'activité.",
@@ -244,6 +262,12 @@ export const metiers: Metier[] = [
     name: "Sage-femme échographiste",
     plural: "Sages-femmes échographistes",
     icon: "activity",
+    image: {
+      src: "/images/metier-echo-obstetrique.webp",
+      alt: "Échographie obstétricale, image fœtale à l'écran",
+      width: 1400,
+      height: 460,
+    },
     title: "Emploi sage-femme échographiste à Paris | TalentCare",
     description:
       "Postes de sage-femme échographiste à Paris. Diplôme d'échographie requis, échographies de dépistage, organisation des vacations et matériel.",
@@ -284,6 +308,12 @@ export const metiers: Metier[] = [
     name: "Médecin échographiste",
     plural: "Médecins échographistes",
     icon: "target",
+    image: {
+      src: "/images/metier-echographie.webp",
+      alt: "Console d'échographie pendant un examen",
+      width: 1400,
+      height: 460,
+    },
     title: "Emploi médecin échographiste à Paris | TalentCare",
     description:
       "Postes de médecin échographiste à Paris en centre d'imagerie et en cabinet. Échographie générale, gynécologique et obstétricale, matériel et vacations.",
