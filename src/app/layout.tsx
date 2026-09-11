@@ -58,6 +58,23 @@ export default function RootLayout({
           "'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
       }}
     >
+      <head>
+        {/*
+          Mesure d'audience Ahrefs, sans cookie et sans donnée personnelle :
+          elle ne déclenche donc aucune obligation de bannière de consentement,
+          contrairement à un traceur publicitaire. C'est la seule requête vers
+          un tiers de tout le site.
+
+          Posée en balise brute plutôt que par next/script : avec un export
+          statique, c'est ce qui garantit sa présence dans le <head> du HTML
+          livré, sans dépendre de l'hydratation côté navigateur.
+        */}
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="tmms28zr1LhKrNtnFud62w"
+          async
+        />
+      </head>
       <body className="min-h-screen bg-bg font-sans">
         <a href="#contenu" className="skip-link">
           Aller au contenu

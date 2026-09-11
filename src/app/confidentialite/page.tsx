@@ -122,9 +122,18 @@ export default function ConfidentialitePage() {
               Cookies et mesure d&apos;audience
             </h2>
             <p className="leading-relaxed text-ink-soft">
-              Ce site ne dépose aucun cookie publicitaire ni traceur
-              publicitaire. Aucune bannière de consentement n&apos;est donc
+              Ce site ne dépose aucun cookie, ni publicitaire ni de mesure
+              d&apos;audience. Aucune bannière de consentement n&apos;est donc
               nécessaire pour naviguer.
+            </p>
+            <p className="mt-4 leading-relaxed text-ink-soft">
+              La fréquentation est mesurée par Ahrefs Web Analytics, un outil
+              sans cookie qui ne collecte ni adresse IP complète, ni identifiant
+              permettant de vous reconnaître d&apos;une visite à l&apos;autre.
+              Les statistiques produites sont agrégées : nombre de visites,
+              pages consultées, origine du trafic. Aucune donnée personnelle
+              n&apos;est traitée à cette occasion, et aucune donnée n&apos;est
+              transmise à des fins publicitaires.
             </p>
           </section>
 
