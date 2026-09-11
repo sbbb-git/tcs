@@ -95,7 +95,6 @@ export function organizationSchema() {
     url: site.url,
     description: site.description,
     email: site.email,
-    telephone: site.phoneE164,
     logo: {
       "@type": "ImageObject",
       url: absoluteUrl("/og/logo.png"),

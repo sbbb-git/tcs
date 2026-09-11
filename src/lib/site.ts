@@ -8,13 +8,11 @@ export const site = {
   url: "https://talentcaresante.fr",
   locale: "fr_FR",
   lang: "fr",
-  title: "TalentCare Santé, cabinet de recrutement médical à Paris",
+  title: "TalentCare Santé, cabinet de recrutement médical",
   description:
-    "Cabinet de recrutement médical à Paris. Médecins généralistes et spécialistes, sages-femmes, échographistes : nous mettons en relation praticiens et structures parisiennes.",
-  tagline: "Recrutement de médecins et de sages-femmes à Paris",
+    "Cabinet de recrutement médical en France. Médecins, spécialistes, dentistes et paramédicaux : nous mettons en relation praticiens et structures de santé, partout en France.",
+  tagline: "Recrutement médical et paramédical en France",
   email: "talentcaresante@gmail.com",
-  phone: "07 56 86 94 41",
-  phoneE164: "+33756869441",
   formEndpoint: "https://formspree.io/f/xeeeppez",
   foundingYear: 2026,
   socials: {
@@ -22,7 +20,7 @@ export const site = {
     facebook: "https://www.facebook.com/profile.php?id=61586657291461",
     instagram: "https://www.instagram.com/talentcare_sante/",
   },
-  areaServed: "Paris et Île-de-France",
+  areaServed: "France",
 
   /*
    * Clé IndexNow, générée depuis Bing Webmaster Tools.

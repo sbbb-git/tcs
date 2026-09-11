@@ -10,14 +10,14 @@ import { breadcrumbSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Offres d'emploi médecin et sage-femme à Paris",
+  title: "Offres d'emploi médical et paramédical en France",
   description:
-    "Postes de médecin généraliste, radiologue, ORL, médecin esthétique, sage-femme et échographiste à Paris. Candidature transmise avec votre accord.",
+    "Postes de médecin généraliste, spécialiste, dentiste, sage-femme et paramédical, partout en France. Candidature transmise avec votre accord.",
   path: "/offres-emploi/",
   keywords: [
-    "offre emploi médecin Paris",
-    "emploi sage-femme Paris",
-    "recrutement médical Paris",
+    "offre emploi médecin",
+    "emploi dentiste",
+    "recrutement médical France",
     "annonces médicales",
   ],
 });
@@ -42,7 +42,7 @@ export default function OffersPage() {
             "@id": absoluteUrl("/offres-emploi/#collection"),
             name: "Offres d'emploi TalentCare Santé",
             description:
-              "Postes de médecin et de sage-femme à Paris, en cabinet, centre médical, centre d'imagerie et centre de santé.",
+              "Postes de médecin, dentiste, sage-femme et paramédical partout en France, en cabinet, centre médical, clinique et centre de santé.",
             inLanguage: "fr-FR",
             isPartOf: { "@id": absoluteUrl("/#website") },
           },
@@ -54,12 +54,12 @@ export default function OffersPage() {
           <Breadcrumbs items={crumbs} />
           <p className="eyebrow">Offres d&apos;emploi</p>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-4xl lg:text-5xl">
-            Médecins et sages-femmes, à Paris
+            Toutes nos offres
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            Cabinets, centres médicaux, centres d&apos;imagerie et centres de
-            santé parisiens. Votre candidature n&apos;est transmise
-            qu&apos;avec votre accord, structure par structure.
+            Cabinets, centres médicaux, cliniques et centres de santé, partout
+            en France. Votre candidature n&apos;est transmise qu&apos;avec votre
+            accord, structure par structure.
           </p>
 
           <nav aria-label="Métiers" className="mt-7">

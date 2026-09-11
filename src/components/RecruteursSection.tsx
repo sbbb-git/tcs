@@ -2,28 +2,22 @@ import FeatureSection, { type Feature } from "@/components/FeatureSection";
 
 const features: Feature[] = [
   {
-    icon: "handshake",
-    title: "Le bon profil, pas le premier disponible",
-    description:
-      "Une structure peut être attractive sans convenir à tous les praticiens. On cherche l'adéquation, parce qu'un praticien qui repart à un an vous ramène au point de départ.",
-  },
-  {
     icon: "search",
-    title: "L'approche directe plutôt que la diffusion",
+    title: "Approche directe",
     description:
-      "Sur les spécialités tendues, les praticiens sont en poste et ne lisent aucune annonce. Les atteindre suppose de les contacter un par un, dans la confidentialité.",
+      "Les praticiens en poste ne lisent pas les annonces. Nous allons les chercher.",
   },
   {
-    icon: "fileCheck",
-    title: "On vous pose les questions du candidat",
+    icon: "handshake",
+    title: "Des profils qui restent",
     description:
-      "Composition de l'équipe, temps par consultation, âge du matériel, organisation du secrétariat. Un praticien les posera au deuxième rendez-vous. Autant y répondre au premier.",
+      "Nous cherchons l'adéquation avec votre structure, pas le premier disponible.",
   },
   {
     icon: "heart",
-    title: "Un accompagnement personnalisé et confidentiel",
+    title: "Recrutement discret",
     description:
-      "Un seul interlocuteur, du premier échange à la prise de poste. Votre recrutement n'est pas diffusé publiquement si vous ne le souhaitez pas.",
+      "Votre recherche n'est pas diffusée publiquement si vous ne le souhaitez pas.",
   },
 ];
 
@@ -33,8 +27,7 @@ export default function RecruteursSection() {
       id="recruteurs"
       tone="soft"
       eyebrow="Vous recrutez"
-      title="Plusieurs structures médicales nous font déjà confiance"
-      intro="Cabinets, centres médicaux, centres d'imagerie et centres de santé, à Paris et en petite couronne."
+      title="Comment nous procédons"
       image={{
         src: "/images/examen-clinique.webp",
         alt: "Mesure de la tension artérielle lors d'une consultation",

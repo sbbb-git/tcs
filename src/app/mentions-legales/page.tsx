@@ -58,7 +58,6 @@ export default function MentionsLegalesPage() {
                 label="Directeur de la publication"
                 value={legal.publicationDirector}
               />
-              <Row label="Téléphone" value={site.phone} />
               <Row label="Email" value={site.email} />
             </dl>
           </section>

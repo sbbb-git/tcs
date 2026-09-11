@@ -22,22 +22,20 @@ export default function Hero() {
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div>
-            <p className="eyebrow">Cabinet de recrutement médical · Paris</p>
+            <p className="eyebrow">Cabinet de recrutement médical</p>
 
             <h1 className="mt-3 max-w-2xl text-4xl font-bold leading-[1.08] tracking-tight text-ink md:text-5xl">
-              On accompagne les médecins dans leurs décisions, pas seulement
-              dans leur recherche.
+              Médecins, spécialistes et paramédicaux, partout en France.
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-              Un médecin peut être compétent sans être heureux au mauvais
-              endroit. Une structure peut être attractive sans convenir à tous
-              les profils. C&apos;est là-dessus qu&apos;on travaille.
+              Nous recrutons pour des cabinets, des centres médicaux et des
+              cliniques. Vous cherchez un poste ou un praticien : écrivez-nous.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/offres-emploi/" className="btn-primary">
-                Voir les postes
+                Voir les offres
                 <Icon name="arrowRight" className="h-[18px] w-[18px]" />
               </Link>
               <Link href="#recruteurs" className="btn-secondary">

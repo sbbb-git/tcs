@@ -47,9 +47,8 @@ export default function ConfidentialitePage() {
                 className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
               >
                 {site.email}
-              </a>{" "}
-              ou au {site.phone}. L&apos;identité complète de l&apos;éditeur
-              figure dans les{" "}
+              </a>. L&apos;identité complète de l&apos;éditeur figure dans
+              les{" "}
               <Link
                 href="/mentions-legales/"
                 className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"

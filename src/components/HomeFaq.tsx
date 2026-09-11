@@ -13,17 +13,17 @@ export const homeFaq: FaqItem[] = [
   {
     question: "Concrètement, vous faites quoi ?",
     answer:
-      "On met en relation des médecins et des sages-femmes avec des structures parisiennes qui recrutent. Côté praticien : on part de votre projet, on présente les postes qui y correspondent et on ne transmet rien sans votre accord. Côté structure : on va chercher les profils, y compris ceux qui ne lisent aucune annonce.",
+      "On met en relation des praticiens et des structures de santé qui recrutent, partout en France. Côté praticien, on présente les postes et on ne transmet rien sans votre accord. Côté structure, on va chercher les profils, y compris ceux qui ne lisent aucune annonce.",
   },
   {
     question: "Vous prenez quelles spécialités ?",
     answer:
-      "Médecine générale, radiologie, ORL, médecine esthétique, échographie, et les sages-femmes, y compris échographistes. En dehors de ça, on préfère vous dire non et vous orienter plutôt que d'accepter une mission qu'on ne saura pas mener.",
+      "Médecine générale et spécialités, chirurgie dentaire, sages-femmes et professions paramédicales. Si un besoin sort de notre périmètre, on le dit plutôt que d'accepter une mission qu'on ne saura pas mener.",
   },
   {
-    question: "Pourquoi Paris uniquement ?",
+    question: "Vous couvrez quelles régions ?",
     answer:
-      "Parce qu'un cabinet de recrutement vaut ce que vaut son réseau, et que le nôtre est parisien. Prétendre couvrir la France entière reviendrait à publier des annonces au hasard, ce qui ne sert personne.",
+      "Toute la France. Les postes se concentrent en Île-de-France et dans les grandes métropoles, mais nous recrutons aussi en zone sous-dotée, où la demande est la plus forte et les conditions souvent les plus négociables.",
   },
   {
     question: "Mon employeur actuel peut-il l'apprendre ?",
@@ -42,7 +42,7 @@ export default function HomeFaq() {
     <Section tone="white" width="wide" labelledBy="faq-accueil-title">
       <SectionHeader
         eyebrow="Questions fréquentes"
-        title="Ce qu'on nous demande au téléphone"
+        title="Ce qu'on nous demande le plus"
         id="faq-accueil-title"
       />
       <p className="mx-auto -mt-6 mb-10 max-w-2xl text-center text-ink-soft">

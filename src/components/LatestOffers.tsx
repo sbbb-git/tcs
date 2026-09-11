@@ -12,8 +12,8 @@ export default function LatestOffers({ offers }: { offers: Offer[] }) {
     <Section id="offres" tone="soft" width="full" labelledBy="offres-accueil-title">
       <SectionHeader
         eyebrow="Postes à pourvoir"
-        title="Postes ouverts à Paris"
-        intro="Cabinets, centres médicaux, centres d'imagerie et centres de santé parisiens. Candidature transmise avec votre accord uniquement."
+        title="Postes ouverts"
+        intro="Cabinets, centres médicaux, cliniques et centres de santé. Candidature transmise avec votre accord uniquement."
         id="offres-accueil-title"
       />
 

@@ -101,7 +101,6 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
       <SectionHeader
         eyebrow="Contact"
         title="Dites-nous ce que vous cherchez"
-        intro="Praticien en recherche ou structure qui recrute, écrivez-nous. Le premier échange est confidentiel et sans engagement."
         id="contact-title"
       />
 
@@ -112,20 +111,6 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
           </p>
 
           <ul className="mt-6 space-y-5">
-            <li className="flex items-start gap-3.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
-                <Icon name="phone" className="h-4 w-4" />
-              </span>
-              <span>
-                <span className="block text-sm font-medium">Téléphone</span>
-                <a
-                  href={`tel:${site.phoneE164}`}
-                  className="text-sm text-accent-100/80 transition hover:text-white"
-                >
-                  {site.phone}
-                </a>
-              </span>
-            </li>
             <li className="flex items-start gap-3.5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
                 <Icon name="mail" className="h-4 w-4" />
@@ -160,11 +145,6 @@ export default function ContactSection({ offers = [] }: { offers?: OfferRef[] })
               ))}
             </ul>
           </div>
-
-          <p className="mt-7 inline-flex items-center gap-2 border-t border-white/10 pt-6 text-sm text-accent-100/80">
-            <Icon name="shield" className="h-4 w-4" />
-            Échange confidentiel, sans engagement
-          </p>
         </div>
 
         <div className="card">

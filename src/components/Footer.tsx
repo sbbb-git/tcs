@@ -50,7 +50,7 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-accent-100/80">
-              Cabinet de recrutement médical à Paris. Médecins, sages-femmes
+              Cabinet de recrutement médical en France. Médecins, spécialistes
               et échographistes, pour les cabinets, centres d&apos;imagerie et
               maternités parisiens.
             </p>
@@ -100,13 +100,6 @@ export default function Footer() {
             <Link href="/confidentialite/" className="transition hover:text-white">
               Confidentialité
             </Link>
-            <a
-              href={`tel:${site.phoneE164}`}
-              className="inline-flex items-center gap-1.5 transition hover:text-white"
-            >
-              <Icon name="phone" className="h-3.5 w-3.5" />
-              {site.phone}
-            </a>
             <a
               href={partner.links.home}
               className="inline-flex items-center gap-1.5 transition hover:text-white"
