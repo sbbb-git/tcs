@@ -193,3 +193,8 @@ export function getOffersForPost(
     (_, i) => all[(debut + i) % all.length],
   );
 }
+
+/** Offres d'une région, pour sa page dédiée. */
+export function getOffersByRegion(region: Region): Offer[] {
+  return getOffers().filter((offer) => offer.region === region);
+}

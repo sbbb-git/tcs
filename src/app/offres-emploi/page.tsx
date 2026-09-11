@@ -6,6 +6,7 @@ import { Icon } from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
 import OfferCard from "@/components/OfferCard";
 import { getMetiersWithOffers, getOffers, getRegionsWithOffers } from "@/lib/jobs";
+import { regionPageByName } from "@/lib/regions";
 import { breadcrumbSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
@@ -111,16 +112,35 @@ export default function OffersPage() {
               Nos postes par région
             </h2>
             <ul className="mt-4 flex flex-wrap gap-2 text-sm">
-              {regions.map(({ region, count }) => (
-                <li
-                  key={region}
-                  className="inline-flex items-center gap-2 rounded-lg bg-soft px-3 py-1.5 text-ink-soft ring-1 ring-line"
-                >
-                  <Icon name="mapPin" className="h-3.5 w-3.5 text-ink-mute" />
-                  {region}
-                  <span className="text-ink-mute">{count}</span>
-                </li>
-              ))}
+              {regions.map(({ region, count }) => {
+                const page = regionPageByName.get(region);
+                const contenu = (
+                  <>
+                    <Icon name="mapPin" className="h-3.5 w-3.5 text-ink-mute" />
+                    {region}
+                    <span className="text-ink-mute">{count}</span>
+                  </>
+                );
+                const classe =
+                  "inline-flex items-center gap-2 rounded-lg bg-soft px-3 py-1.5 text-ink-soft ring-1 ring-line";
+
+                /* Une région sans page rédigée reste une simple étiquette :
+                   mieux vaut pas de lien qu'un lien vers une page vide. */
+                return (
+                  <li key={region}>
+                    {page ? (
+                      <Link
+                        href={`/offres-emploi/region/${page.slug}/`}
+                        className={`${classe} transition hover:ring-accent-300 hover:text-accent-800`}
+                      >
+                        {contenu}
+                      </Link>
+                    ) : (
+                      <span className={classe}>{contenu}</span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         )}
