@@ -349,6 +349,171 @@ export const metiers: Metier[] = [
       },
     ],
   },
+  {
+    slug: "chirurgien-dentiste",
+    name: "Chirurgien-dentiste",
+    plural: "Chirurgiens-dentistes",
+    icon: "tooth",
+    title: "Emploi chirurgien-dentiste | TalentCare Santé",
+    description:
+      "Postes de chirurgien-dentiste en France : cabinet, centre dentaire, collaboration ou association. Rétrocession, assistante au fauteuil et plateau technique.",
+    intro:
+      "Le chirurgien-dentiste choisit surtout entre trois cadres : la collaboration libérale, le salariat en centre dentaire et l'association. Ce qui distingue deux postes tient à la rétrocession, au plateau et à l'assistanat.",
+    sections: [
+      {
+        heading: "Collaboration, salariat ou association",
+        paragraphs: [
+          "La collaboration libérale reste le mode d'entrée le plus courant. Le praticien exerce pour son compte dans un cabinet existant et reverse une part de ses honoraires, la rétrocession, en échange des locaux, du matériel et de l'assistanat.",
+          "Le salariat en centre dentaire supprime la gestion et l'investissement. Le revenu est connu d'avance et l'organisation est celle de la structure : agenda, durée des actes et logiciel sont fixés collectivement.",
+          "L'association engage davantage : on entre au capital d'une structure existante et on partage ses décisions comme ses charges. C'est un choix de long terme, rarement un premier poste.",
+        ],
+      },
+      {
+        heading: "Ce qui se vérifie avant d'accepter",
+        paragraphs: [
+          "Le taux de rétrocession, mais surtout son assiette. Un pourcentage élevé calculé après déduction des prothèses et des consommables peut rapporter moins qu'un taux plus bas calculé sur les honoraires bruts.",
+          "L'assistanat au fauteuil, dédié ou partagé. À volume d'actes égal, un fauteuil sans assistante dédiée allonge chaque acte et réduit le nombre de patients vus dans la journée.",
+          "L'équipement disponible et son âge : radiologie panoramique, cône beam, empreinte optique, et ce que la structure prend en charge pour la prothèse.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Quelle rétrocession pour un collaborateur libéral ?",
+        answer:
+          "Elle se négocie et varie selon les régions, l'équipement et l'assistanat fourni. Le chiffre seul ne dit rien : demandez sur quelle base il se calcule, et ce que la structure prend en charge pour les prothèses et les consommables.",
+      },
+      {
+        question: "Un diplôme obtenu dans l'Union européenne permet-il d'exercer en France ?",
+        answer:
+          "Un diplôme d'État de docteur en chirurgie dentaire délivré dans l'Union européenne, l'Espace économique européen ou en Suisse relève de la reconnaissance des qualifications professionnelles. L'inscription au tableau de l'Ordre national des chirurgiens-dentistes reste obligatoire, et la maîtrise du français est appréciée à cette occasion.",
+      },
+    ],
+  },
+  {
+    slug: "cardiologue",
+    name: "Cardiologue",
+    plural: "Cardiologues",
+    icon: "heart",
+    title: "Emploi cardiologue | TalentCare Santé",
+    description:
+      "Postes de cardiologue en France : consultation, échocardiographie, épreuve d'effort et rythmologie. Plateau technique, délais et organisation des vacations.",
+    intro:
+      "La cardiologie libérale et hospitalière recrute partout, et les délais de rendez-vous s'allongent dans la plupart des départements. Ce qui distingue deux postes tient au plateau technique et à la part de consultation.",
+    sections: [
+      {
+        heading: "Le plateau détermine l'exercice",
+        paragraphs: [
+          "Consultation simple, échocardiographie transthoracique, épreuve d'effort, holter rythmique et tensionnel : ces activités ne demandent ni le même équipement ni le même temps par patient, et toutes les structures ne les proposent pas.",
+          "L'échographie cardiaque est le point à clarifier en premier. Un poste annoncé en cardiologie qui se révèle être de la consultation exclusive, sans accès à l'échographe, ne correspond pas à ce que la plupart des praticiens recherchent.",
+          "Les activités interventionnelles, coronarographie et rythmologie, supposent un établissement autorisé et une organisation de permanence des soins. Elles se traitent à part.",
+        ],
+      },
+      {
+        heading: "Consultation, technique et délais",
+        paragraphs: [
+          "Le nombre de patients attendus par demi-journée et la durée retenue par acte déterminent le rythme réel. Une échographie correctement menée ne tient pas dans le créneau d'une consultation de suivi.",
+          "Le délai de rendez-vous de la structure est un bon indicateur de sa tension : un délai très long signale une demande forte, donc un poste qui se remplira vite, mais aussi une pression à laquelle il faut être prêt.",
+          "Le secrétariat, la cotation et l'adressage par les généralistes du secteur complètent la description du poste.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Faut-il un diplôme complémentaire pour l'échographie cardiaque ?",
+        answer:
+          "Le diplôme d'études spécialisées de cardiologie et maladies vasculaires inclut la formation à l'échocardiographie. Un diplôme interuniversitaire dédié existe et reste un atout, notamment pour les praticiens dont la pratique s'en était éloignée.",
+      },
+      {
+        question: "Peut-on exercer en cardiologie sans activité interventionnelle ?",
+        answer:
+          "Oui, et c'est le cas de la majorité des postes en cabinet et en centre : consultation, échocardiographie, épreuves d'effort et holters suffisent à remplir un exercice complet, sans permanence des soins interventionnelle.",
+      },
+    ],
+  },
+  {
+    slug: "manipulateur-radio",
+    name: "Manipulateur en électroradiologie",
+    plural: "Manipulateurs en électroradiologie",
+    icon: "zap",
+    title: "Emploi manipulateur radio | TalentCare Santé",
+    description:
+      "Postes de manipulateur en électroradiologie médicale : radiologie, scanner, IRM, médecine nucléaire et radiothérapie. Modalités, horaires et astreintes.",
+    intro:
+      "Le manipulateur en électroradiologie médicale est le métier le plus tendu de l'imagerie : sans lui, une machine ne tourne pas. Ce qui distingue deux postes tient aux modalités confiées et au rythme des horaires.",
+    sections: [
+      {
+        heading: "Les modalités ne se valent pas",
+        paragraphs: [
+          "Radiologie conventionnelle, scanner, IRM, mammographie, médecine nucléaire, radiothérapie : chacune suppose une formation propre et une organisation différente. Un poste qui ne précise pas les modalités confiées ne décrit rien.",
+          "La polyvalence est souvent présentée comme un avantage. Elle l'est quand la structure forme réellement au passage d'une modalité à l'autre, beaucoup moins quand elle sert à combler les trous de planning.",
+          "Le renouvellement du parc conditionne la pratique autant que pour le radiologue : un appareil ancien allonge chaque examen et limite les protocoles disponibles.",
+        ],
+      },
+      {
+        heading: "Horaires, astreintes et progression",
+        paragraphs: [
+          "L'amplitude horaire, le travail de nuit et de week-end, l'existence d'astreintes et leur fréquence sont les premiers éléments à obtenir. Ils pèsent davantage sur la qualité de vie que la rémunération affichée.",
+          "Le ratio de manipulateurs par machine et par vacation dit si l'équipe est correctement dimensionnée. Une structure en sous-effectif reporte la charge sur ceux qui restent, et le poste se dégrade en quelques mois.",
+          "L'accès à la formation continue, notamment au passage en IRM ou en médecine nucléaire, est un vrai critère de choix en début de carrière.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Quels diplômes permettent d'exercer comme manipulateur ?",
+        answer:
+          "Deux voies coexistent : le diplôme d'État de manipulateur d'électroradiologie médicale et le diplôme de technicien supérieur en imagerie médicale et radiologie thérapeutique. Les deux ouvrent le même exercice, et l'enregistrement du diplôme auprès de l'autorité compétente est obligatoire avant la prise de poste.",
+      },
+      {
+        question: "Peut-on passer de la radiologie conventionnelle à l'IRM ?",
+        answer:
+          "Oui, la progression se fait le plus souvent par formation interne sur site. C'est précisément le point à faire préciser à l'embauche : une structure qui s'y engage par écrit et une structure qui l'évoque sans calendrier ne proposent pas la même chose.",
+      },
+    ],
+  },
+  {
+    slug: "infirmier",
+    name: "Infirmier",
+    plural: "Infirmiers",
+    icon: "syringe",
+    title: "Emploi infirmier | TalentCare Santé",
+    description:
+      "Postes d'infirmier diplômé d'État en France : établissement, centre de santé, bloc, dialyse et coordination. Horaires, ratios et spécialisations.",
+    intro:
+      "L'exercice infirmier recouvre des réalités très différentes selon le service et la structure. Le titre est le même partout, la journée ne l'est jamais, et c'est sur ce point que se joue le choix d'un poste.",
+    sections: [
+      {
+        heading: "Le service fait le métier",
+        paragraphs: [
+          "Médecine, chirurgie, bloc opératoire, dialyse, soins intensifs, consultation, coordination de parcours : le geste, le rythme et la charge mentale n'ont rien de commun d'un service à l'autre.",
+          "Certaines fonctions supposent un diplôme d'État complémentaire, infirmier de bloc opératoire ou infirmier anesthésiste, ou une formation de pratique avancée. D'autres se transmettent sur le terrain, à condition que la structure prévoie réellement un temps de compagnonnage.",
+          "En centre de santé et en cabinet, l'exercice est davantage tourné vers la consultation, la prévention et le suivi de patients chroniques, avec des horaires plus réguliers qu'en établissement.",
+        ],
+      },
+      {
+        heading: "Ce qui décide de la tenabilité d'un poste",
+        paragraphs: [
+          "Le ratio de patients par infirmier et par poste. C'est le chiffre le plus déterminant, et celui que les annonces mentionnent le moins.",
+          "L'organisation des horaires : journées de sept heures trente ou de douze heures, roulement, week-ends travaillés, délai de prévenance en cas de changement de planning.",
+          "La stabilité de l'équipe. Un service qui recrute en permanence sur le même poste signale un problème d'organisation que la rémunération ne compense pas.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Un diplôme infirmier obtenu à l'étranger permet-il d'exercer en France ?",
+        answer:
+          "Un diplôme délivré dans l'Union européenne, l'Espace économique européen ou en Suisse relève de la reconnaissance des qualifications professionnelles. Un diplôme obtenu hors de cette zone suppose une procédure d'autorisation d'exercice distincte. Dans les deux cas, l'inscription à l'Ordre national des infirmiers est obligatoire.",
+      },
+      {
+        question: "Faut-il un numéro RPPS pour prendre un poste ?",
+        answer:
+          "Le numéro RPPS identifie le professionnel de santé et découle de son inscription à l'Ordre. Il n'est pas à la charge de l'employeur, mais il doit exister : un infirmier non inscrit ne peut pas exercer. Cela se vérifie au moment de la promesse d'embauche, pas après la prise de poste.",
+      },
+    ],
+    relatedPost: "recruter-infirmier-etablissement-sante",
+  },
 ];
 
 export const metierBySlug = new Map(metiers.map((m) => [m.slug, m]));
