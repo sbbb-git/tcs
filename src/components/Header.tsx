@@ -11,6 +11,7 @@ const NAV = [
   { href: "/offres-emploi/", label: "Offres d'emploi" },
   { href: "/#medecins", label: "Professionnels de santé" },
   { href: "/#recruteurs", label: "Recruteurs" },
+  { href: "/fiches-metiers/", label: "Fiches métiers" },
   { href: "/blog/", label: "Blog" },
 ];
 

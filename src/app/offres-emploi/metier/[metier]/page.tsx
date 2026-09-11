@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import OfferCard from "@/components/OfferCard";
 import { getOffersByMetier } from "@/lib/jobs";
 import { getPost } from "@/lib/blog";
+import { getFicheByMetier } from "@/lib/fiches";
 import { metierBySlug, metiers } from "@/lib/metiers";
 import { breadcrumbSchema, faqSchema, jsonLdGraph, pageMetadata } from "@/lib/seo";
 
@@ -37,6 +38,7 @@ export default async function MetierPage({ params }: Params) {
 
   const offers = getOffersByMetier(slug);
   const relatedPost = metier.relatedPost ? getPost(metier.relatedPost) : undefined;
+  const fiche = getFicheByMetier(metier.slug);
 
   const crumbs = [
     { name: "Accueil", path: "/" },
@@ -157,6 +159,28 @@ export default async function MetierPage({ params }: Params) {
           liens internes, ceux de la page d'offres et de sa propre annonce :
           le minimum, pour les pages qui comptent le plus.
         */}
+        {/*
+          Renvoi vers la fiche métier, avec son rôle dit explicitement. Cette
+          page-ci vise « emploi <métier> », la fiche vise « fiche métier
+          <métier> » et « devenir <métier> » : deux intentions distinctes, donc
+          deux pages qui ne se concurrencent pas.
+        */}
+        {fiche && (
+          <aside className="mt-10 max-w-3xl rounded-xl bg-soft p-5 ring-1 ring-line">
+            <p className="text-sm leading-relaxed text-ink-soft">
+              Vous vous renseignez sur la profession plutôt que sur un poste ?
+              Notre{" "}
+              <Link
+                href={`/fiches-metiers/${fiche.slug}/`}
+                className="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800"
+              >
+                fiche métier {metier.name.toLowerCase()}
+              </Link>{" "}
+              détaille la formation, les missions et la rémunération.
+            </p>
+          </aside>
+        )}
+
         <nav className="mt-12 max-w-3xl" aria-label="Autres spécialités">
           <p className="eyebrow">Autres spécialités</p>
           <ul className="mt-3 flex flex-wrap gap-2">

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getCategories, getPosts } from "@/lib/blog";
 import { getOffers } from "@/lib/jobs";
+import { getFiches } from "@/lib/fiches";
 import { metiers } from "@/lib/metiers";
 import { regionPages } from "@/lib/regions";
 import { absoluteUrl } from "@/lib/site";
@@ -39,6 +40,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: lastOfferDate ? new Date(lastOfferDate) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,
+    })),
+    {
+      url: absoluteUrl("/fiches-metiers/"),
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    ...getFiches().map((fiche) => ({
+      url: absoluteUrl(`/fiches-metiers/${fiche.slug}/`),
+      lastModified: new Date(fiche.updated ?? fiche.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
     ...regionPages.map((page) => ({
       url: absoluteUrl(`/offres-emploi/region/${page.slug}/`),

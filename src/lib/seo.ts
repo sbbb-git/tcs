@@ -248,3 +248,41 @@ export function faqSchema(items: { question: string; answer: string }[]) {
 export function jsonLdGraph(nodes: object[]) {
   return { "@context": "https://schema.org", "@graph": nodes };
 }
+
+/**
+ * Fiche métier.
+ *
+ * Déclarée en `Article` et non en `BlogPosting` : une fiche métier n'est pas
+ * une publication datée dans un flux, c'est une référence mise à jour. La
+ * distinction compte pour les moteurs comme pour les assistants, qui citent
+ * volontiers une référence et plus rarement un billet.
+ */
+export function ficheSchema(fiche: {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  updated?: string;
+  wordCount: number;
+  metierName: string;
+}) {
+  const url = absoluteUrl(`/fiches-metiers/${fiche.slug}/`);
+
+  return {
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: fiche.title,
+    description: fiche.description,
+    inLanguage: "fr-FR",
+    datePublished: fiche.date,
+    dateModified: fiche.updated ?? fiche.date,
+    wordCount: fiche.wordCount,
+    about: { "@type": "Occupation", name: fiche.metierName },
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    image: [absoluteUrl("/og/default.png")],
+    author: { "@id": absoluteUrl("/#organization") },
+    publisher: { "@id": absoluteUrl("/#organization") },
+    isPartOf: { "@id": absoluteUrl("/#website") },
+  };
+}
