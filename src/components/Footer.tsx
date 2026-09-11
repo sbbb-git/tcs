@@ -5,6 +5,19 @@ import { Logo } from "@/components/Header";
 import { regionPages } from "@/lib/regions";
 import { partner, site } from "@/lib/site";
 
+/*
+ * Aucun lien vers le site partenaire ici.
+ *
+ * Un lien en pied de page apparaît sur chaque page : il y en avait 55, soit
+ * un par page du site, tous vers la même page d'accueil. Entre deux sites
+ * appartenant aux mêmes personnes, c'est le motif type que Google traite
+ * comme un échange de liens destiné à manipuler le classement, et non comme
+ * une recommandation éditoriale.
+ *
+ * Les liens vers le partenaire subsistent là où ils veulent dire quelque
+ * chose : la bande partenaire de l'accueil et les articles qui traitent
+ * réellement du sujet.
+ */
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
     title: "Offres d'emploi",
@@ -108,13 +121,6 @@ export default function Footer() {
             <Link href="/confidentialite/" className="transition hover:text-white">
               Confidentialité
             </Link>
-            <a
-              href={partner.links.home}
-              className="inline-flex items-center gap-1.5 transition hover:text-white"
-            >
-              Partenaire {partner.name}
-              <Icon name="externalLink" className="h-3.5 w-3.5" />
-            </a>
           </div>
         </div>
       </div>
