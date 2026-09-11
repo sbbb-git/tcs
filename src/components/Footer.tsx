@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Icon, type IconName } from "@/components/Icon";
 import { Logo } from "@/components/Header";
+import { regionPages } from "@/lib/regions";
 import { partner, site } from "@/lib/site";
 
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
@@ -9,9 +10,16 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
     title: "Offres d'emploi",
     links: [
       { href: "/offres-emploi/", label: "Toutes les offres" },
-      { href: "/offres-emploi/metier/medecin-generaliste/", label: "Médecin généraliste" },
-      { href: "/offres-emploi/metier/radiologue/", label: "Radiologue" },
-      { href: "/offres-emploi/metier/sage-femme/", label: "Sage-femme" },
+      /*
+       * Les régions plutôt qu'une sélection de métiers. Trois spécialités
+       * choisies à la main captaient à elles seules un lien depuis chaque page
+       * du site, pendant que les huit autres en recevaient deux. Les régions
+       * sont peu nombreuses, stables, et c'est le maillage qui manquait.
+       */
+      ...regionPages.map((page) => ({
+        href: `/offres-emploi/region/${page.slug}/`,
+        label: page.region,
+      })),
     ],
   },
   {

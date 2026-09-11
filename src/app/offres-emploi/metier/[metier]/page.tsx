@@ -151,6 +151,31 @@ export default async function MetierPage({ params }: Params) {
           </Link>
         </aside>
 
+        {/*
+          Les pages métier sont celles que visent les requêtes du type « emploi
+          cardiologue ». Sans cette navigation, chacune ne recevait que deux
+          liens internes, ceux de la page d'offres et de sa propre annonce :
+          le minimum, pour les pages qui comptent le plus.
+        */}
+        <nav className="mt-12 max-w-3xl" aria-label="Autres spécialités">
+          <p className="eyebrow">Autres spécialités</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {metiers
+              .filter((other) => other.slug !== metier.slug)
+              .map((other) => (
+                <li key={other.slug}>
+                  <Link
+                    href={`/offres-emploi/metier/${other.slug}/`}
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-soft px-3.5 py-2 text-sm font-medium text-ink-soft transition hover:border-accent-300 hover:text-accent-800"
+                  >
+                    <Icon name={other.icon} className="h-4 w-4 text-accent-600" />
+                    {other.name}
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </nav>
+
         {relatedPost && (
           <aside className="mt-10 max-w-3xl rounded-xl bg-soft p-5 ring-1 ring-line">
             <p className="eyebrow">Pour aller plus loin</p>

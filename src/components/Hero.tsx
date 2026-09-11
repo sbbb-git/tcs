@@ -1,20 +1,19 @@
 import Link from "next/link";
 
-import { Icon, type IconName } from "@/components/Icon";
+import { Icon } from "@/components/Icon";
+import { metiers } from "@/lib/metiers";
 
 /*
- * Les six spécialités couvertes, avec leur pictogramme. C'est le seul visuel du
- * héros et il est informatif : il dit en un coup d'œil le périmètre du cabinet,
- * là où une photo d'illustration ne dirait rien.
+ * Les spécialités couvertes, avec leur pictogramme. C'est le seul visuel du
+ * héros à porter de l'information : il dit en un coup d'œil le périmètre du
+ * cabinet, là où une photo d'illustration ne dirait rien.
+ *
+ * La liste dérive de la taxonomie plutôt que d'être écrite ici. Une liste
+ * tenue à la main se périme au premier métier ajouté, et c'est exactement ce
+ * qui s'est produit : le héros est resté sur six spécialités alors que le site
+ * en couvrait onze.
  */
-const specialites: { label: string; icon: IconName; href: string }[] = [
-  { label: "Médecine générale", icon: "stethoscope", href: "/offres-emploi/metier/medecin-generaliste/" },
-  { label: "Radiologie", icon: "scan", href: "/offres-emploi/metier/radiologue/" },
-  { label: "ORL", icon: "ear", href: "/offres-emploi/metier/orl/" },
-  { label: "Médecine esthétique", icon: "sparkles", href: "/offres-emploi/metier/medecin-esthetique/" },
-  { label: "Sages-femmes", icon: "baby", href: "/offres-emploi/metier/sage-femme/" },
-  { label: "Échographie", icon: "activity", href: "/offres-emploi/metier/medecin-echographiste/" },
-];
+const specialites = metiers;
 
 export default function Hero() {
   return (
@@ -45,13 +44,13 @@ export default function Hero() {
 
             <ul className="mt-10 flex flex-wrap gap-2">
               {specialites.map((item) => (
-                <li key={item.label}>
+                <li key={item.slug}>
                   <Link
-                    href={item.href}
+                    href={`/offres-emploi/metier/${item.slug}/`}
                     className="inline-flex items-center gap-2 rounded-full border border-line bg-soft px-3.5 py-2 text-sm font-medium text-ink-soft transition hover:border-accent-300 hover:text-accent-800"
                   >
                     <Icon name={item.icon} className="h-4 w-4 text-accent-600" />
-                    {item.label}
+                    {item.name}
                   </Link>
                 </li>
               ))}

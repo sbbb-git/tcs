@@ -7,6 +7,7 @@ import { Icon } from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
 import OfferCard from "@/components/OfferCard";
 import { getOffersByRegion } from "@/lib/jobs";
+import { metierBySlug } from "@/lib/metiers";
 import { regionPageBySlug, regionPages } from "@/lib/regions";
 import {
   breadcrumbSchema,
@@ -44,6 +45,12 @@ export default async function RegionPage({ params }: Params) {
   if (!page) notFound();
 
   const offers = getOffersByRegion(page.region);
+
+  /* Les spécialités qui recrutent réellement dans cette région, sans doublon
+     et dans l'ordre de la taxonomie. */
+  const specialites = [...new Set(offers.map((o) => o.metier))]
+    .map((slug) => metierBySlug.get(slug))
+    .filter((m) => m !== undefined);
 
   const crumbs = [
     { name: "Accueil", path: "/" },
@@ -138,6 +145,25 @@ export default async function RegionPage({ params }: Params) {
             Déposer ma candidature
           </Link>
         </aside>
+
+        {specialites.length > 0 && (
+          <nav className="mt-12 max-w-3xl" aria-label="Spécialités qui recrutent">
+            <p className="eyebrow">Spécialités qui recrutent ici</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {specialites.map((specialite) => (
+                <li key={specialite.slug}>
+                  <Link
+                    href={`/offres-emploi/metier/${specialite.slug}/`}
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-soft px-3.5 py-2 text-sm font-medium text-ink-soft transition hover:border-accent-300 hover:text-accent-800"
+                  >
+                    <Icon name={specialite.icon} className="h-4 w-4 text-accent-600" />
+                    {specialite.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
 
         <nav className="mt-12 max-w-3xl" aria-label="Autres régions">
           <p className="eyebrow">Autres régions</p>
