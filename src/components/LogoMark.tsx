@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
  * clignotement au chargement. Le tracé pèse moins d'un kilo-octet.
  *
  * Deux tonalités, parce qu'un bleu marine disparaît sur le fond sombre du pied
- * de page. Le vert des feuilles et le turquoise du pavillon restent
- * identiques : ils sont décoratifs et ne portent aucun texte, donc aucune
- * exigence de contraste ne s'y applique.
+ * de page. Les deux tonalités reprennent les bleus du
+ * logo : marine pour le tracé, bleu roi pour les embouts, le pavillon et la
+ * feuille de droite.
  */
 export function LogoMark({
   tone = "dark",
@@ -19,8 +19,11 @@ export function LogoMark({
   tone?: "dark" | "light";
   className?: string;
 }) {
-  const tube = tone === "light" ? ["#FFFFFF", "#D6E7F2"] : ["#1B3A63", "#2E6491"];
-  const embout = tone === "light" ? "#FFFFFF" : "#1B3A63";
+  const tube = tone === "light" ? ["#FFFFFF", "#B9D4FB"] : ["#17305C", "#3A72DC"];
+  const embout = tone === "light" ? "#FFFFFF" : "#3A72DC";
+  const pavillon = tone === "light" ? "#FFFFFF" : "#17305C";
+  const feuilleA = tone === "light" ? ["#5E93E8", "#89B4F5"] : ["#14294F", "#23477F"];
+  const feuilleB = tone === "light" ? ["#7FB0F2", "#A9CBFA"] : ["#2456B0", "#4A85E8"];
   const id = tone === "light" ? "l" : "d";
 
   return (
@@ -36,19 +39,19 @@ export function LogoMark({
           <stop offset="1" stopColor={tube[1]} />
         </linearGradient>
         <linearGradient id={`leafA-${id}`} x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#2E9E7E" />
-          <stop offset="1" stopColor="#6FC44A" />
+          <stop offset="0" stopColor={feuilleA[0]} />
+          <stop offset="1" stopColor={feuilleA[1]} />
         </linearGradient>
         <linearGradient id={`leafB-${id}`} x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#5BB733" />
-          <stop offset="1" stopColor="#8ED04F" />
+          <stop offset="0" stopColor={feuilleB[0]} />
+          <stop offset="1" stopColor={feuilleB[1]} />
         </linearGradient>
       </defs>
 
       <path d="M55 72 C38 69 32 56 35 43 C49 46 56 58 55 72 Z" fill={`url(#leafA-${id})`} />
       <path d="M58 74 C58 53 68 40 83 36 C85 55 75 70 58 74 Z" fill={`url(#leafB-${id})`} />
-      <path d="M55 72 C48 62 43 55 37 47" stroke="#fff" strokeOpacity=".5" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M58 74 C64 61 71 50 81 40" stroke="#fff" strokeOpacity=".45" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M55 72 C48 62 43 55 37 47" stroke="#fff" strokeOpacity=".35" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M58 74 C64 61 71 50 81 40" stroke="#fff" strokeOpacity=".4" strokeWidth="1.5" fill="none" strokeLinecap="round" />
 
       <path
         d="M26 26 C18 52 24 76 44 86 C58 93 72 88 79 78"
@@ -68,9 +71,9 @@ export function LogoMark({
       <circle cx="26" cy="24" r="6.8" fill={embout} />
       <circle cx="90" cy="24" r="6.8" fill={embout} />
 
-      <circle cx="90" cy="88" r="15.5" fill={embout} />
+      <circle cx="90" cy="88" r="15.5" fill={pavillon} />
       <circle cx="90" cy="88" r="11.2" fill={tone === "light" ? "#0B2A3F" : "#fff"} />
-      <circle cx="90" cy="88" r="8.2" fill="#22B59B" />
+      <circle cx="90" cy="88" r="8.2" fill="#2E6BD6" />
     </svg>
   );
 }

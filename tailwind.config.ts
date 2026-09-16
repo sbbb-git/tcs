@@ -21,14 +21,14 @@ const config: Config = {
         },
         /* Toutes les bordures et anneaux. Un bleu pâle, pas un gris. */
         /*
-         * Vert de la marque. Le turquoise du logo, #22B59B, n'atteint que
-         * 2,58:1 sur blanc : il échoue même au seuil des grands textes. Il
-         * reste donc dans le tracé du logo, où il est décoratif, et le texte
-         * utilise ces deux valeurs assombries de la même famille.
+         * Bleu du logo, repris tel quel : #2E6BD6 atteint 5,01:1 sur blanc et
+         * satisfait donc le niveau AA pour du texte courant, sans qu'il faille
+         * l'assombrir. La variante claire sert sur le fond sombre du pied de
+         * page, où elle monte à 6,07:1.
          */
         brand: {
-          DEFAULT: "#178070",
-          light: "#4FD1B5",
+          DEFAULT: "#2E6BD6",
+          light: "#6FA8F5",
         },
         line: "#DDE9F1",
         /*
