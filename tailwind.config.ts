@@ -19,36 +19,38 @@ const config: Config = {
           soft: "#2B4E68", // corps de texte : jamais du noir pur
           mute: "#64879F", // métadonnées uniquement, contraste 3.8:1
         },
-        /* Toutes les bordures et anneaux. Un bleu pâle, pas un gris. */
         /*
-         * Bleu du logo, repris tel quel : #2E6BD6 atteint 5,01:1 sur blanc et
-         * satisfait donc le niveau AA pour du texte courant, sans qu'il faille
-         * l'assombrir. La variante claire sert sur le fond sombre du pied de
-         * page, où elle monte à 6,07:1.
+         * Bleu du logo, repris tel quel du fichier source : #2E5FBF atteint
+         * 5,99:1 sur blanc et satisfait donc le niveau AA pour du texte
+         * courant, sans qu'il faille l'assombrir. La variante claire sert sur
+         * le fond sombre du pied de page, où elle monte à 6,18:1.
          */
         brand: {
-          DEFAULT: "#2E6BD6",
-          light: "#6FA8F5",
+          DEFAULT: "#2E5FBF",
+          light: "#7FA8F0",
         },
+        /* Toutes les bordures et anneaux. Un bleu pâle, pas un gris. */
         line: "#DDE9F1",
         /*
-         * Une seule teinte d'accent, échelle complète. Le bleu de la marque
-         * (#0284C5) occupe le rang 500 : il échoue AA sur blanc en texte, donc
-         * il sert aux aplats et au logo, tandis que 600 et 700 portent le texte
-         * et les fonds de bouton. Contrastes vérifiés avant écriture des pages.
+         * L'échelle d'accent est construite autour du bleu du logo, qui occupe
+         * le rang 500. Contrastes mesurés : 500 atteint 5,99:1 sur blanc et
+         * porte donc du texte courant, 600 monte à 7,03:1 et 700 à 8,68:1 pour
+         * les fonds de bouton en blanc. Le rang 300 sert sur le fond sombre du
+         * pied de page, où il donne 7,45:1. Le rang 400 ne sert qu'aux anneaux
+         * de focus : 3,07:1 sur blanc, au-dessus du seuil non textuel de 3:1.
          */
         accent: {
-          50: "#EFF7FD",
-          100: "#D8ECFA",
-          200: "#B2DBF4",
-          300: "#79C1EA",
-          400: "#2FA4DC",
-          500: "#0284C5",
-          600: "#046FA6",
-          700: "#075882",
-          800: "#0C4967",
-          900: "#103D55",
-          950: "#0A2739",
+          50: "#F1F5FE",
+          100: "#E1EAFC",
+          200: "#C3D5F8",
+          300: "#9CB8F2",
+          400: "#6A92E4",
+          500: "#2E5FBF",
+          600: "#2A55AB",
+          700: "#254892",
+          800: "#1E3B77",
+          900: "#193159",
+          950: "#111F39",
         },
       },
       fontFamily: {

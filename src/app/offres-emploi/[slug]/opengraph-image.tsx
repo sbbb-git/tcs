@@ -23,8 +23,8 @@ export const alt = "Offre d'emploi TalentCare Santé";
 
 const INK = "#0B2A3F";
 const INK_SOFT = "#2B4E68";
-const ACCENT = "#0284C5";
-const ACCENT_DARK = "#075882";
+const ACCENT = "#2E5FBF";
+const ACCENT_DARK = "#254892";
 const LINE = "#DDE9F1";
 
 export function generateStaticParams() {

@@ -25,7 +25,7 @@ export function Logo({
 }) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <LogoMark tone={tone} className="h-9 w-9" />
+      <LogoMark tone={tone} className="h-8 w-auto" />
       <span className="text-lg font-bold tracking-tight">
         TalentCare{" "}
         <span className={tone === "light" ? "text-brand-light" : "text-brand"}>
