@@ -5,25 +5,32 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Icon } from "@/components/Icon";
+import { LogoMark } from "@/components/LogoMark";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/offres-emploi/", label: "Offres d'emploi" },
   { href: "/#medecins", label: "Professionnels de santé" },
-  { href: "/#recruteurs", label: "Recruteurs" },
-  { href: "/recruter/", label: "Recruter" },
+  { href: "/recruter/", label: "Recruteurs" },
   { href: "/fiches-metiers/", label: "Fiches métiers" },
   { href: "/blog/", label: "Blog" },
 ];
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  tone = "dark",
+  className,
+}: {
+  tone?: "dark" | "light";
+  className?: string;
+}) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <span className="icon-pill h-9 w-9 rounded-lg">
-        <Icon name="heart" className="h-[18px] w-[18px]" />
-      </span>
+      <LogoMark tone={tone} className="h-9 w-9" />
       <span className="text-lg font-bold tracking-tight">
-        TalentCare <span className="text-accent-600">Santé</span>
+        TalentCare{" "}
+        <span className={tone === "light" ? "text-brand-light" : "text-brand"}>
+          Santé
+        </span>
       </span>
     </span>
   );

@@ -32,7 +32,13 @@ export const metadata: Metadata = {
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/og/logo.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/og/logo.png",
+    /*
+     * L'icône Apple a son propre fichier : elle est posée sur l'écran
+     * d'accueil sans marge ni fond ajouté, donc un logo transparent sur fond
+     * blanc y apparaîtrait flottant dans un carré blanc. La variante favicon,
+     * avec son fond de marque et ses coins arrondis, est faite pour cet usage.
+     */
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
   },
   alternates: {
     canonical: site.url,

@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="TalentCare Santé">
-  <rect width="32" height="32" rx="8" fill="#0284c5"/>
-  <path d="M25.3 18.7c1.99-1.95 4-4.28 4-7.33A7.33 7.33 0 0 0 22 4c-2.35 0-4 .67-6 2.67C14 4.67 12.35 4 10 4a7.33 7.33 0 0 0-7.33 7.37c0 3.06 2 4.4 4 7.33L16 28Z"
-        transform="scale(0.72) translate(6.2 5.5)"
-        fill="none" stroke="#f0f9ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512">
+  <rect width="64" height="64" rx="14" fill="#1B3A63"/>
+  <path d="M19 19 C14 32 17 44 25 49" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M45 19 C50 31 49 40 45 45" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M25 49 C31 53 38 51 42 46" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M31 41 C22 39 19 31 21 24 C29 26 32 33 31 41 Z" fill="#6FC44A"/>
+  <path d="M33 42 C33 30 38 23 47 21 C48 32 43 40 33 42 Z" fill="#8ED04F"/>
+  <circle cx="45" cy="47" r="9" fill="#fff"/>
+  <circle cx="45" cy="47" r="5.6" fill="#22B59B"/>
 </svg>

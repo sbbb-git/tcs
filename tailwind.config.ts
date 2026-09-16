@@ -20,6 +20,16 @@ const config: Config = {
           mute: "#64879F", // métadonnées uniquement, contraste 3.8:1
         },
         /* Toutes les bordures et anneaux. Un bleu pâle, pas un gris. */
+        /*
+         * Vert de la marque. Le turquoise du logo, #22B59B, n'atteint que
+         * 2,58:1 sur blanc : il échoue même au seuil des grands textes. Il
+         * reste donc dans le tracé du logo, où il est décoratif, et le texte
+         * utilise ces deux valeurs assombries de la même famille.
+         */
+        brand: {
+          DEFAULT: "#178070",
+          light: "#4FD1B5",
+        },
         line: "#DDE9F1",
         /*
          * Une seule teinte d'accent, échelle complète. Le bleu de la marque

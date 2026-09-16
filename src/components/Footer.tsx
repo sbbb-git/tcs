@@ -69,12 +69,12 @@ export default function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
           <div>
             <Link href="/" className="text-white">
-              <Logo />
+              <Logo tone="light" />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-accent-100/80">
               Cabinet de recrutement médical en France. Médecins, spécialistes
-              et échographistes, pour les cabinets, centres d&apos;imagerie et
-              maternités parisiens.
+              dentistes et paramédicaux, pour les cabinets, centres médicaux,
+              cliniques et centres de santé, partout en France.
             </p>
             <ul className="mt-5 flex gap-2">
               {SOCIALS.map((s) => (
